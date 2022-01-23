@@ -67,6 +67,7 @@ function loadImage(path, target) {
 function removeImage(path) {
     let public_id = path.split('/').pop().split('.')[0];
     $("img[src*=" + public_id + "]").remove();
+    modalImgContent.src = "#";
 }
 
 // Sets initial form marker location and current location after button click on 'Add Free Food' and
