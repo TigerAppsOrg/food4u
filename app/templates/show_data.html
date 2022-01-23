@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Data</title>
+    </head>
+
+    <body>
+        <h1>Events </h1>
+        <br/>
+        {% for event in events %}
+            <div>
+                <p>
+                    event # {{ event.id }} posted by {{ event.net_id }} is a free food event titled
+                    {{ event.title }} at {{ event.start_time }} set to end at {{ event.end_time }} at the location of {{ event.location }}
+                    at the coordinates {{ event.latitude }}, {{ event.longitude }} with {{ event.minutes_left }}
+                    minutes left with the description of {{ event.description }}
+                </p>
+            </div>
+        {% endfor %}
+        <br/>
+        <h1>Pictures</h1>
+        <br/>
+        {% for picture in pictures %}
+            <div>
+                <p>
+                    Picture {{ picture.event_picture }} is associated with event id {{ picture.event_id }}
+                </p>
+            </div>
+        {% endfor %}
+        <br/>
+        <h1>Notification Subscribers</h1>
+        <br/>
+        {% for notification in notifications %}
+            <div>
+                <p>
+                    Notification saved for {{ notification.name }} who has netid: {{ notification.net_id }} and wants
+                    emails sent to {{ notification.email_address }} and text messages sent to {{ notification.phone_number }}
+                </p>
+            </div>
+        {% endfor %}
+    </body>
+
+</html>

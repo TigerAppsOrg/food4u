@@ -1,0 +1,1 @@
+web: gunicorn food4uprinceton:app --preload

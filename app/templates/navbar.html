@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=UTF-8>
+    <title>InfoWindow</title>
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-fixed-top navbar-default navbar-inverse py-0" style="margin-bottom: 0; border-radius: 0;">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar"
+                    aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">
+                <img alt="food 4 u" class="d-inline-block mr-1"
+                     src="{{ url_for('static', filename='images/orange_logo.png') }}">
+            </a>
+        </div>
+        <div class="collapse navbar-collapse" id="main-navbar">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#" onclick="centerMap()">Map</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#aboutModal">About</a></li>
+            </ul>
+            <button id="addFoodButton" type="button" class="btn btn-primary navbar-btn" data-toggle="modal"
+                    data-target="#inputFormModal"
+            >
+                Add Free Food
+            </button>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">
+                        {{ username }}<span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a data-toggle="modal"
+                               data-target="#notificationModal" id="openNotificationSettings">Notification Settings</a>
+                        </li>
+                        <li><a onclick="tutorialAgain()" id="tutorial">Tutorial</a></li>
+                        <li><a data-toggle="modal" data-target="#feedbackModal" id="openFeedback">Feedback</a></li>
+                        <li><a href="/logout">Logout</a></li>
+
+
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+</body>
+</html>

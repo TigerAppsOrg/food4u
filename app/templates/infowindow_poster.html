@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=UTF-8>
+    <title>InfoWindow</title>
+</head>
+
+<body>
+<div id="marker_content" style="max-width: 310px;">
+    <h1 id=firstHeading>
+        <strong>
+            <div id="event_title_{{ event.id }}">{{ event.title }}</div>
+        </strong>
+    </h1>
+    <div id=bodyContent>
+        <p>
+            Posted by: <strong>{{ event.net_id }}</strong>
+        </p>
+        <p id="remaining_time_{{ event.id }}">
+            <strong>{{ remaining_time_message }}
+            </strong>
+
+        <div>at Building:</div>
+        <strong>
+            <div id="event_building_{{ event.id }}"> {{ event.building }}</div>
+        </strong>
+        <div>in Room:</div>
+        <strong>
+            <div id="event_room_{{ event.id }}"> {{ event.room }} </div>
+        </strong>
+
+        <div class="descriptionOptional">
+            {% if event.description != "N/A" %}
+                <div>
+                    Description:
+
+                    <strong>
+                        <div id="event_description_{{ event.id }}">
+                            {{ event.description }}
+                        </div>
+                    </strong>
+                </div>
+            {% endif %}
+        </div>
+        <div id="images_{{ event.id }}"></div>
+
+        </p>
+    </div>
+    <div>
+        <form action=/handleEventDelete
+              id=deleteForm method=post enctype=multipart/form-data>
+            <input type=text class=input-hidden id=idForDeletion name=idForDeletion value={{ event.id }}>
+        </form>
+    </div>
+    <div class=mini-footer>
+        <table>
+            <tr>
+                <td align=left>
+                    <form action=/handleEventExtend id="extendForm" method="post" enctype="multipart/form-data"
+                          style="width: 100%; height: 100%; margin-top:3px">
+                        <div class="input-group" style="width: 100%; height: 100%;">
+                            <input type=number class=form-control id=durationOfExtension name=durationOfExtension
+                                   value=30 required min=5 max={{ max_extension_minutes|safe }}>
+                            <span id=durationOfExtensionAddOn class="input-group-addon">
+                                            min
+                                        </span>
+                        </div>
+                        <input type=text class=input-hidden id=idForExtension name=idForExtension
+                               value={{ event.id }}>
+                    </form>
+                </td>
+                <td align=right>
+                    <button type=submit id="extendButton" form="extendForm" class="btn btn-secondary"
+                            style="width:100%; height:100%; vertical-align:top" onclick="extendWithoutRefresh();return false">
+                        Extend Your Event
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td align=left>
+                    <div style="width:100%; height:100%;">
+                        <button type="button" id="editButton" class="btn btn-primary" data-toggle="modal"
+                                data-target="#editFormModal" style="width:100%;height:100%;"
+                                data-event-id="{{ event.id }}"
+                                onclick="">
+                            Edit Your Event
+                        </button>
+                    </div>
+                </td>
+                <td align=right>
+                    <div style="width: 100%; height: 100%;">
+                        <button type=submit id="deleteButton" form="deleteForm" class="btn btn-primary"
+                                style="width:100%;height:100%;" onclick="deleteWithoutRefresh(); return false">
+                            Delete Your Event
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>

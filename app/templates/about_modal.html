@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset=UTF-8>
+        <title>InfoWindow</title>
+    </head>
+
+    <body>
+
+        <!-- About Modal -->
+        <div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="aboutModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="aboutModalLabel">About food 4 u
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </h5>
+            </div>
+            <div class="modal-body">
+                <p>
+                    food 4 u is a web app to help the Princeton community better organize distribution and retrieval of
+                    free food by highlighting the time and location of free food giveaway events. Our dream is to foster a
+                    culture of sharing on campus and reduce the impact of social events on the environment by reducing food waste!
+                </p>
+
+                <h4>
+                    Team Members
+                </h4>
+
+                <table>
+                    <tr>
+                        <td>
+                            <img class="profile-pic" alt="daphne" src="{{ url_for('static', filename='images/daphne.jpg') }}" width="80%">
+                        </td>
+                        <td>
+                            <img class="profile-pic" alt="aaron" src="{{ url_for('static', filename='images/aaron.jpg') }}" width="80%">
+                        </td>
+                        <td>
+                            <img class="profile-pic" alt="ben" src="{{ url_for('static', filename='images/ben.jpg') }}" width="80%">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="about_member">
+                                Daphne Barretto<br>
+                                daphnegb@
+                            </p>
+                        </td>
+                        <td>
+                            <p class="about_member">
+                                Aaron Buck<br>
+                                ambuck@
+                            </p>
+                        </td>
+                        <td>
+                            <p class="about_member">
+                                Ben Chan<br>
+                                bychan@
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+
+                <!-- <img class="image" alt="daphne" src="{{ url_for('static', filename='images/daphne.jpg') }}" width="60%">
+                <p class="about_member">
+                    Daphne Barretto<br>
+                    daphnegb@princeton.edu
+                </p>
+                <img class="image" alt="aaron" src="{{ url_for('static', filename='images/aaron.jpg') }}" width="60%">
+                <p class="about_member">
+                    Aaron Buck<br>
+                    ambuck@princeton.edu
+                </p>
+                <img class="image" alt="ben" src="{{ url_for('static', filename='images/ben.jpg') }}" width="60%">
+                <p class="about_member">
+                    Ben Chan<br>
+                    bychan@princeton.edu
+                </p> -->
+                <h4>
+                    Acknowledgements
+                </h4>
+                <p>
+                    Bob Dondero - COS 333 Fall 2021 Professor<br>
+                    Anat Kleiman - COS 333 Fall 2021 Advisor
+                </p>
+            </div>
+        </div>
+        </div>
+        </div>
+
+    </body>
+</html>

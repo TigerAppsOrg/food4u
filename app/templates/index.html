@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Title -->
+    <title>food 4 u</title>
+
+    <link rel="icon" href="{{ url_for('static', filename='images/orange_logo_mini.png') }}">
+
+    <!-- Link Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link
+            href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap"
+            rel="stylesheet"
+    />
+    <!-- Material Icons CSS Library -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons"
+          rel="stylesheet">
+
+    <!-- Link Dropzone -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/dropzone.js"></script>
+    <!-- Link Bootstrap -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <!-- Link Marker Spidifier -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OverlappingMarkerSpiderfier/1.0.3/oms.min.js"></script>
+
+
+    <!-- Link SweetAlert2 -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Initializes event markers before loading the main Google Map -->
+    <script>
+        let events = {{ events | safe }};
+    </script>
+
+    <!-- Initializes all global variables for JS functions -->
+    <script src="{{ url_for('static', filename='js/globalVariables.js') }}"></script>
+
+    <!-- Link Source Files -->
+    <script src="{{ url_for('static', filename='js/imageFunctions.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/textFunctions.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/markerFunctions.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/mapFunctions.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+
+    <!-- IntroJS -->
+    <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
+    <link href="https://unpkg.com/intro.js/minified/introjs.min.css" rel="stylesheet">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+
+<body>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Link Notyf CSS Library -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+<!-- Link Notyf JS Library -->
+<script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+<script src="{{ url_for('static', filename='js/alertFunctions.js') }}"></script>
+
+
+{% with errors = get_flashed_messages(category_filter=["error"]) %}
+    {% if errors %}
+        {% for msg in errors %}
+            <script>notyf.error("{{ msg }}")</script>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+{% with successes = get_flashed_messages(category_filter=["success"]) %}
+    {% if successes %}
+        {% for msg in successes %}
+            <script>notyf.success("{{ msg }}")</script>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+{% include 'navbar.html' %}
+
+<!-- Map -->
+<div id="map"></div>
+
+
+{% include 'input_form_modal.html' %}
+
+{% include 'edit_event_input_form_modal.html' %}
+
+{% include 'feedback_modal.html' %}
+
+{% include 'about_modal.html' %}
+
+{% include 'notification_modal.html' %}
+
+{% include 'tutorial_modal.html' %}
+
+{% include 'welcome_modal.html' %}
+
+<!-- The Image Modal -->
+<div id="modal-image" class="modal-image">
+
+
+    <!-- Modal Content (The Image) -->
+    <img class="modal-content-image" id="modal-content-image">
+
+    <!-- The Close Button -->
+    <span class="close" onclick="closeImageModal();event.stopPropagation()">&times;</span>
+
+
+</div>
+
+<!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9TRCt7oxBmM7I22eTFTFbb-_1k3BhaNw&callback=initMap&v=weekly&channel=2"
+        async></script>
+
+<script src="{{ url_for('static', filename='js/formFunctions.js') }}"></script>
+<script src="{{ url_for('static', filename='js/intro.js') }}"></script>
+
+
+<script>
+
+    'use strict';
+    let requestEvent = null;
+
+    function fetchEvents() {
+        if (requestEvent != null)
+            requestEvent.abort();
+
+        requestEvent = $.ajax(
+            {
+                type: 'GET',
+                contentType: "application/json",
+                url: "/fetchEvents",
+                success:
+                    function (events) {
+                        populateAdditionalMarkers(events);
+                        updateMarkers(events);
+                    },
+                dataType: 'json'
+            }
+        );
+
+    }
+
+
+    function setup() {
+        dropzoneInit();
+        {% if check_first_time %}
+            tutorial();
+        {% endif %}
+        {% if deeplinkEventID %}
+            let ajaxCount = 0;
+            $(document).ajaxStop(function () {
+                ajaxCount += 1;
+                if (ajaxCount === 1) {
+                    setTimeout(clickMarkerByEventID.bind(null, {{ deeplinkEventID }}), 1000);
+                }
+            });
+        {% endif %}
+        $.ajax(
+            {
+                type: 'GET',
+                contentType: "application/json",
+                url: "/fetchNotificationPreferences",
+                success:
+                    function (notificationPreferences) {
+                        prePopulateNotificationPreferences(notificationPreferences);
+                    },
+                dataType: 'json'
+            }
+        );
+        window.setInterval(fetchEvents, 1000);
+        window.setInterval(updateTime, 1000);
+        window.setInterval(getCurrentLocationMainMap, 1000);
+    }
+
+    // Get the image modal
+    const modalImg = document.getElementById("modal-image");
+
+    // Get the image and insert it inside the modal
+    const modalImgContent = document.getElementById("modal-content-image");
+
+    // Get the <span> element that closes the modal
+    const close = document.getElementsByClassName("close")[0];
+
+    // When the user clicks on <span> (x), close the modal
+    function closeImageModal() {
+        $("#modal-image").hide();
+    }
+
+    $('document').ready(setup);
+
+</script>
+
+</body>
+</html>
