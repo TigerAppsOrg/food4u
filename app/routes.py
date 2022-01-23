@@ -175,6 +175,9 @@ def index(event_id=None):
         pictures = event.pictures.all()
         db.session.commit()
         pictureList = [[picture.event_picture, picture.name] for picture in pictures]
+        if username == event.net_id:
+            ongoing, marker_color_address, remaining_minutes = set_color_get_time(
+                event, True)
         events_dict_list.append(
             {'title': event.title, 'building': event.building,
              'room': event.room,
@@ -249,6 +252,9 @@ def fetch_events():
             pictures = event.pictures.all()
             db.session.commit()
             pictureList = [[picture.event_picture, picture.name] for picture in pictures]
+            if username == event.net_id:
+                ongoing, marker_color_address, remaining_minutes = set_color_get_time(
+                    event, True)
             events_dict_list.append(
                 {'title': event.title, 'building': event.building,
                  'room': event.room,

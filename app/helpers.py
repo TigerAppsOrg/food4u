@@ -26,6 +26,7 @@ def unsubscribe_token(email):
     token = s.dumps(email)
     return token
 
+
 def send_feedback_email(netid, feedback):
     email_html_suffix = "<div id=bodyContent>"
     email_html_suffix += "<p><strong>Submitted by: <strong>" + str(netid) + "</strong></p>"
@@ -37,9 +38,9 @@ def send_feedback_email(netid, feedback):
     msg = Message(
         html=email_html,
         subject=("food 4 u: feedback"),
-            sender="food4uprinceton@gmail.com",
-            recipients="food4uprinceton@gmail.com".split()
-            )
+        sender="food4uprinceton@gmail.com",
+        recipients="food4uprinceton@gmail.com".split()
+    )
     mail.send(msg)
 
 
@@ -236,10 +237,13 @@ def handle_and_edit_pics(pics, event, created_event, pics_to_delete=None):
     return 0
 
 
-def set_color_get_time(event):
+def set_color_get_time(event, poster=False):
     # set default color to green
     marker_color_address = url_for(
         'static', filename='images/green_logo_mini.png')
+    if poster:
+        marker_color_address = url_for(
+            'static', filename='images/green_logo_poster_mini.png')
     # swap color to yellow, query event host
     time = datetime.datetime.utcnow()
     remaining_minutes = math.ceil(
@@ -248,10 +252,16 @@ def set_color_get_time(event):
     if (event.end_time - datetime.timedelta(minutes=10)) < time:
         marker_color_address = url_for(
             'static', filename='images/yellow_logo_mini.png')
+        if poster:
+            marker_color_address = url_for(
+                'static', filename='images/green_logo_poster_mini.png')
         # swap color to red, prep for removal
     if event.end_time < time:
         marker_color_address = url_for(
             'static', filename='images/red_logo_mini.png')
+        if poster:
+            marker_color_address = url_for(
+                'static', filename='images/green_logo_poster_mini.png')
     # remove if past event expiration date by considerable time
     if (event.end_time + datetime.timedelta(hours=1)) < time:
         return False, "", 0
