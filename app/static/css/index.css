@@ -42,11 +42,13 @@ body {
     background: linear-gradient(to bottom, #ffcc00 0%, #f58025 100%);
 }
 
-#addFoodButton:hover {
+#addFoodButton:hover, [id^=directionsButton_]:hover, #editButton:hover, #deleteButton:hover,
+#notificationSubmit:hover, #feedbackSubmitButton:hover, #extendButton:hover {
     cursor: pointer;
     color: white;
     background: #f58025;
 }
+
 
 .orangeButton {
     border: 1px solid black;
