@@ -1,5 +1,5 @@
 function getTimeRemaining(event_endtime) {
-        // create Date object for current location
+    // create Date object for current location
     var d = new Date();
 
     // convert to msec
@@ -71,8 +71,7 @@ function prePopulateEditForm(event_id) {
             let description = foundMarker.get("event_description");
             if (description !== 'N/A') {
                 $("#edit_description").val(foundMarker.get("event_description"));
-            }
-            else {
+            } else {
                 $("#edit_description").val('');
             }
 
@@ -91,8 +90,12 @@ function prePopulateNotificationPreferences(notificationPreferences) {
         $("#notificationEmailSwitch").prop('checked', notificationPreferences.wantsEmail);
         $("#notificationEmailAddress").prop('required', notificationPreferences.wantsEmail);
     }
-    // responsive form for notification preferences
-    $("#notificationEmailSwitch").click(function() {
-        $("#notificationEmailAddress").prop('required', $("#notificationEmailSwitch").is(':checked'));
-    });
+
+    if (notificationPreferences.wantsEmail !== undefined) {
+        if ($("#notificationEmailSwitch").is(':checked')) {
+            // pass
+        } else {
+            $(this).toggle();
+        }
+    }
 }
