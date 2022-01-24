@@ -43,7 +43,7 @@ body {
 }
 
 #addFoodButton:hover, [id^=directionsButton_]:hover, #editButton:hover, #deleteButton:hover,
-#notificationSubmit:hover, #feedbackSubmitButton:hover, #extendButton:hover {
+#notificationSubmit:hover, #feedbackSubmitButton:hover, #extendButton:hover, #flagButton:hover {
     cursor: pointer;
     color: white;
     background: #f58025;
