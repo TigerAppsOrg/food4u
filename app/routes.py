@@ -98,32 +98,6 @@ def manage_notification_subscriptions():
         else:
             message = "Please move the switch to the right to subscribe to email notifications from food 4 u!"
             return jsonify(message=message), 400
-    elif subscriber_search.wants_email and wants_email:
-        subscriber_search = db.session.query(NotificationSubscribers).filter(NotificationSubscribers.email_address
-                                                                             == email_address)
-        subscriber_search.update(
-            {"name": name,
-             "email_address": email_address,
-             "wants_email": wants_email,
-             "phone_number": phone_number,
-             "wants_text": wants_text},
-            synchronize_session=False)
-
-        message = "You have already subscribed to email notifications from food 4 u!"
-        return jsonify(message=message), 400
-    elif not subscriber_search.wants_email and not wants_email:
-        subscriber_search = db.session.query(NotificationSubscribers).filter(NotificationSubscribers.email_address
-                                                                             == email_address)
-        subscriber_search.update(
-            {"name": name,
-             "email_address": email_address,
-             "wants_email": wants_email,
-             "phone_number": phone_number,
-             "wants_text": wants_text},
-            synchronize_session=False)
-
-        message = "You have already unsubscribed from email notifications from food 4 u!"
-        return jsonify(message=message), 400
     else:
         subscriber_search = db.session.query(NotificationSubscribers).filter(NotificationSubscribers.email_address
                                                                              == email_address)
