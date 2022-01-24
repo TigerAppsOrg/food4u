@@ -122,7 +122,7 @@ def manage_notification_subscriptions():
              "wants_text": wants_text},
             synchronize_session=False)
 
-        message = "You have already unsubscribed to email notifications from food 4 u!"
+        message = "You have already unsubscribed from email notifications from food 4 u!"
         return jsonify(message=message), 400
     else:
         subscriber_search = db.session.query(NotificationSubscribers).filter(NotificationSubscribers.email_address
@@ -139,7 +139,7 @@ def manage_notification_subscriptions():
             message = "You have subscribed to email notifications from food 4 u!"
             return jsonify(message=message), 200
         else:
-            message = "You have unsubscribed to email notifications from food 4 u!"
+            message = "You have unsubscribed from email notifications from food 4 u!"
             return jsonify(message=message), 200
 
 
