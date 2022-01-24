@@ -99,8 +99,8 @@ def manage_notification_subscriptions():
             message = "Please move the switch to the right to subscribe to email notifications from food 4 u!"
             return jsonify(message=message), 400
     else:
-        subscriber_search = db.session.query(NotificationSubscribers).filter(NotificationSubscribers.email_address
-                                                                             == email_address)
+        subscriber_search = db.session.query(NotificationSubscribers).filter(NotificationSubscribers.net_id
+                                                                             == username)
         subscriber_search.update(
             {"name": name,
              "email_address": email_address,

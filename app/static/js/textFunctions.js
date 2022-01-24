@@ -95,7 +95,7 @@ function prePopulateNotificationPreferences(notificationPreferences) {
         if ($("#notificationEmailSwitch").is(':checked')) {
             // pass
         } else {
-            $(this).toggle();
+            $("#notificationEmailSwitch").prop('checked', true)
         }
     }
 }
