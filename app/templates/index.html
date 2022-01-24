@@ -149,6 +149,26 @@
 
     }
 
+    let requestNotificationPreferences = null;
+
+    function fetchNotificationPreferences() {
+        if (requestNotificationPreferences != null)
+            requestNotificationPreferences.abort();
+
+        requestNotificationPreferences = $.ajax(
+            {
+                type: 'GET',
+                contentType: "application/json",
+                url: "/fetchNotificationPreferences",
+                success:
+                    function (notificationPreferences) {
+                        prePopulateNotificationPreferences(notificationPreferences);
+                    },
+                dataType: 'json'
+            }
+        );
+
+    }
 
     function setup() {
         dropzoneInit();
@@ -164,18 +184,7 @@
                 }
             });
         {% endif %}
-        $.ajax(
-            {
-                type: 'GET',
-                contentType: "application/json",
-                url: "/fetchNotificationPreferences",
-                success:
-                    function (notificationPreferences) {
-                        prePopulateNotificationPreferences(notificationPreferences);
-                    },
-                dataType: 'json'
-            }
-        );
+        fetchNotificationPreferences();
         window.setInterval(fetchEvents, 1000);
         window.setInterval(updateTime, 1000);
         window.setInterval(getCurrentLocationMainMap, 1000);
