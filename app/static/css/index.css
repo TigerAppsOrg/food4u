@@ -42,11 +42,14 @@ body {
     background: linear-gradient(to bottom, #ffcc00 0%, #f58025 100%);
 }
 
-#addFoodButton:hover {
+#addFoodButton:hover, [id^=directionsButton_]:hover, #editButton:hover, #deleteButton:hover,
+#notificationSubmit:hover, #feedbackSubmitButton:hover, #extendButton:hover, #flagButton:hover {
     cursor: pointer;
     color: white;
     background: #f58025;
+    border-color: black;
 }
+
 
 .orangeButton {
     border: 1px solid black;
@@ -482,6 +485,10 @@ td {
 
 .introjs-arrow.left, .introjs-arrow.left-bottom {
     border-right-color: #eea026 !important;
+}
+
+.introjs-arrow.right, .introjs-arrow.right-top {
+    border-left-color: #eea026 !important;
 }
 
 .introjs-tooltip {
