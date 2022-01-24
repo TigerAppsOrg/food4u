@@ -487,6 +487,10 @@ td {
     border-right-color: #eea026 !important;
 }
 
+.introjs-arrow.right, .introjs-arrow.right-top {
+    border-left-color: #eea026 !important;
+}
+
 .introjs-tooltip {
     min-width: 400px !important;
     max-width: 500px !important;
