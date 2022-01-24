@@ -604,7 +604,13 @@ def handle_data():
 
 @app.route('/show_data', methods=['GET'])
 def show_data():
-    CasClient().authenticate()
+    username = CasClient().authenticate()
+    username = username.lower().strip()
+
+    authorized_users = ["bychan", "ambuck", "daphnegb"]
+
+    if username not in authorized_users:
+        redirect(url_for('index'))
 
     events = Event.query.all()
     pictures = Picture.query.all()
