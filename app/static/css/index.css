@@ -5,6 +5,10 @@ body {
     overflow: auto !important;
 }
 
+body {
+    padding-top: 50px;
+}
+
 #map {
     height: 100%;
 }
