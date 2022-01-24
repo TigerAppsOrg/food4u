@@ -91,7 +91,7 @@ function prePopulateNotificationPreferences(notificationPreferences) {
         $("#notificationEmailAddress").prop('required', notificationPreferences.wantsEmail);
     }
 
-    if (notificationPreferences.wantsEmail !== undefined) {
+    if (notificationPreferences.wantsEmail === undefined) {
         if ($("#notificationEmailSwitch").is(':checked')) {
             // pass
         } else {
