@@ -93,6 +93,6 @@ function prePopulateNotificationPreferences(notificationPreferences) {
     }
     // responsive form for notification preferences
     $("#notificationEmailSwitch").click(function() {
-        $("#notificationEmailAddress").prop('required', $("#emailSwitch").is(':checked'));
+        $("#notificationEmailAddress").prop('required', $("#notificationEmailSwitch").is(':checked'));
     });
 }
