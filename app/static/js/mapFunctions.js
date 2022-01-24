@@ -12,7 +12,7 @@ function initFormMap() {
             position: princetonCoords,
             map: formMap,
             icon: {
-                url: "/static/images/original_orange_logo.png",
+                url: "/static/images/original_orange_logo_poster_mini.png",
                 scaledSize: new google.maps.Size(66, 51),
             }
         });
@@ -63,7 +63,7 @@ function initFormMap() {
                 position: mapsMouseEvent.latLng,
                 map: formMap,
                 icon: {
-                    url: "/static/images/original_orange_logo.png",
+                    url: "/static/images/original_orange_logo_poster_mini.png",
                     scaledSize: new google.maps.Size(66, 51),
                 }
             });
