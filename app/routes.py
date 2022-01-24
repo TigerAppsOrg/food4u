@@ -610,7 +610,7 @@ def show_data():
     authorized_users = ["bychan", "ambuck", "daphnegb"]
 
     if username not in authorized_users:
-        redirect(url_for('index'))
+        return redirect(url_for('index'))
 
     events = Event.query.all()
     pictures = Picture.query.all()
