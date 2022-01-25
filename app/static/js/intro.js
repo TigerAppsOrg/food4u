@@ -94,6 +94,6 @@ function tutorialAgain() {
         $(".dropdown-toggle").attr("aria-expanded", "true");
         intro.start();
     } else {
-        $('#tutorial_modal').modal('show');
+        $('#tutorialModal').modal('show');
     }
 }
