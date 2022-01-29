@@ -39,7 +39,7 @@ def send_feedback_email(netid, feedback):
         html=email_html,
         subject=("food 4 u: feedback"),
         sender="food4uprinceton@gmail.com",
-        recipients="food4uprinceton@gmail.com".split()
+        recipients=["ambuck@princeton.edu", "shannon.heh@princeton.edu", "ntyp@princeton.edu", "bychan@princeton.edu"]
     )
     mail.send(msg)
 
