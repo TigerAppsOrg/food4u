@@ -71,7 +71,7 @@ intro.setOptions({
 
 
 intro.onexit(function () {
-    $(".dropdown-toggle").attr("data-toggle", "dropdown");
+    $(".close-dropdown").dropdown("toggle");
 });
 
 let width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
