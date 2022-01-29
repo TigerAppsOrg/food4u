@@ -72,6 +72,8 @@ intro.setOptions({
 
 intro.onexit(function () {
     $(".dropdown-toggle").attr("data-toggle", "dropdown");
+    $('.dropdown').removeClass('open');
+    $(".dropdown-toggle").attr("aria-expanded", "false");
 });
 
 let width = (window.innerWidth > 0) ? window.innerWidth : screen.width;
