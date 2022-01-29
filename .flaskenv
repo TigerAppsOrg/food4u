@@ -1,8 +1,0 @@
-FLASK_APP=food4uprinceton
-FLASK_DEBUG=1
-FLASK_ENV=development
-CLOUD_NAME=food-4-u
-API_KEY=712332389985111
-API_SECRET=Po0w3T9_31SGnObrH91Y8ut6jrc
-SECRET_KEY=tamarawhakitangihangakououapokianuakitanatuha
-SQLALCHEMY_DATABASE_URI=postgresql://nhcqvcngoagvqc:bdd130a7be3f7bf3eb92645cfc792c74ed27fcac459327f8588eb979af7d8486@ec2-44-198-146-224.compute-1.amazonaws.com:5432/dccsvpakl4li65

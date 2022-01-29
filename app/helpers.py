@@ -12,10 +12,10 @@ from better_profanity import profanity as pf
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeSerializer
 
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_SERVER'] = 'smtp.sendgrid.net'
 app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'food4uprinceton@gmail.com'
-app.config['MAIL_PASSWORD'] = 'gjaiiorgfrfzhqey'
+app.config['MAIL_USERNAME'] = 'apikey'
+app.config['MAIL_PASSWORD'] = os.environ.get('SENDGRID_PASSWORD')
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
@@ -39,7 +39,7 @@ def send_feedback_email(netid, feedback):
         html=email_html,
         subject=("food 4 u: feedback"),
         sender="food4uprinceton@gmail.com",
-        recipients="food4uprinceton@gmail.com".split()
+        recipients=["ambuck@princeton.edu", "shannon.heh@princeton.edu", "ntyp@princeton.edu", "bychan@princeton.edu"]
     )
     mail.send(msg)
 

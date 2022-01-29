@@ -293,6 +293,7 @@ function deleteWithoutRefresh() {
                 success: function (data, textStatus, jqXHR) {
                     notyf.success(jqXHR.responseJSON.message);
                     infoWindow.close();
+                    $("#editFormModal").modal('hide');
                 },
                 error: function (jqXHR) {
                     notyf.error(jqXHR.responseJSON.message);

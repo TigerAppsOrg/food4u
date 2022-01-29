@@ -94,7 +94,7 @@ function initEditFormMap() {
     editFormMarker = new google.maps.Marker({
         map: editFormMap,
         icon: {
-            url: "/static/images/original_orange_logo.png",
+            url: "/static/images/original_orange_logo_poster_mini.png",
             scaledSize: new google.maps.Size(66, 51),
         }
     });
