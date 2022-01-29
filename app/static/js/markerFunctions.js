@@ -309,8 +309,8 @@ function modifyMarkerOnClick(associatedEvent, associatedMarker) {
                 $('#remaining_time_' + associatedEvent.id).html(remaining_time_message);
             });
         }
-                
-        
+
+
         loadEventImages(associatedMarker);
 
 
@@ -354,14 +354,17 @@ function updateMarkers(events) {
                 if (foundMarker.title !== foundEvent.title) {
                     foundMarker.setTitle(foundEvent.title);
                     $("#event_title_" + foundEvent.id).text(foundEvent.title);
+                    foundMarker.set("event_title", foundEvent.title);
                 }
                 if (foundMarker.get("event_building") !== foundEvent.building) {
                     foundMarker.set("event_building", foundEvent.building);
                     $("#event_building_" + foundEvent.id).text(foundEvent.building);
+                    foundMarker.set("event_building", foundEvent.building);
                 }
                 if (foundMarker.get("event_room") !== foundEvent.room) {
                     foundMarker.set("event_room", foundEvent.room);
                     $("#event_room_" + foundEvent.id).text(foundEvent.room);
+                    foundMarker.set("event_room", foundEvent.room);
                 }
                 if (foundMarker.get("event_description") !== foundEvent.description) {
                     foundMarker.set("event_description", foundEvent.description);
@@ -374,6 +377,7 @@ function updateMarkers(events) {
                     } else {
                         $("#event_description_" + foundEvent.id).text(foundEvent.description);
                     }
+                    foundMarker.set("event_description", foundEvent.description);
                 }
                 if ((foundMarker.get("event_latitude") !== foundEvent.latitude ||
                     foundMarker.get("event_longitude") !== foundEvent.longitude)) {
