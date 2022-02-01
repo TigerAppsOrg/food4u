@@ -254,14 +254,14 @@ def set_color_get_time(event, poster=False):
             'static', filename='images/yellow_logo_mini.png')
         if poster:
             marker_color_address = url_for(
-                'static', filename='images/green_logo_poster_mini.png')
+                'static', filename='images/yellow_logo_poster_mini.png')
         # swap color to red, prep for removal
     if event.end_time < time:
         marker_color_address = url_for(
             'static', filename='images/red_logo_mini.png')
         if poster:
             marker_color_address = url_for(
-                'static', filename='images/green_logo_poster_mini.png')
+                'static', filename='images/red_logo_poster_mini.png')
     # remove if past event expiration date by considerable time
     if (event.end_time + datetime.timedelta(hours=1)) < time:
         return False, "", 0
