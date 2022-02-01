@@ -3,7 +3,8 @@ function initFormMap() {
         zoom: 17,
         center: princetonCoords,
         clickableIcons: false,
-        streetViewControl: false
+        streetViewControl: false,
+        fullscreenControl: false
     });
 
 
