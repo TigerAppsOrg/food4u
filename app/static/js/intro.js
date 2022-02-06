@@ -3,7 +3,7 @@ let intro = introJs();
 intro.setOptions({
     steps: [
         {
-            intro: "<h3><b>Welcome to food 4 u!</b></h3> food 4 u is a webapp to help the Princeton community " +
+            intro: "<h3><b>Welcome to food 4 u!</b></h3> food 4 u is a web app to help the Princeton community " +
                 "better organize distribution and retrieval of free food by highlighting the time and location of" +
                 " free food giveaway events.",
         },
