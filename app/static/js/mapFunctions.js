@@ -4,7 +4,6 @@ function initFormMap() {
         center: princetonCoords,
         clickableIcons: false,
         streetViewControl: false,
-        fullscreenControl: false
     });
 
 
@@ -125,7 +124,8 @@ function initMap() {
         zoom: 16,
         center: princetonCoords,
         clickableIcons: false,
-        streetViewControl: false
+        streetViewControl: false,
+        fullscreenControl: false
     })
 
     google.maps.event.addListener(main_map, 'click', function (event) {
