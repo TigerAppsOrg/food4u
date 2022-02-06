@@ -75,7 +75,7 @@ def send_notifications(event):
             if notification_subscription.wants_email and legal_email(notification_subscription.email_address):
                 email_html = f"Hi {notification_subscription.name}," + email_html_suffix
                 secret_token = unsubscribe_token(notification_subscription.email_address)
-                url_secret_token = 'https://food4uprinceton.herokuapp.com/unsubscribe/' + secret_token
+                url_secret_token = 'https://food4u.tigerapps.org/unsubscribe/' + secret_token
                 email_html += '<br><a href={0} target="_blank" rel="noopener noreferrer">Unsubscribe</a>'.format(
                     url_secret_token)
                 msg = Message(
