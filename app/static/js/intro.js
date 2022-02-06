@@ -44,7 +44,7 @@ intro.setOptions({
             element: "#openNotificationSettings",
             intro: "<h4><b>Notification Settings</b></h4> If you would like" +
                 " to be notified about free food events, click on the dropdown menu" +
-                " in the top right then select \"Notifications\". There, you can" +
+                " in the top right then select \"Notification Settings\". There, you can" +
                 " subscribe to email notifications for new events.",
             position: 'left'
         },
