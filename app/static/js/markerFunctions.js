@@ -223,20 +223,18 @@ function addMarker(event) {
                     prePopulateEditForm(event_id);
                     dropzoneEdit(event_id);
                 });
+                loadEventImages(marker);
             });
         } else {
             infoWindow.setContent(infoWindowInfo);
             google.maps.event.addListener(infoWindow, 'domready', function () {
                 $('#remaining_time_' + event.id).html(remaining_time_message);
+                loadEventImages(marker);
             });
         }
 
-        loadEventImages(marker);
-
-
         infoWindow.setPosition({lat: marker.getPosition().lat(), lng: marker.getPosition().lng()});
         infoWindow.open(main_map);
-
     })
     oms.addMarker(marker)
 }
