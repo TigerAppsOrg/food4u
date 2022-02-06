@@ -27,7 +27,7 @@ intro.setOptions({
         {
             intro: "<h4><b>Finding Free Food</b></h4> On the map, you'll see markers with the food 4 u logo in" +
                 " different colors. These indicate " +
-                "free food events around campus." + "<br>Markers are initially " +
+                "free food events around campus." + "<br> <br> are initially " +
                 "green. Those with 10 minutes left are yellow. The markers that are red are events with no more time" +
                 " left. If you find an event that is running out of food and has more than 10 minutes left, please" +
                 " flag it to automatically set the remaining time to 10 minutes and prevent our community" +
