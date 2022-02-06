@@ -66,8 +66,8 @@ def send_notifications(event):
     email_html_suffix += "<p><strong>Thank you for being awesome!<strong></p>"
     email_html_suffix += "<p>Sincerely,</p>"
     email_html_suffix += '<p style="color:#f58025;"><strong>The food 4 u Team<strong><br>'
-    email_html_suffix += '<a href="https://food4uprinceton.herokuapp.com/" style="color:#f58025;"' \
-                         'target="_blank" rel="noopener noreferrer">https://food4uprinceton.herokuapp.com/</a></p>'
+    email_html_suffix += '<a href="https://food4u.tigerapps.org/" style="color:#f58025;"' \
+                         'target="_blank" rel="noopener noreferrer">https://food4u.tigerapps.org/</a></p>'
 
     notification_subscription_list = NotificationSubscribers.query.all()
     if notification_subscription_list is not None:
