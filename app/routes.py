@@ -584,6 +584,10 @@ def handle_data():
         description=desc,
         end_time=end_time, duration=duration)
     db.session.add(e)
+    user_search = db.session.query(Users).filter(Users.net_id == username)
+    user_search.update(
+        {"posts_made": 1},
+        synchronize_session=False)
     pics = request.files.to_dict().values()
     create = True
     is_illegal = handle_and_edit_pics(pics, e, create)

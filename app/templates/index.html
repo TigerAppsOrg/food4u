@@ -51,6 +51,11 @@
     <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
     <link href="https://unpkg.com/intro.js/minified/introjs.min.css" rel="stylesheet">
 
+    <!-- Socket IO 4.4.1 Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js"
+            integrity="sha512-MgkNs0gNdrnOM7k+0L+wgiRc5aLgl74sJQKbIWegVIMvVGPc1+gc1L2oK9Wf/D9pq58eqIJAxOonYPVE5UwUFA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
@@ -172,6 +177,20 @@
 
     function setup() {
         dropzoneInit();
+        let socket = io();
+
+        socket.on('subscribe', function (integer) {
+
+        })
+
+        socket.on('unsubscribe', function (integer) {
+
+        })
+
+        socket.on('uniqueVisitor', function (integer) {
+
+        })
+
         {% if check_first_time %}
             tutorial();
         {% endif %}
