@@ -7,9 +7,12 @@ from app.helpers import legal_location, legal_duration, send_notifications
 from app.helpers import legal_description, legal_lat_lng, handle_and_edit_pics
 from app.helpers import legal_email, legal_fields, send_feedback_email, send_flag_email
 from flask import redirect, flash, url_for
+from flask_socketio import SocketIO
 from app import app, db
 from app.models import Event, Picture, Users, NotificationSubscribers
 from itsdangerous import URLSafeSerializer, BadData
+
+socket_io = SocketIO(app)
 
 
 @app.route('/feedbackSubmissionForm', methods=['POST'])
@@ -95,6 +98,7 @@ def manage_notification_subscriptions():
         db.session.commit()
         if wants_email:
             message = "You have subscribed to email notifications from food 4 u!"
+            socket_io.emit('subscribe', 1, broadcast=True)
             return jsonify(message=message), 200
         else:
             message = "Please move the switch to the right to subscribe to email notifications from food 4 u!"
@@ -112,9 +116,11 @@ def manage_notification_subscriptions():
         db.session.commit()
         if wants_email:
             message = "You have subscribed to email notifications from food 4 u!"
+            socket_io.emit('subscribe', 1, broadcast=True)
             return jsonify(message=message), 200
         else:
             message = "You have unsubscribed from email notifications from food 4 u!"
+            socket_io.emit('subscribe', -1, broadcast=True)
             return jsonify(message=message), 200
 
 
@@ -133,6 +139,7 @@ def unsubscribe_token(token):
     subscriber = NotificationSubscribers.query.filter_by(email_address=email).first()
     if not subscriber.wants_email:
         flash("You have successfully unsubscribed from email notifications from food 4 u!", "success")
+        socket_io.emit('subscribe', -1, broadcast=True)
         return redirect(url_for('index'))
     else:
         subscriber_search = db.session.query(NotificationSubscribers).filter(NotificationSubscribers.email_address
@@ -145,6 +152,7 @@ def unsubscribe_token(token):
         db.session.commit()
 
     flash("You have successfully unsubscribed from email notifications from food 4 u!", "success")
+    socket_io.emit('subscribe', -1, broadcast=True)
     return redirect(url_for('index'))
 
 
@@ -163,6 +171,7 @@ def index(event_id=None):
         first_time_user = Users(net_id=username)
         db.session.add(first_time_user)
         db.session.commit()
+        socket_io.emit('uniqueVisitor', 1, broadcast=True)
     events_dict_list = []
     events = Event.query.all()
     db.session.commit()
@@ -189,22 +198,25 @@ def index(event_id=None):
              'net_id': event.net_id.lower().strip(),
              'end_time': event.end_time.isoformat(),
              'username': username})
+    subscribers_count = NotificationSubscribers.query.filter_by(
+        wants_email=True).count()
+    unique_visitors_count = db.session.query(Users.net_id).count()
     if not event_id:
         html = render_template(
             "index.html", events=json.dumps(events_dict_list),
             username=username, check_first_time=check_first_time,
-            deeplinkEventID=None)
+            deeplinkEventID=None, subscribers_count=subscribers_count, unique_visitors_count=unique_visitors_count)
     elif Event.query.filter_by(id=event_id).first() is None:
         flash("The free food event has already ended.", "error")
         html = render_template(
             "index.html", events=json.dumps(events_dict_list),
             username=username, check_first_time=check_first_time,
-            deeplinkEventID=None)
+            deeplinkEventID=None, subscribers_count=subscribers_count, unique_visitors_count=unique_visitors_count)
     else:
         html = render_template(
             "index.html", events=json.dumps(events_dict_list),
             username=username, check_first_time=check_first_time,
-            deeplinkEventID=event_id)
+            deeplinkEventID=event_id, subscribers_count=subscribers_count, unique_visitors_count=unique_visitors_count)
     response = make_response(html)
     return response
 

@@ -26,12 +26,12 @@
         </div>
         <div class="collapse navbar-collapse" id="main-navbar">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#" onclick="centerMap()">Map</a></li>
+                <li><a href="#" onclick="centerMap()">Map</a></li>
                 <li><a href="#" data-toggle="modal" data-target="#aboutModal">About</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#activityModal">Stats</a></li>
             </ul>
             <button id="addFoodButton" type="button" class="btn btn-primary navbar-btn" data-toggle="modal"
-                    data-target="#inputFormModal"
-            >
+                    data-target="#inputFormModal">
                 Add Free Food
             </button>
             <ul class="nav navbar-nav navbar-right">
@@ -42,7 +42,8 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a data-toggle="modal"
-                               data-target="#notificationModal" onclick="fetchNotificationPreferences()" id="openNotificationSettings">Notification Settings</a>
+                               data-target="#notificationModal" onclick="fetchNotificationPreferences()"
+                               id="openNotificationSettings">Notification Settings</a>
                         </li>
                         <li><a onclick="tutorialAgain()" id="tutorial">Tutorial</a></li>
                         <li><a data-toggle="modal" data-target="#feedbackModal" id="openFeedback">Feedback</a></li>

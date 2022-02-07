@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=UTF-8>
+    <title>InfoWindow</title>
+</head>
+
+<body>
+
+<!-- About Modal -->
+<div class="modal fade" id="activityModal" tabindex="-1" role="dialog" aria-labelledby="activityModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="activityModalLabel">Real-Time Statistics
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </h5>
+            </div>
+            <div class="modal-body">
+                <table>
+                    <tr style="border-bottom: 1px solid #000;border-color: white">
+                        <td>
+                            <span style="display: table;margin: 0 auto;">
+                            Unique Visitors Count
+                            </span>
+                        </td>
+                        <td style="border-left: 1px solid #000;
+                     border-color: white">
+                            <span style="display: table;margin: 0 auto;">
+                            Notification Subscribers Count
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="
+                     border-right: 1px solid #000; border-color: white">
+                            <span id="unique-visitors-count" style="display: table;margin: 0 auto;">
+                                {{ unique_visitors_count }} people
+                            </span>
+                        </td>
+                        <td style="border-left: 1px solid #000;
+                      border-color: white">
+                            <span id="subscribers-count" style="display: table;margin: 0 auto;">
+                                {{ subscribers_count }} people
+                            </span>
+                        </td>
+
+                    </tr>
+                </table>
+                <div style="height: 2rem;"></div>
+                <table>
+                    <tr>
+                        <td>
+                            <span style="display: table;margin: 0 auto;">
+                            food 4 u Leaderboard Scores
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border-top: 1px solid #000;
+                     border-color: white">
+                            <span style="display: table;margin: 0 auto;">
+                                Coming Soon!
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

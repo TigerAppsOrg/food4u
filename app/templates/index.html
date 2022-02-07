@@ -108,6 +108,8 @@
 
 {% include 'welcome_modal.html' %}
 
+{% include 'activity_modal.html' %}
+
 <!-- The Image Modal -->
 <div id="modal-image" class="modal-image">
 
@@ -177,19 +179,17 @@
 
     function setup() {
         dropzoneInit();
+
+        // Start Socket_IO
         let socket = io();
-
         socket.on('subscribe', function (integer) {
-
-        })
-
-        socket.on('unsubscribe', function (integer) {
-
+            $("#subscribers-count").html(parseInt($('#subscribers-count').html(), 10) + integer + " people")
         })
 
         socket.on('uniqueVisitor', function (integer) {
-
+            $("#unique-visitors-count").html(parseInt($('#unique-visitors-count').html(), 10) + integer + " people")
         })
+        // End Socket_IO
 
         {% if check_first_time %}
             tutorial();

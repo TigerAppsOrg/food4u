@@ -3,14 +3,11 @@ from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
-from flask_socketio import SocketIO
-
 
 # from flask_mail import Mail
 
 app = Flask(__name__)
 CORS(app)
-SocketIO(app)
 # mail = Mail(app)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
@@ -19,5 +16,6 @@ migrate = Migrate(app, db)
 
 from app import routes, models, scheduler
 from app.scheduler import scheduler_trash_markers
+
 scheduler_trash_markers.init_app(app)
 scheduler_trash_markers.start()
