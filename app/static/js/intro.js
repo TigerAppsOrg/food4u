@@ -3,7 +3,7 @@ let intro = introJs();
 intro.setOptions({
     steps: [
         {
-            intro: "<h3><b>Welcome to food 4 u!</b></h3> food 4 u is a webapp to help the Princeton community " +
+            intro: "<h3><b>Welcome to food 4 u!</b></h3> food 4 u is a web app to help the Princeton community " +
                 "better organize distribution and retrieval of free food by highlighting the time and location of" +
                 " free food giveaway events.",
         },
@@ -27,7 +27,7 @@ intro.setOptions({
         {
             intro: "<h4><b>Finding Free Food</b></h4> On the map, you'll see markers with the food 4 u logo in" +
                 " different colors. These indicate " +
-                "free food events around campus." + "<br>Markers are initially " +
+                "free food events around campus." + "<br> <br> Markers are initially " +
                 "green. Those with 10 minutes left are yellow. The markers that are red are events with no more time" +
                 " left. If you find an event that is running out of food and has more than 10 minutes left, please" +
                 " flag it to automatically set the remaining time to 10 minutes and prevent our community" +
@@ -44,7 +44,7 @@ intro.setOptions({
             element: "#openNotificationSettings",
             intro: "<h4><b>Notification Settings</b></h4> If you would like" +
                 " to be notified about free food events, click on the dropdown menu" +
-                " in the top right then select \"Notifications\". There, you can" +
+                " in the top right then select \"Notification Settings\". There, you can" +
                 " subscribe to email notifications for new events.",
             position: 'left'
         },

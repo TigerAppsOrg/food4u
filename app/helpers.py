@@ -31,7 +31,7 @@ def send_feedback_email(netid, feedback):
     email_html_suffix = "<div id=bodyContent>"
     email_html_suffix += "<p><strong>Submitted by: <strong>" + str(netid) + "</strong></p>"
     email_html_suffix += "<p>" + str(feedback) + "</p>"
-    email_html_suffix += "<p><strong>Thank you food 4 u team!"
+    email_html_suffix += "<p><strong>Thank you, food 4 u team!<strong><p></div>"
 
     email_html = '<p style="color:#f58025;"><strong>food 4 u has new feedback!<strong></p>'
     email_html += email_html_suffix
@@ -44,9 +44,32 @@ def send_feedback_email(netid, feedback):
     mail.send(msg)
 
 
+def send_flag_email(flagger_netid, op_netid, event):
+    email_html_suffix = "<div id=bodyContent>"
+    email_html_suffix += "<p><strong>Flagged by: <strong>" + str(flagger_netid) + "</strong></p>"
+    email_html_suffix += '</div>'
+
+    email_html = '<p style="color:#f58025;"><strong>' \
+                 'Your free food event has been flagged to have 10 minutes remaining!' \
+                 '<strong></p>'
+    email_html += '<p style="color:#f58025;"><strong> ' \
+                  f"<a href='https://food4u.tigerapps.org/index/{event.id}'" \
+                  f"target='_blank' rel='noopener noreferrer'>Click here" \
+                  '</a> to see this your live event\'s details and to extend it if it\'s still ' \
+                  'ongoing! <strong></p>'
+    email_html += email_html_suffix
+    msg = Message(
+        html=email_html,
+        subject=("food 4 u: Your Event Was Flagged by Another User"),
+        sender="food4uprinceton@gmail.com",
+        recipients=[op_netid + "@princeton.edu"]
+    )
+    mail.send(msg)
+
+
 def send_notifications(event):
     email_html_suffix = '<p style="color:#f58025;"><strong>We have food 4 u! ' \
-                        f"<a href='https://food4uprinceton.herokuapp.com/index/{event.id}'" \
+                        f"<a href='https://food4u.tigerapps.org/index/{event.id}'" \
                         f"target='_blank' rel='noopener noreferrer'>Click here" \
                         '</a> to see this live event\'s details! <strong></p>'
     email_html_suffix += "<h1><strong>" + str(event.title) + "<strong></h1>"
@@ -66,8 +89,8 @@ def send_notifications(event):
     email_html_suffix += "<p><strong>Thank you for being awesome!<strong></p>"
     email_html_suffix += "<p>Sincerely,</p>"
     email_html_suffix += '<p style="color:#f58025;"><strong>The food 4 u Team<strong><br>'
-    email_html_suffix += '<a href="https://food4uprinceton.herokuapp.com/" style="color:#f58025;"' \
-                         'target="_blank" rel="noopener noreferrer">https://food4uprinceton.herokuapp.com/</a></p>'
+    email_html_suffix += '<a href="https://food4u.tigerapps.org/" style="color:#f58025;"' \
+                         'target="_blank" rel="noopener noreferrer">https://food4u.tigerapps.org/</a></p>'
 
     notification_subscription_list = NotificationSubscribers.query.all()
     if notification_subscription_list is not None:
@@ -75,7 +98,7 @@ def send_notifications(event):
             if notification_subscription.wants_email and legal_email(notification_subscription.email_address):
                 email_html = f"Hi {notification_subscription.name}," + email_html_suffix
                 secret_token = unsubscribe_token(notification_subscription.email_address)
-                url_secret_token = 'https://food4uprinceton.herokuapp.com/unsubscribe/' + secret_token
+                url_secret_token = 'https://food4u.tigerapps.org/unsubscribe/' + secret_token
                 email_html += '<br><a href={0} target="_blank" rel="noopener noreferrer">Unsubscribe</a>'.format(
                     url_secret_token)
                 msg = Message(

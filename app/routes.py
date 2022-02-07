@@ -35,6 +35,7 @@ def send_feedback():
         return redirect(url_for('index'))
 
     send_feedback_email(username, feedback)
+    flash("Feedback has been successfully submitted. food 4 u appreciates your input!")
     return redirect(url_for('index'))
 
 
@@ -373,6 +374,7 @@ def flag_event():
         {Event.end_time: datetime.datetime.utcnow() + datetime.timedelta(minutes=10)})
     db.session.commit()
 
+    send_flag_email(username, flagged_event.net_id, flagged_event)
     message = "The event has been successfully flagged and reduced to 10 minutes."
     return jsonify(message=message), 200
 
