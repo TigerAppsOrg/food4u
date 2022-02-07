@@ -158,9 +158,9 @@ def index(event_id=None):
     username = username.lower().strip()
     check_first_time = False
 
-    if FirstTime.query.filter_by(net_id=username).first() is None:
+    if Users.query.filter_by(net_id=username).first() is None:
         check_first_time = True
-        first_time_user = FirstTime(net_id=username)
+        first_time_user = Users(net_id=username)
         db.session.add(first_time_user)
         db.session.commit()
     events_dict_list = []
