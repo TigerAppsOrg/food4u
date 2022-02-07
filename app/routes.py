@@ -308,19 +308,16 @@ def extend_event():
 
     extended_event_id = request.form['idForExtension']
     extended_event = Event.query.filter_by(id=extended_event_id).first()
-    
+
     if extended_event is None:
         message = "Your event has not been found. It may have been already deleted."
         return jsonify(message=message), 400
-    
 
     ongoing, marker_color_address, remaining_minutes = set_color_get_time(extended_event)
 
     if remaining_minutes + extension_duration > 180:
         message = "Your event's total time cannot exceed 3 hours."
         return jsonify(message=message), 400
-
-
 
     if username != extended_event.net_id:
         message = "Extensions must be from the original poster. Please contact them to extend the event."
@@ -352,18 +349,16 @@ def flag_event():
 
     flagged_event_id = request.form['idForFlagging']
     flagged_event = Event.query.filter_by(id=flagged_event_id).first()
-    
+
     if flagged_event is None:
         message = "The event has not been found. It may have been already deleted."
         return jsonify(message=message), 400
-    
+
     ongoing, marker_color_address, remaining_minutes = set_color_get_time(flagged_event)
 
     if remaining_minutes <= 10:
         message = "The event is already less than 10 minutes."
         return jsonify(message=message), 400
-
-
 
     if username == flagged_event.net_id:
         message = "Flags must be from not the original poster. Please use the edit form to decrease time " \
