@@ -51,23 +51,37 @@ function removeEventImage(eventPictureURL) {
     removeImage(eventPictureURL);
 }
 
+
 // Loads associated event images
 function loadImage(path, target, eventPicLength) {
+    let addListener = false;
     google.maps.event.addListener(infoWindow, 'domready', function () {
-        setTimeout(function () {
-            if ($(target).children().length >= eventPicLength) {
-                // pass
-            } else {
-                let dynamicHeight = Math.ceil(Math.random() * 30) + 100;
-                let imageTag = $('<img src="' + path + ' "style="height=' + dynamicHeight + 'px;width:100%;max-width:310px;margin-top:2%" class="image elem">');
-                imageTag.appendTo(target);
-                imageTag.on("click", function () {
-                    modalImg.style.display = "block";
-                    modalImgContent.src = this.src;
-                });
-            }
-        })
+        addListener = true;
+        if ($(target).children().length >= eventPicLength) {
+            // pass
+        } else {
+            let dynamicHeight = Math.ceil(Math.random() * 30) + 100;
+            let imageTag = $('<img src="' + path + ' "style="height=' + dynamicHeight + 'px;width:100%;max-width:310px;margin-top:2%" class="image elem">');
+            imageTag.appendTo(target);
+            imageTag.on("click", function () {
+                modalImg.style.display = "block";
+                modalImgContent.src = this.src;
+            });
+        }
     });
+    if (addListener === false) {
+        if ($(target).children().length >= eventPicLength) {
+            // pass
+        } else {
+            let dynamicHeight = Math.ceil(Math.random() * 30) + 100;
+            let imageTag = $('<img src="' + path + ' "style="height=' + dynamicHeight + 'px;width:100%;max-width:310px;margin-top:2%" class="image elem">');
+            imageTag.appendTo(target);
+            imageTag.on("click", function () {
+                modalImg.style.display = "block";
+                modalImgContent.src = this.src;
+            });
+        }
+    }
 }
 
 function removeImage(path) {
@@ -235,12 +249,11 @@ function addMarker(event) {
             });
         }
 
-        loadEventImages(marker);
 
         infoWindow.setPosition({lat: marker.getPosition().lat(), lng: marker.getPosition().lng()});
         infoWindow.open(main_map);
 
-
+        loadEventImages(marker);
     })
 
     oms.addMarker(marker);
@@ -454,7 +467,8 @@ function updateMarkers(events) {
                         removeEventImage(toBeRemovedPictureURLs[i]);
                     }
                     for (let i = 0; i < tobeAddedPictureURLs.length; i++) {
-                        loadEventImage(tobeAddedPictureURLs[i], foundEvent.id);
+                        loadEventImage(tobeAddedPictureURLs[i], foundEvent.id, tobeAddedPictureURLs.length
+                            + Object.keys(foundMarker.get("event_pictures")).length);
                     }
                     foundMarker.set("event_pictures", eventPictureDict);
                 }
