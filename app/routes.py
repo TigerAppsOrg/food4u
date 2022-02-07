@@ -5,10 +5,10 @@ from app.casclient import CasClient
 from app.helpers import delete_data, legal_title, set_color_get_time
 from app.helpers import legal_location, legal_duration, send_notifications
 from app.helpers import legal_description, legal_lat_lng, handle_and_edit_pics
-from app.helpers import legal_email, legal_fields, send_feedback_email
+from app.helpers import legal_email, legal_fields, send_feedback_email, send_flag_email
 from flask import redirect, flash, url_for
 from app import app, db
-from app.models import Event, Picture, FirstTime, NotificationSubscribers
+from app.models import Event, Picture, Users, NotificationSubscribers
 from itsdangerous import URLSafeSerializer, BadData
 
 
