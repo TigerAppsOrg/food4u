@@ -11,6 +11,7 @@ from flask_socketio import SocketIO
 from app import app, db
 from app.models import Event, Picture, Users, NotificationSubscribers
 from itsdangerous import URLSafeSerializer, BadData
+from sqlalchemy.sql import functions
 
 socket_io = SocketIO(app)
 
