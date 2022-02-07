@@ -35,24 +35,6 @@ function populateAdditionalMarkers(events) {
     }
 }
 
-function loadEventImages(marker) {
-    let markerEventPicturesDict = marker.get("event_pictures");
-    let markerEventID = marker.get("event_id");
-    $.each(markerEventPicturesDict, function (pictureName, pictureURL) {
-        loadEventImage(pictureURL, markerEventID)
-
-    })
-}
-
-function loadEventImage(eventPictureURL, eventID) {
-    loadImage(eventPictureURL.replace(/^http:\/\//i, 'https://'), '#images_' + eventID)
-}
-
-function removeEventImage(eventPictureURL) {
-    removeImage(eventPictureURL);
-}
-
-// Loads associated event images
 function loadImage(path, target) {
     $('<img src="' + path + ' "style="width:100%;max-width:310px;margin-top:2%" class="image">')
         .on('load', function () {
@@ -62,6 +44,69 @@ function loadImage(path, target) {
                 modalImgContent.src = this.src;
             });
         });
+}
+
+function loadEventImage(eventPictureURL, eventID, marker) {
+    loadImage(eventPictureURL.replace(/^http:\/\//i, 'https://'), '#images_' + eventID, marker)
+}
+
+
+function removeEventImage(eventPictureURL) {
+    removeImage(eventPictureURL);
+}
+
+
+// Loads associated event images
+function loadEventImages(marker) {
+    let dynamicHeight = Math.ceil(Math.random() * 30) + 100;
+    let listenerHandle = marker.get("listenerHandle");
+    if (listenerHandle === undefined) {
+        listenerHandle = google.maps.event.addListener(infoWindow, 'domready', function () {
+            let markerEventPicturesDict = marker.get("event_pictures");
+            let markerEventID = marker.get("event_id");
+            $.each(markerEventPicturesDict, function (pictureName, pictureURL) {
+                let imageTag = $('<img src="' + pictureURL.replace(/^http:\/\//i, 'https://') + ' "style="height=' +
+                    dynamicHeight + 'px;width:100%;max-width:310px;margin-top:2%" class="image elem">');
+                imageTag.appendTo('#images_' + markerEventID);
+                imageTag.on("click", function () {
+                    modalImg.style.display = "block";
+                    modalImgContent.src = this.src;
+                });
+            })
+        });
+        marker.set("listenerHandle", listenerHandle);
+    } else {
+        google.maps.event.removeListener(listenerHandle);
+        listenerHandle = google.maps.event.addListener(infoWindow, 'domready', function () {
+            let markerEventPicturesDict = marker.get("event_pictures");
+            let markerEventID = marker.get("event_id");
+            $.each(markerEventPicturesDict, function (pictureName, pictureURL) {
+                let imageTag = $('<img src="' + pictureURL.replace(/^http:\/\//i, 'https://') + ' "style="height=' +
+                    dynamicHeight + 'px;width:100%;max-width:310px;margin-top:2%" class="image elem">');
+                imageTag.appendTo('#images_' + markerEventID);
+                imageTag.on("click", function () {
+                    modalImg.style.display = "block";
+                    modalImgContent.src = this.src;
+                });
+            })
+        });
+        marker.set("listenerHandle", listenerHandle);
+    }
+}
+
+function loadImagesWhileInfoWindowIsOpen(marker) {
+    let dynamicHeight = Math.ceil(Math.random() * 30) + 100;
+    let markerEventPicturesDict = marker.get("event_pictures");
+    let markerEventID = marker.get("event_id");
+    $.each(markerEventPicturesDict, function (pictureName, pictureURL) {
+        let imageTag = $('<img src="' + pictureURL.replace(/^http:\/\//i, 'https://') + ' "style="height=' +
+            dynamicHeight + 'px;width:100%;max-width:310px;margin-top:2%" class="image elem">');
+        imageTag.appendTo('#images_' + markerEventID);
+        imageTag.on("click", function () {
+            modalImg.style.display = "block";
+            modalImgContent.src = this.src;
+        });
+    })
 }
 
 function removeImage(path) {
@@ -155,6 +200,7 @@ function addMarker(event) {
     marker.set("event_remaining_minutes", event.remaining);
     marker.set("event_latitude", event.latitude);
     marker.set("event_longitude", event.longitude);
+    marker.set("clickOnFirstTime", true);
 
     let pictureDict = {};
     for (let i = 0; i < event.pictures.length; i++) {
@@ -204,10 +250,8 @@ function addMarker(event) {
                 + time_remaining.minutes + "m " + time_remaining.seconds + "s " + " " +
                 "remaining for event") + "</strong>" :
             "<strong>" + "This event has ended.<br>We hope you got some of the good food!" + "</strong>";
-        const tenMinsAfterPresent = ((new Date()).getTime() + 10 * 60 * 1000);
         const threeHoursAfterPresent = ((new Date()).getTime() + 3 * 60 * 60 * 1000);
         // if there are less than 10 minutes remaining then event cannot be flagged
-        const showSuffixButton = endTimeMilliSeconds > tenMinsAfterPresent;
         const maxExtensionMinutes = Math.floor((threeHoursAfterPresent - endTimeMilliSeconds) / (60 * 1000));
 
         // provides separate views for poster and consumers
@@ -231,14 +275,14 @@ function addMarker(event) {
             });
         }
 
-        loadEventImages(marker);
-
 
         infoWindow.setPosition({lat: marker.getPosition().lat(), lng: marker.getPosition().lng()});
         infoWindow.open(main_map);
 
+        loadEventImages(marker);
     })
-    oms.addMarker(marker)
+
+    oms.addMarker(marker);
 }
 
 function modifyMarkerOnClick(associatedEvent, associatedMarker) {
@@ -448,10 +492,10 @@ function updateMarkers(events) {
                     for (let i = 0; i < toBeRemovedPictureURLs.length; i++) {
                         removeEventImage(toBeRemovedPictureURLs[i]);
                     }
-                    for (let i = 0; i < tobeAddedPictureURLs.length; i++) {
-                        loadEventImage(tobeAddedPictureURLs[i], foundEvent.id);
-                    }
+                    modifyMarkerOnClick(foundEvent, foundMarker);
                     foundMarker.set("event_pictures", eventPictureDict);
+                    $("#images_" + foundMarker.get("event_id")).empty();
+                    loadImagesWhileInfoWindowIsOpen(foundMarker);
                 }
                 break;
             }

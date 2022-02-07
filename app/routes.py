@@ -5,11 +5,15 @@ from app.casclient import CasClient
 from app.helpers import delete_data, legal_title, set_color_get_time
 from app.helpers import legal_location, legal_duration, send_notifications
 from app.helpers import legal_description, legal_lat_lng, handle_and_edit_pics
-from app.helpers import legal_email, legal_fields, send_feedback_email
+from app.helpers import legal_email, legal_fields, send_feedback_email, send_flag_email
 from flask import redirect, flash, url_for
+from flask_socketio import SocketIO
 from app import app, db
-from app.models import Event, Picture, FirstTime, NotificationSubscribers
+from app.models import Event, Picture, Users, NotificationSubscribers
 from itsdangerous import URLSafeSerializer, BadData
+from sqlalchemy.sql import functions
+
+socket_io = SocketIO(app)
 
 
 @app.route('/feedbackSubmissionForm', methods=['POST'])
@@ -95,6 +99,7 @@ def manage_notification_subscriptions():
         db.session.commit()
         if wants_email:
             message = "You have subscribed to email notifications from food 4 u!"
+            socket_io.emit('subscribe', 1, broadcast=True)
             return jsonify(message=message), 200
         else:
             message = "Please move the switch to the right to subscribe to email notifications from food 4 u!"
@@ -112,9 +117,11 @@ def manage_notification_subscriptions():
         db.session.commit()
         if wants_email:
             message = "You have subscribed to email notifications from food 4 u!"
+            socket_io.emit('subscribe', 1, broadcast=True)
             return jsonify(message=message), 200
         else:
             message = "You have unsubscribed from email notifications from food 4 u!"
+            socket_io.emit('subscribe', -1, broadcast=True)
             return jsonify(message=message), 200
 
 
@@ -133,6 +140,7 @@ def unsubscribe_token(token):
     subscriber = NotificationSubscribers.query.filter_by(email_address=email).first()
     if not subscriber.wants_email:
         flash("You have successfully unsubscribed from email notifications from food 4 u!", "success")
+        socket_io.emit('subscribe', -1, broadcast=True)
         return redirect(url_for('index'))
     else:
         subscriber_search = db.session.query(NotificationSubscribers).filter(NotificationSubscribers.email_address
@@ -145,6 +153,7 @@ def unsubscribe_token(token):
         db.session.commit()
 
     flash("You have successfully unsubscribed from email notifications from food 4 u!", "success")
+    socket_io.emit('subscribe', -1, broadcast=True)
     return redirect(url_for('index'))
 
 
@@ -158,11 +167,12 @@ def index(event_id=None):
     username = username.lower().strip()
     check_first_time = False
 
-    if FirstTime.query.filter_by(net_id=username).first() is None:
+    if Users.query.filter_by(net_id=username).first() is None:
         check_first_time = True
-        first_time_user = FirstTime(net_id=username)
+        first_time_user = Users(net_id=username)
         db.session.add(first_time_user)
         db.session.commit()
+        socket_io.emit('uniqueVisitor', 1, broadcast=True)
     events_dict_list = []
     events = Event.query.all()
     db.session.commit()
@@ -189,22 +199,29 @@ def index(event_id=None):
              'net_id': event.net_id.lower().strip(),
              'end_time': event.end_time.isoformat(),
              'username': username})
+    subscribers_count = NotificationSubscribers.query.filter_by(
+        wants_email=True).count()
+    unique_visitors_count = db.session.query(Users.net_id).count()
+    posts_all_time_count = db.session.query(functions.sum(Users.posts_made)).scalar()
     if not event_id:
         html = render_template(
             "index.html", events=json.dumps(events_dict_list),
             username=username, check_first_time=check_first_time,
-            deeplinkEventID=None)
+            deeplinkEventID=None, subscribers_count=subscribers_count, unique_visitors_count=unique_visitors_count,
+            posts_all_time_count=posts_all_time_count)
     elif Event.query.filter_by(id=event_id).first() is None:
         flash("The free food event has already ended.", "error")
         html = render_template(
             "index.html", events=json.dumps(events_dict_list),
             username=username, check_first_time=check_first_time,
-            deeplinkEventID=None)
+            deeplinkEventID=None, subscribers_count=subscribers_count, unique_visitors_count=unique_visitors_count,
+            posts_all_time_count=posts_all_time_count)
     else:
         html = render_template(
             "index.html", events=json.dumps(events_dict_list),
             username=username, check_first_time=check_first_time,
-            deeplinkEventID=event_id)
+            deeplinkEventID=event_id, subscribers_count=subscribers_count, unique_visitors_count=unique_visitors_count,
+            posts_all_time_count=posts_all_time_count)
     response = make_response(html)
     return response
 
@@ -290,6 +307,11 @@ def delete_event():
         return jsonify(message=message), 400
     _ = delete_data(deleted_event)
     message = "Your event has been successfully deleted."
+    user_search = db.session.query(Users).filter(Users.net_id == username)
+    user_search.update(
+        {"posts_made": Users.posts_made - 1},
+        synchronize_session=False)
+    socket_io.emit('post_increment', -1)
     return jsonify(message=message), 200
 
 
@@ -308,19 +330,16 @@ def extend_event():
 
     extended_event_id = request.form['idForExtension']
     extended_event = Event.query.filter_by(id=extended_event_id).first()
-    
+
     if extended_event is None:
         message = "Your event has not been found. It may have been already deleted."
         return jsonify(message=message), 400
-    
 
     ongoing, marker_color_address, remaining_minutes = set_color_get_time(extended_event)
 
     if remaining_minutes + extension_duration > 180:
         message = "Your event's total time cannot exceed 3 hours."
         return jsonify(message=message), 400
-
-
 
     if username != extended_event.net_id:
         message = "Extensions must be from the original poster. Please contact them to extend the event."
@@ -352,18 +371,16 @@ def flag_event():
 
     flagged_event_id = request.form['idForFlagging']
     flagged_event = Event.query.filter_by(id=flagged_event_id).first()
-    
+
     if flagged_event is None:
         message = "The event has not been found. It may have been already deleted."
         return jsonify(message=message), 400
-    
+
     ongoing, marker_color_address, remaining_minutes = set_color_get_time(flagged_event)
 
     if remaining_minutes <= 10:
         message = "The event is already less than 10 minutes."
         return jsonify(message=message), 400
-
-
 
     if username == flagged_event.net_id:
         message = "Flags must be from not the original poster. Please use the edit form to decrease time " \
@@ -589,6 +606,10 @@ def handle_data():
         description=desc,
         end_time=end_time, duration=duration)
     db.session.add(e)
+    user_search = db.session.query(Users).filter(Users.net_id == username)
+    user_search.update(
+        {"posts_made": 1},
+        synchronize_session=False)
     pics = request.files.to_dict().values()
     create = True
     is_illegal = handle_and_edit_pics(pics, e, create)
@@ -599,6 +620,11 @@ def handle_data():
         message = "An unsupported file type was submitted. " \
                   "Please upload an image or images with file type 'png', 'jpg', 'jpeg', or 'heic' and submit again."
         return jsonify(message=message), 400
+    user_search = db.session.query(Users).filter(Users.net_id == username)
+    user_search.update(
+        {"posts_made": Users.posts_made + 1},
+        synchronize_session=False)
+    socket_io.emit('post_increment', 1)
     db.session.commit()
     send_notifications(e)
     return jsonify(success=True)

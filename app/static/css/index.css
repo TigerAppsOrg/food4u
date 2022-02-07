@@ -48,7 +48,7 @@ body {
 
 #addFoodButton:hover, [id^=directionsButton_]:hover, #editButton:hover, #deleteButton:hover,
 #notificationSubmit:hover, #feedbackSubmitButton:hover, #extendButton:hover, #flagButton:hover,
-#currentLocationButton:hover, #submitFood:hover, #cancelFood:hover, #editDeleteButton:hover, #editFood:hover{
+#currentLocationButton:hover, #submitFood:hover, #cancelFood:hover, #editDeleteButton:hover, #editFood:hover {
     cursor: pointer;
     color: white;
     background: #f58025;
@@ -228,6 +228,7 @@ body {
     background: #f58025;
     font-family: "Poppins", sans-serif;
     color: black;
+    width: 70rem;
 }
 
 
@@ -571,4 +572,26 @@ input {
     -moz-user-select: text; /* Firefox 2+ */
     -ms-user-select: text; /* IE 10+ */
     user-select: text; /* Standard syntax */
+}
+
+.elem {
+    background-color: #f58025;
+    margin: 5px;
+    animation-duration: 0.5s;
+    animation-name: slidein;
+}
+
+
+@keyframes slidein {
+    from {
+        max-height: 0px;
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    to {
+        max-height: 1000px;
+        transform: scale(1);
+        opacity: 1;
+    }
 }

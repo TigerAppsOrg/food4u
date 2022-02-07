@@ -1,1 +1,1 @@
-web: gunicorn food4uprinceton:app --preload
+web: gunicorn --worker-class eventlet -w 1 food4uprinceton:app --preload
