@@ -35,8 +35,9 @@ class Picture(db.Model):
     }
 
 
-class FirstTime(db.Model):
+class Users(db.Model):
     net_id = db.Column(db.String(20), primary_key=True)
+    posts_made = db.Column(db.Integer, default=0)
 
     def __repr__(self):
         return '<User: {}>'.format(self.net_id)
