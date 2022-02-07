@@ -191,6 +191,10 @@
         socket.on('uniqueVisitor', function (integer) {
             $("#unique-visitors-count").html(parseInt($('#unique-visitors-count').html(), 10) + integer + " people")
         })
+
+        socket.on('post_increment', function (integer) {
+            $("#number-of-posts-all-time").html(parseInt($('#number-of-posts-all-time').html(), 10) + integer + " posts")
+        })
         // End Socket_IO
 
         {% if check_first_time %}

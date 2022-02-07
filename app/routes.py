@@ -201,22 +201,26 @@ def index(event_id=None):
     subscribers_count = NotificationSubscribers.query.filter_by(
         wants_email=True).count()
     unique_visitors_count = db.session.query(Users.net_id).count()
+    posts_all_time_count = db.session.query(functions.sum(Users.posts_made)).scalar()
     if not event_id:
         html = render_template(
             "index.html", events=json.dumps(events_dict_list),
             username=username, check_first_time=check_first_time,
-            deeplinkEventID=None, subscribers_count=subscribers_count, unique_visitors_count=unique_visitors_count)
+            deeplinkEventID=None, subscribers_count=subscribers_count, unique_visitors_count=unique_visitors_count,
+            posts_all_time_count=posts_all_time_count)
     elif Event.query.filter_by(id=event_id).first() is None:
         flash("The free food event has already ended.", "error")
         html = render_template(
             "index.html", events=json.dumps(events_dict_list),
             username=username, check_first_time=check_first_time,
-            deeplinkEventID=None, subscribers_count=subscribers_count, unique_visitors_count=unique_visitors_count)
+            deeplinkEventID=None, subscribers_count=subscribers_count, unique_visitors_count=unique_visitors_count,
+            posts_all_time_count=posts_all_time_count)
     else:
         html = render_template(
             "index.html", events=json.dumps(events_dict_list),
             username=username, check_first_time=check_first_time,
-            deeplinkEventID=event_id, subscribers_count=subscribers_count, unique_visitors_count=unique_visitors_count)
+            deeplinkEventID=event_id, subscribers_count=subscribers_count, unique_visitors_count=unique_visitors_count,
+            posts_all_time_count=posts_all_time_count)
     response = make_response(html)
     return response
 
@@ -302,6 +306,11 @@ def delete_event():
         return jsonify(message=message), 400
     _ = delete_data(deleted_event)
     message = "Your event has been successfully deleted."
+    user_search = db.session.query(Users).filter(Users.net_id == username)
+    user_search.update(
+        {"posts_made": Users.posts_made - 1},
+        synchronize_session=False)
+    socket_io.emit('post_increment', -1)
     return jsonify(message=message), 200
 
 
@@ -610,6 +619,11 @@ def handle_data():
         message = "An unsupported file type was submitted. " \
                   "Please upload an image or images with file type 'png', 'jpg', 'jpeg', or 'heic' and submit again."
         return jsonify(message=message), 400
+    user_search = db.session.query(Users).filter(Users.net_id == username)
+    user_search.update(
+        {"posts_made": Users.posts_made + 1},
+        synchronize_session=False)
+    socket_io.emit('post_increment', 1)
     db.session.commit()
     send_notifications(e)
     return jsonify(success=True)
