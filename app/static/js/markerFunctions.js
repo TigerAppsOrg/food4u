@@ -39,13 +39,12 @@ function loadEventImages(marker) {
     let markerEventPicturesDict = marker.get("event_pictures");
     let markerEventID = marker.get("event_id");
     $.each(markerEventPicturesDict, function (pictureName, pictureURL) {
-        loadEventImage(pictureURL, markerEventID)
-
+        loadEventImage(pictureURL, markerEventID, Object.keys(markerEventPicturesDict).length);
     })
 }
 
-function loadEventImage(eventPictureURL, eventID) {
-    loadImage(eventPictureURL.replace(/^http:\/\//i, 'https://'), '#images_' + eventID)
+function loadEventImage(eventPictureURL, eventID, eventPicLength) {
+    loadImage(eventPictureURL.replace(/^http:\/\//i, 'https://'), '#images_' + eventID, eventPicLength)
 }
 
 function removeEventImage(eventPictureURL) {
@@ -53,15 +52,22 @@ function removeEventImage(eventPictureURL) {
 }
 
 // Loads associated event images
-function loadImage(path, target) {
-    $('<img src="' + path + ' "style="width:100%;max-width:310px;margin-top:2%" class="image">')
-        .on('load', function () {
-            $(this).appendTo(target);
-            $(this).on("click", function () {
-                modalImg.style.display = "block";
-                modalImgContent.src = this.src;
-            });
-        });
+function loadImage(path, target, eventPicLength) {
+    google.maps.event.addListener(infoWindow, 'domready', function () {
+        setTimeout(function () {
+            if ($(target).children().length >= eventPicLength) {
+                // pass
+            } else {
+                let dynamicHeight = Math.ceil(Math.random() * 30) + 100;
+                let imageTag = $('<img src="' + path + ' "style="height=' + dynamicHeight + 'px;width:100%;max-width:310px;margin-top:2%" class="image elem">');
+                imageTag.appendTo(target);
+                imageTag.on("click", function () {
+                    modalImg.style.display = "block";
+                    modalImgContent.src = this.src;
+                });
+            }
+        })
+    });
 }
 
 function removeImage(path) {
@@ -204,10 +210,8 @@ function addMarker(event) {
                 + time_remaining.minutes + "m " + time_remaining.seconds + "s " + " " +
                 "remaining for event") + "</strong>" :
             "<strong>" + "This event has ended.<br>We hope you got some of the good food!" + "</strong>";
-        const tenMinsAfterPresent = ((new Date()).getTime() + 10 * 60 * 1000);
         const threeHoursAfterPresent = ((new Date()).getTime() + 3 * 60 * 60 * 1000);
         // if there are less than 10 minutes remaining then event cannot be flagged
-        const showSuffixButton = endTimeMilliSeconds > tenMinsAfterPresent;
         const maxExtensionMinutes = Math.floor((threeHoursAfterPresent - endTimeMilliSeconds) / (60 * 1000));
 
         // provides separate views for poster and consumers
@@ -233,12 +237,13 @@ function addMarker(event) {
 
         loadEventImages(marker);
 
-
         infoWindow.setPosition({lat: marker.getPosition().lat(), lng: marker.getPosition().lng()});
         infoWindow.open(main_map);
 
+
     })
-    oms.addMarker(marker)
+
+    oms.addMarker(marker);
 }
 
 function modifyMarkerOnClick(associatedEvent, associatedMarker) {
