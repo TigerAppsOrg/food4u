@@ -607,15 +607,11 @@ def handle_data():
         description=desc,
         end_time=end_time, duration=duration)
     db.session.add(e)
-    user_search = db.session.query(Users).filter(Users.net_id == username)
-    user_search.update(
-        {"posts_made": 1},
-        synchronize_session=False)
     pics = request.files.to_dict().values()
     create = True
     is_illegal = handle_and_edit_pics(pics, e, create)
     if is_illegal == 1:
-        message = "More than 5 photos submitted. Please upload 5 or fewer images and submit again."
+        message = "There are more than 5 photos submitted. Please edit to have 5 or fewer images or submit again."
         return jsonify(message=message), 400
     if is_illegal == 2:
         message = "An unsupported file type was submitted. " \
