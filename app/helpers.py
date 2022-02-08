@@ -218,8 +218,6 @@ def legal_lat_lng(latitude, longitude):
 
 # Picture error handling
 def handle_and_edit_pics(pics, event, created_event, pics_to_delete=None):
-    if len(pics) > 5:
-        return 1
     ALLOWED_EXTENSIONS_LOWER = {'png', 'jpg', 'jpeg', 'heic'}
 
     def allowed_file_lower(filename):
@@ -244,13 +242,21 @@ def handle_and_edit_pics(pics, event, created_event, pics_to_delete=None):
                 url = ".".join(url_split)
                 name = pic.filename
                 if created_event:
+                    event_id = Event.query.order_by(
+                            Event.post_time.desc()).first().id
+                    if len(pics) + Picture.query.filter_by(
+                            event_id=event_id).count() > 5:
+                        return 1
                     p = Picture(
-                        event_id=Event.query.order_by(
-                            Event.post_time.desc()).first().id,
+                        event_id=event_id,
                         event_picture=url, public_id=public_id, event=event, name=name)
                 else:
+                    event_id = event.first().id
+                    if len(pics) + Picture.query.filter_by(
+                            event_id=event_id).count() > 5:
+                        return 1
                     p = Picture(
-                        event_id=event.first().id,
+                        event_id=event_id,
                         event_picture=url, public_id=public_id, event=event.first(), name=name)
                 db.session.add(p)
             else:
