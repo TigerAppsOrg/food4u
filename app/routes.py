@@ -624,7 +624,7 @@ def handle_data():
     user_search.update(
         {"posts_made": Users.posts_made + 1},
         synchronize_session=False)
-    socket_io.emit('post_increment', 1)
+    socket_io.emit('postIncrement', 1, broadcast=True)
     db.session.commit()
     send_notifications(e)
     return jsonify(success=True)
