@@ -504,7 +504,12 @@ function updateMarkers(events) {
         // say "This event has ended..."
         if (!found) {
             foundMarker.setMap(null);
+            let eventID = foundMarker.get("event_id")
             foundMarker.set("event_end_time", "1970-01-01T00:00:00.000000");
+            // handles get directions button dynamically when infowindow is open
+            $('#directionsButton_' + eventID).remove();
+            // handles flag button dynamically when infowindow is open
+            $('#suffix_button_' + eventID).empty();
         }
     }
 }
