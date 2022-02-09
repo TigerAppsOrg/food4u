@@ -4,6 +4,7 @@ function initFormMap() {
         center: princetonCoords,
         clickableIcons: false,
         streetViewControl: false,
+        fullscreenControl: true,
     });
 
 
@@ -84,7 +85,8 @@ function initEditFormMap() {
     editFormMap = new google.maps.Map(document.getElementById("map_canvas_edit"), {
         zoom: 17,
         center: princetonCoords,
-        clickableIcons: false
+        clickableIcons: false,
+        fullscreenControl: true,
     });
 
 

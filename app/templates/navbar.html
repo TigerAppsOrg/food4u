@@ -30,6 +30,10 @@
                 <li><a href="#" data-toggle="modal" data-target="#aboutModal">About</a></li>
                 <li><a href="#" data-toggle="modal" data-target="#activityModal">Stats</a></li>
                 <li><a href="#" data-toggle="modal" data-target="#newsModal">News</a></li>
+                <li><a data-toggle="modal"
+                       data-target="#notificationModal" onclick="fetchNotificationPreferences()"
+                       id="openNotificationSettings">Notification Settings</a>
+                </li>
             </ul>
             <button id="addFoodButton" type="button" class="btn btn-primary navbar-btn" data-toggle="modal"
                     data-target="#inputFormModal">
@@ -42,10 +46,7 @@
                         {{ username }}<span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a data-toggle="modal"
-                               data-target="#notificationModal" onclick="fetchNotificationPreferences()"
-                               id="openNotificationSettings">Notification Settings</a>
-                        </li>
+
                         <li><a onclick="tutorialAgain()" id="tutorial">Tutorial</a></li>
                         <li><a data-toggle="modal" data-target="#feedbackModal" id="openFeedback">Feedback</a></li>
                         <li><a href="/logout">Logout</a></li>
