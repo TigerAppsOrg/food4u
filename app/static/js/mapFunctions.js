@@ -123,7 +123,7 @@ function initEditFormMap() {
 
 function initMap() {
     main_map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 16,
+        zoom: 14,
         center: princetonCoords,
         clickableIcons: false,
         streetViewControl: false,
