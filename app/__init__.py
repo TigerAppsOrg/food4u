@@ -6,6 +6,7 @@ from flask_cors import CORS
 
 # from flask_mail import Mail
 
+
 app = Flask(__name__)
 CORS(app)
 # mail = Mail(app)

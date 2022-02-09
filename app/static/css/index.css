@@ -455,29 +455,133 @@ td {
 
 @media all and (min-width: 569px) and (max-width: 768px) {
     #marker_content {
-        max-width: 100px; /* or whatever width you want. */
+        max-width: 205px !important; /* or whatever width you want. */
         display: inline-block;
+    }
+
+    #extendButton {
+        font-size: xx-small !important;
+    }
+
+    #editButton {
+        font-size: xx-small !important;
+    }
+
+    #deleteButton {
+        font-size: xx-small !important;
+    }
+
+    #durationOfExtension {
+        font-size: xx-small !important;
+        height: 2.7rem !important;
+        margin-top: 0.5px !important;
+        margin-bottom: -0.5px !important;
+    }
+
+    #durationOfExtensionAddOn {
+        font-size: xx-small !important;
+        height: 2.7rem !important;
+        position: relative !important;
+        top: 0.5px !important;
     }
 }
 
 @media all and (min-width: 481px) and (max-width: 568px) {
     #marker_content {
-        max-width: 100px; /* or whatever width you want. */
+        max-width: 205px !important; /* or whatever width you want. */
         display: inline-block;
+    }
+
+    #extendButton {
+        font-size: xx-small !important;
+    }
+
+    #editButton {
+        font-size: xx-small !important;
+    }
+
+    #deleteButton {
+        font-size: xx-small !important;
+    }
+
+    #durationOfExtension {
+        font-size: xx-small !important;
+        height: 2.7rem !important;
+        margin-top: 0.5px !important;
+        margin-bottom: -0.5px !important;
+    }
+
+    #durationOfExtensionAddOn {
+        font-size: xx-small !important;
+        height: 2.7rem !important;
+        position: relative !important;
+        top: 0.5px !important;
     }
 }
 
 @media all and (min-width: 321px) and (max-width: 480px) {
     #marker_content {
-        max-width: 100px; /* or whatever width you want. */
+        max-width: 205px !important; /* or whatever width you want. */
         display: inline-block;
+    }
+
+    #extendButton {
+        font-size: xx-small !important;
+    }
+
+    #editButton {
+        font-size: xx-small !important;
+    }
+
+    #deleteButton {
+        font-size: xx-small !important;
+    }
+
+    #durationOfExtension {
+        font-size: xx-small !important;
+        height: 2.7rem !important;
+        margin-top: 0.5px !important;
+        margin-bottom: -0.5px !important;
+    }
+
+    #durationOfExtensionAddOn {
+        font-size: xx-small !important;
+        height: 2.7rem !important;
+        position: relative !important;
+        top: 0.5px !important;
     }
 }
 
 @media all and (min-width: 0px) and (max-width: 320px) {
     #marker_content {
-        max-width: 100px; /* or whatever width you want. */
+        max-width: 205px !important; /* or whatever width you want. */
         display: inline-block;
+    }
+
+    #extendButton {
+        font-size: xx-small !important;
+    }
+
+    #editButton {
+        font-size: xx-small !important;
+    }
+
+    #deleteButton {
+        font-size: xx-small !important;
+    }
+
+    #durationOfExtension {
+        font-size: xx-small !important;
+        height: 2.7rem !important;
+        margin-top: 0.5px !important;
+        margin-bottom: -0.5px !important;
+    }
+
+    #durationOfExtensionAddOn {
+        font-size: xx-small !important;
+        height: 2.7rem !important;
+        position: relative !important;
+        top: 0.5px !important;
     }
 }
 
@@ -595,3 +699,13 @@ input {
         opacity: 1;
     }
 }
+
+    #durationOfExtension {
+        margin-top: 0.5px !important;
+        margin-bottom: -0.5px !important;
+    }
+
+    #durationOfExtensionAddOn {
+        position: relative !important;
+        top: 0.5px !important;
+    }
