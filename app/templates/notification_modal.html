@@ -33,7 +33,7 @@
                                                             <label for="notificationName" class="col-form-label">Preferred Name</label>
 
                                         <input type="text" id="notificationName" class="inputOrEditTextBox form-control" name="name"
-                                               maxlength="30" required>
+                                               maxlength="30" data-name="{{ username | safe }}" required>
 
                                 </div>
                             </td>
@@ -45,6 +45,7 @@
                                         <label class="switch" for="notificationEmailSwitch">
                                             <input type="checkbox" id="notificationEmailSwitch" name="emailSwitch"
                                                    class="custom-control-label" value="email" data-on-color="primary"
+
                                                    formnovalidate>
                                             <span class="slider round"></span>
                                         </label>
@@ -62,7 +63,8 @@
                                         <input type="email" pattern=".+@.+\..+"
                                                title="netid@princeton.edu or departmental email"
                                                id="notificationEmailAddress" class="inputOrEditTextBox form-control"
-                                               name="emailAddress" maxlength="30" required>
+                                               name="emailAddress" maxlength="30"
+                                               data-email="{{ username | safe }}@princeton.edu" required>
 
                                 </div>
                             </td>

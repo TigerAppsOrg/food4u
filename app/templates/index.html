@@ -198,6 +198,8 @@
         // End Socket_IO
 
         {% if check_first_time %}
+            $("#notificationName").val($('#notificationName').data('name'));
+            $("#notificationEmailAddress").val($('#notificationEmailAddress').data('email'));
             tutorial();
         {% endif %}
         {% if deeplinkEventID %}
