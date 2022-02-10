@@ -313,6 +313,9 @@ def delete_event():
         synchronize_session=False)
     socket_io.emit('postIncrement', -1, broadcast=True)
     # socket_io.emit('fetchEvents', fetch_events(), broadcast=True);
+    user_search.update(
+        {"posts_made": Users.posts_made - 1},
+        synchronize_session=False)
     return jsonify(message=message), 200
 
 

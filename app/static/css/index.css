@@ -700,12 +700,20 @@ input {
     }
 }
 
-    #durationOfExtension {
-        margin-top: 0.5px !important;
-        margin-bottom: -0.5px !important;
-    }
+#durationOfExtension {
+    margin-top: 0.5px !important;
+    margin-bottom: -0.5px !important;
+}
 
-    #durationOfExtensionAddOn {
-        position: relative !important;
-        top: 0.5px !important;
-    }
+#durationOfExtensionAddOn {
+    position: relative !important;
+    top: 0.5px !important;
+}
+
+.slider {
+    background-color: red !important;
+}
+
+input:checked + .slider {
+    background-color: green !important;
+}
