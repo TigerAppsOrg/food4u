@@ -115,13 +115,13 @@ introAgain.setOptions({
             intro: "<h4><b>Finding You on the Map</b></h4>  If you're on campus, " +
                 "You'll also see a blue dot marking your current location to see "
                 + "where you are relative to the food!" +
-                " Click \"Map\" in the top navigation bar to reset the map view to be centered on your current location."
+                " Click \"Recenter Map\" in the top navigation bar to reset the map view to be centered on your current location."
         },
         {
             element: "#openNotificationSettings",
             intro: "<h4><b>Notification Settings</b></h4> If you would like" +
-                " to be notified about free food events, click on the dropdown menu" +
-                " in the top right then select \"Notification Settings\". There, you can" +
+                " to be notified about free food events, " +
+                "select \"Notification Settings\". There, you can" +
                 " subscribe to email notifications for new events.",
             position: 'left'
         },
