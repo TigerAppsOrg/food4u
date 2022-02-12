@@ -317,6 +317,8 @@ def going_to_event():
         if is_attendee is None:
             # is going
             if switch_on:
+                attendee = Attendees(event_id=going_event_id, net_id=username, going=True)
+                db.session.add(attendee)
                 user_search.update(
                     {"events_going": Users.events_going + 1,
                      "events_responded": Users.events_responded + 1},
@@ -328,7 +330,9 @@ def going_to_event():
                 message = "You successfully responded that you are going to this event!"
                 return jsonify(message=message), 200
             else:
-                # is not going
+                # is not
+                attendee = Attendees(event_id=going_event_id, net_id=username, going=False)
+                db.session.add(attendee)
                 user_search.update(
                     {"events_responded": Users.events_responded + 1},
                     synchronize_session=False)
@@ -339,15 +343,29 @@ def going_to_event():
                 return jsonify(message=message), 200
         else:
             # If already on attendees list
-            if switch_on:
+            if switch_on and is_attendee.going:
                 message = "You already responded that you were going to this event!"
                 return jsonify(message=message), 400
+            elif switch_on and not is_attendee.going:
+                user_search.update(
+                    {"events_going": Users.events_going + 1},
+                    synchronize_session=False)
+                going_event_search.update({"not_planning_to_go": Event.not_planning_to_go - 1,
+                                           "planning_to_go": Event.planning_to_go} + 1,
+                                          synchronize_session=False)
+                db.session.commit()
+                message = "You successfully responded that you are going to this event!"
+                return jsonify(message=message), 200
+            elif not switch_on and not is_attendee.going:
+                message = "You already responded that you were not going to this event!"
+                return jsonify(message=message), 400
             else:
-                db.session.delete(is_attendee)
+                # not switch and going
                 user_search.update(
                     {"events_going": Users.events_going - 1},
                     synchronize_session=False)
-                going_event_search.update({"not_planning_to_go": Event.not_planning_to_go - 1},
+                going_event_search.update({"not_planning_to_go": Event.not_planning_to_go + 1,
+                                           "planning_to_go": Event.planning_to_go} - 1,
                                           synchronize_session=False)
                 db.session.commit()
                 message = "You successfully responded that you are not going to this event!"

@@ -52,6 +52,7 @@ class Attendees(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'), primary_key=False)
     net_id = db.Column(db.String(20), primary_key=False)
+    going = db.Column(db.Boolean, default=None)
 
     def __repr__(self):
         return '<Attendee: {}>'.format(self.net_id)
