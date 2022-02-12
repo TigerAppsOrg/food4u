@@ -14,9 +14,38 @@
         </strong>
     </h1>
     <div id=bodyContent>
-        <p>
-            Posted by: <strong>{{ event.net_id }}</strong>
-        </p>
+
+        {% if event_remaining_minutes > 0 %}
+            <span id="going_line_{{ event.id }}">
+            Staying at Your Event?
+            </span>
+
+            <button type="submit" class="btn btn-success btn-xs shadow-none"
+                    id="goingButton" form="goingForm" onclick="goingWithoutRefresh(); return false">
+                Yes
+            </button>
+            <button type="submit" class="btn btn-danger btn-xs"
+                    id="goingButton" form="goingForm" onclick="notGoingWithoutRefresh(); return false">
+                No
+            </button>
+            <div id="going_button_{{ event.id }}">
+                <form action="/handleGoing" id="goingForm" method="post" enctype="multipart/form-data">
+                    <input type="text" class="input-hidden" id="idForGoing" name="idForGoing"
+                           value="{{ event.id }}">
+                    <input type="checkbox" id="goingSwitch" name="goingSwitch" hidden>
+                </form>
+            </div>
+            <br>
+        {% endif %}
+
+        <div id="attendance_info_{{ event.id }}">
+            <span>Total Number of People Going: {{ number_of_people_going }} people </span> <br>
+            <span>Going "Yes" Percentage: {{ going_percentage }}% </span> <br>
+            <span>Host is Staying at Event? {{ is_host_there }} </span> <br>
+            {#            <span>Number of People Planning to Go Since Last Edit: </span> <br>#}
+        </div>
+        <br>
+
         <p id="remaining_time_{{ event.id }}">
             <strong>{{ remaining_time_message }}
             </strong>
@@ -46,6 +75,9 @@
         <div id="images_{{ event.id }}"></div>
 
         </p>
+        <p>
+            Posted by: <strong>{{ event.net_id }}</strong>
+        </p>
     </div>
     <div>
         <form action=/handleEventDelete
@@ -59,12 +91,12 @@
                 <td align=left>
                     <form action=/handleEventExtend id="extendForm" method="post" enctype="multipart/form-data"
                           style="width: 100%; height: 100%; margin-top:3px">
-                        <div class="input-group" id="minutesExtensionBox"style="width: 100%; height: 100%;">
+                        <div class="input-group" id="minutesExtensionBox" style="width: 100%; height: 100%;">
                             <input type=number class=form-control id=durationOfExtension name=durationOfExtension
                                    value=30 required min=5 max=180>
                             <span id=durationOfExtensionAddOn class="input-group-addon">
                                             min
-                                        </span>
+                            </span>
                         </div>
                         <input type=text class=input-hidden id=idForExtension name=idForExtension
                                value={{ event.id }}>
@@ -72,7 +104,8 @@
                 </td>
                 <td align=right>
                     <button type=submit id="extendButton" form="extendForm" class="btn btn-secondary"
-                            style="width:100%; height:100%; vertical-align:top" onclick="extendWithoutRefresh();return false">
+                            style="width:100%; height:100%; vertical-align:top"
+                            onclick="extendWithoutRefresh();return false">
                         Extend Your Event
                     </button>
                 </td>

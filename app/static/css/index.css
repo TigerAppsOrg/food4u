@@ -718,3 +718,8 @@ input {
 input:checked + .slider {
     background-color: green !important;
 }
+
+.btn:focus {
+  outline: none;
+  box-shadow: none;
+}

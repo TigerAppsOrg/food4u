@@ -94,14 +94,13 @@ function prePopulateNotificationPreferences(notificationPreferences) {
 
     if (notificationPreferences.wantsEmail !== undefined) {
         $("#notificationEmailSwitch").prop('checked', notificationPreferences.wantsEmail);
-        $("#notificationEmailAddress").prop('required', notificationPreferences.wantsEmail);
     }
 
     if (notificationPreferences.wantsEmail === undefined) {
         if ($("#notificationEmailSwitch").is(':checked')) {
             // pass
         } else {
-            $("#notificationEmailSwitch").prop('checked', true)
+            $("#notificationEmailSwitch").prop('checked', true);
         }
     }
 }

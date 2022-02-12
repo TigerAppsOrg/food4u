@@ -313,3 +313,19 @@ def legal_fields(title, building, room):
 def clean_html(raw_html):
     html_tags = re.findall('<.*?>', raw_html)
     return html_tags
+
+
+def get_attendance(event):
+    number_of_people_going = event.planning_to_go
+    try:
+        going_percentage = int(number_of_people_going / (number_of_people_going + event.not_planning_to_go) * 100)
+    except ZeroDivisionError:
+        going_percentage = 0
+    is_host_there = event.host_staying
+    if is_host_there is None:
+        host_message = "No response"
+    elif is_host_there:
+        host_message = "Yes"
+    else:
+        host_message = "No"
+    return number_of_people_going, going_percentage, host_message
