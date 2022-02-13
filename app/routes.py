@@ -324,8 +324,6 @@ def going_to_event():
                      "events_responded": Users.events_responded + 1},
                     synchronize_session=False)
                 going_event_search.update({"planning_to_go": Event.planning_to_go + 1}, synchronize_session=False)
-                attendee = Attendees(event_id=going_event_id, net_id=username)
-                db.session.add(attendee)
                 db.session.commit()
                 message = "You successfully responded that you are going to this event!"
                 return jsonify(message=message), 200
@@ -351,7 +349,7 @@ def going_to_event():
                     {"events_going": Users.events_going + 1},
                     synchronize_session=False)
                 going_event_search.update({"not_planning_to_go": Event.not_planning_to_go - 1,
-                                           "planning_to_go": Event.planning_to_go} + 1,
+                                           "planning_to_go": Event.planning_to_go + 1},
                                           synchronize_session=False)
                 db.session.commit()
                 message = "You successfully responded that you are going to this event!"
@@ -365,7 +363,7 @@ def going_to_event():
                     {"events_going": Users.events_going - 1},
                     synchronize_session=False)
                 going_event_search.update({"not_planning_to_go": Event.not_planning_to_go + 1,
-                                           "planning_to_go": Event.planning_to_go} - 1,
+                                           "planning_to_go": Event.planning_to_go - 1},
                                           synchronize_session=False)
                 db.session.commit()
                 message = "You successfully responded that you are not going to this event!"
