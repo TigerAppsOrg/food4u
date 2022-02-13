@@ -2,7 +2,7 @@ from flask import url_for
 import re
 from app import app, db
 from app.models import Event, Picture
-from app.models import NotificationSubscribers
+from app.models import NotificationSubscribers, Attendees
 import cloudinary.uploader
 import math
 import datetime
@@ -140,8 +140,18 @@ def delete_all_pics(event):
             result = cloudinary.uploader.destroy(pic_to_be_deleted.public_id, invalidate=True)
 
 
+def delete_all_going(event):
+    event_id = event.id
+    people_going = Attendees.query.filter_by(
+        event_id=event_id).all()
+    for people in people_going:
+        db.session.delete(people)
+    db.session.commit()
+
+
 def delete_data(event):
     delete_all_pics(event)
+    delete_all_going(event)
     db.session.delete(event)
     db.session.commit()
 
