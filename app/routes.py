@@ -268,6 +268,7 @@ def fetch_events():
             pictures = event.pictures.all()
             db.session.commit()
             pictureList = [[picture.event_picture, picture.name] for picture in pictures]
+            number_of_people_going, going_percentage, host_message = get_attendance(event)
             if username == event.net_id:
                 ongoing, marker_color_address, remaining_minutes = set_color_get_time(
                     event, True)
@@ -282,7 +283,10 @@ def fetch_events():
                  'remaining': remaining_minutes, 'id': event.id,
                  'net_id': event.net_id.lower().strip(),
                  'end_time': event.end_time.isoformat(),
-                 'username': username
+                 'username': username,
+                 'people_going': number_of_people_going,
+                 'going_percentage': going_percentage,
+                 'host_message': host_message,
                  })
         return jsonify(events_dict_list)
     return jsonify(events_dict_list)
