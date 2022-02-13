@@ -431,7 +431,7 @@ def going_to_event():
                 return jsonify(message=message), 400
             else:
                 # not switch and going
-                attendee_search.update({"going": True}, synchronize_session=False)
+                attendee_search.update({"going": False}, synchronize_session=False)
                 user_search.update(
                     {"events_going": Users.events_going - 1},
                     synchronize_session=False)
