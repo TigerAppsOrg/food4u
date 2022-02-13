@@ -144,8 +144,9 @@ def delete_all_going(event):
     event_id = event.id
     people_going = Attendees.query.filter_by(
         event_id=event_id).all()
-    for people in people_going:
-        db.session.delete(people)
+    if people_going:
+        for people in people_going:
+            db.session.delete(people)
     db.session.commit()
 
 
