@@ -201,6 +201,9 @@ function addMarker(event) {
     marker.set("event_latitude", event.latitude);
     marker.set("event_longitude", event.longitude);
     marker.set("clickOnFirstTime", true);
+    marker.set("people_going", event.people_going);
+    marker.set("going_percentage", event.going_percentage);
+    marker.set("host_message", event.host_message);
 
     let pictureDict = {};
     for (let i = 0; i < event.pictures.length; i++) {
@@ -391,6 +394,21 @@ function updateMarkers(events) {
             let foundEvent = events[j];
             if (foundEvent.id === foundMarker.get('event_id')) {
                 found = true;
+
+                if (foundMarker.get("people_going") !== foundEvent.people_going) {
+                    foundMarker.set("people_going", foundEvent.people_going);
+                    $("#attendance_info_" + foundEvent.id).find("#numberOfPeopleGoing").text(foundEvent.people_going);
+                }
+                if (foundMarker.get("going_percentage") !== foundEvent.going_percentage) {
+                    foundMarker.set("going_percentage", foundEvent.going_percentage);
+                    $("#attendance_info_" + foundEvent.id).find("#goingPercentage").
+                    text(foundEvent.going_percentage);
+                }
+                if (foundMarker.get("host_message") !== foundEvent.host_message) {
+                    foundMarker.set("host_message", foundEvent.host_message);
+                    $("#attendance_info_" + foundEvent.id).find("#isHostThere").
+                    text(foundEvent.host_message);
+                }
                 // If end_time is different, update
                 if (foundMarker.get("event_end_time") !== foundEvent.end_time) {
                     foundMarker.set("event_end_time", foundEvent.end_time);
@@ -453,15 +471,15 @@ function updateMarkers(events) {
                     if (foundMarker.icon.url === "/static/images/red_logo_mini.png") {
                         $('#going_line_' + foundEvent.id).remove();
                     } else if ($('#goingLineOptional_' + foundEvent.id).children().length === 0) {
-                        let stringToAppend = '<span id=\"going_line_'+ foundEvent.id + "\">Going to this Event?"
+                        let stringToAppend = '<span id=\"going_line_' + foundEvent.id + "\">Going to this Event?"
                             + "<button type=\"submit\" class=\"btn btn-success btn-xs shadow-none\" " +
-                    " id=\"goingButton\" form=\"goingForm\" onclick=\"goingWithoutRefresh(); return false\">" +
-                "Yes </button>" + "<button type=\"submit\" class=\"btn btn-danger btn-xs\"" +
-                    "id=\"goingButton\" form=\"goingForm\" onclick=\"notGoingWithoutRefresh(); return false\">" +
-                "No </button>" + "<div><form action=\"/handleGoing\" id=\"goingForm\" method=\"post\" " +
+                            " id=\"goingButton\" form=\"goingForm\" onclick=\"goingWithoutRefresh(); return false\">" +
+                            "Yes </button>" + "<button type=\"submit\" class=\"btn btn-danger btn-xs\"" +
+                            "id=\"goingButton\" form=\"goingForm\" onclick=\"notGoingWithoutRefresh(); return false\">" +
+                            "No </button>" + "<div><form action=\"/handleGoing\" id=\"goingForm\" method=\"post\" " +
                             "encType=\"multipart/form-data\">" +
-                    "<input type=\"text\" class=\"input-hidden\" id=\"idForGoing\" name=\"idForGoing\"" +
-                           ' value=\"'+ foundEvent.id +'\">' + '<input type="checkbox" id="goingSwitch" ' +
+                            "<input type=\"text\" class=\"input-hidden\" id=\"idForGoing\" name=\"idForGoing\"" +
+                            ' value=\"' + foundEvent.id + '\">' + '<input type="checkbox" id="goingSwitch" ' +
                             'name="goingSwitch" hidden>' + "</form></div><br></span>"
                         $('#goingLineOptional_' + foundEvent.id).append(stringToAppend);
                     }
