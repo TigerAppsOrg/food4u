@@ -419,8 +419,8 @@ def going_to_event():
                 user_search.update(
                     {"events_going": Users.events_going + 1},
                     synchronize_session=False)
-                going_event_search.update({"not_planning_to_go": Event.not_planning_to_go + 1,
-                                           "planning_to_go": Event.planning_to_go - 1,
+                going_event_search.update({"not_planning_to_go": Event.not_planning_to_go - 1,
+                                           "planning_to_go": Event.planning_to_go + 1,
                                            "host_staying": True},
                                           synchronize_session=False)
                 db.session.commit()
