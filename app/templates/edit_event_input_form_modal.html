@@ -112,7 +112,7 @@
                     <div class="form-group">
                         <label for="message-text" class="col-form-label">Description</label>
                         <textarea class="form-control" name="description" accept="image/*" id="edit_description"
-                                  style="white-space: pre-wrap;" maxlength="500"></textarea>
+                                  style="white-space: pre-line;" maxlength="500"></textarea>
                     </div>
                     <input type="text" class="input-hidden" id="pic_URLs_for_deletion" name="pic_URLs_for_deletion"
                            readonly>
@@ -128,7 +128,8 @@
                 <button type="button" id="cancelFood" class="btn btn-secondary" data-dismiss="modal">
                     Cancel
                 </button>
-                <button type=submit id="editDeleteButton" form="editDeleteForm" class="btn btn-primary" onclick="deleteWithoutRefresh(); return false">
+                <button type=submit id="editDeleteButton" form="editDeleteForm" class="btn btn-primary"
+                        onclick="deleteWithoutRefresh(); return false">
                     Delete Your Event
                 </button>
                 <button type="submit" onclick="getEditFormCoordinates()" form="edit-form" id="editFood"

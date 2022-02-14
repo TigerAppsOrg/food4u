@@ -62,17 +62,10 @@
 
         <div class="descriptionOptional">
             {% if event.description != "N/A" %}
-                <div>
-                    Description:
-
+                <div>Description:
                     <strong>
-                        <div id="event_description_{{ event.id }}" style="white-space: pre-wrap;">
-                            {{ event.description }}
-                        </div>
-                    </strong>
-                </div>
-            {% endif %}
-        </div>
+                        <div id="event_description_{{ event.id }}" style="white-space: pre-line;">{{ event.description }}</div></strong></div>
+            {% endif %}</div>
         <div id="images_{{ event.id }}"></div>
 
         </p>
