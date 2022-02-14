@@ -643,6 +643,7 @@ def handle_data_edit():
                   "Please upload an image or images with file type 'png', 'jpg', 'jpeg', or 'heic' and submit again."
         return jsonify(message=message), 400
     db.session.commit()
+    socket_io.emit('update', fetch_events(), broadcast=True)
     return jsonify(success=True)
 
 
@@ -751,6 +752,7 @@ def handle_data():
     socket_io.emit('postIncrement', 1, broadcast=True)
     db.session.commit()
     send_notifications(e)
+    socket_io.emit('update', fetch_events(), broadcast=True)
     return jsonify(success=True)
 
 
