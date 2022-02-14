@@ -340,3 +340,44 @@ def get_attendance(event):
     else:
         host_message = "No"
     return number_of_people_going, going_percentage, host_message
+
+
+def fetch_events():
+    username = "ben"
+    username = username.lower().strip()
+    # username = CasClient().authenticate()
+    # username = username.lower().strip()
+
+    events_dict_list = []
+    events = Event.query.all()
+    db.session.commit()
+    for event in events:
+        ongoing, marker_color_address, remaining_minutes = set_color_get_time(
+            event)
+        if not ongoing:
+            continue
+        pictures = event.pictures.all()
+        db.session.commit()
+        pictureList = [[picture.event_picture, picture.name] for picture in pictures]
+        number_of_people_going, going_percentage, host_message = get_attendance(event)
+        if username == event.net_id:
+            ongoing, marker_color_address, remaining_minutes = set_color_get_time(
+                event, True)
+        events_dict_list.append(
+            {'title': event.title, 'building': event.building,
+             'room': event.room,
+             'latitude': event.latitude,
+             'longitude': event.longitude,
+             'description': event.description,
+             'pictures': pictureList,
+             'icon': marker_color_address,
+             'remaining': remaining_minutes, 'id': event.id,
+             'net_id': event.net_id.lower().strip(),
+             'end_time': event.end_time.isoformat(),
+             'username': username,
+             'people_going': number_of_people_going,
+             'going_percentage': going_percentage,
+             'host_message': host_message,
+             })
+        return events_dict_list
+    return events_dict_list

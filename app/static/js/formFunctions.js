@@ -51,7 +51,6 @@ function dropzoneInit() {
                             success: function () {
                                 notyf.success('Your new event has been successfully submitted!');
                                 $('#submit-form').trigger("reset");
-                                fetchEvents();
                             },
                             error: function (jqXHR) {
                                 notyf.error(jqXHR.responseJSON.message);
@@ -75,7 +74,6 @@ function dropzoneInit() {
                 notyf.success('Your new event has been successfully submitted!');
                 $('#submit-form').trigger("reset");
                 myDropzone.removeAllFiles(true);
-                fetchEvents();
             });
 
             this.on("errormultiple", function (files, response) {
@@ -123,7 +121,6 @@ function dropzoneInit() {
                             data: formData,
                             success: function () {
                                 notyf.success('Your event has been successfully edited!');
-                                fetchEvents();
                                 infoWindow.setPosition({lat: theseEditCoords.lat, lng: theseEditCoords.lng});
                             },
                             error: function (jqXHR) {
@@ -152,7 +149,6 @@ function dropzoneInit() {
                 notyf.success('Your event has been successfully edited!');
                 $('#edit-form').trigger("reset");
                 myDropzone.removeAllFiles(true);
-                fetchEvents();
                 infoWindow.setPosition({lat: theseEditCoords.lat, lng: theseEditCoords.lng});
             });
 

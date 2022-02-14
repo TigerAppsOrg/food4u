@@ -136,27 +136,6 @@
 <script>
 
     'use strict';
-    let requestEvent = null;
-
-    function fetchEvents() {
-        if (requestEvent != null)
-            requestEvent.abort();
-
-        requestEvent = $.ajax(
-            {
-                type: 'GET',
-                contentType: "application/json",
-                url: "/fetchEvents",
-                success:
-                    function (events) {
-                        populateAdditionalMarkers(events);
-                        updateMarkers(events);
-                    },
-                dataType: 'json'
-            }
-        );
-
-    }
 
     let requestNotificationPreferences = null;
 
@@ -176,7 +155,6 @@
                 dataType: 'json'
             }
         );
-
     }
 
     function setup() {
@@ -186,15 +164,21 @@
         let socket = io();
         socket.on('subscribe', function (integer) {
             $("#subscribers-count").html(parseInt($('#subscribers-count').html(), 10) + integer + " people")
-        })
+        });
 
         socket.on('uniqueVisitor', function (integer) {
             $("#unique-visitors-count").html(parseInt($('#unique-visitors-count').html(), 10) + integer + " people")
-        })
+        });
 
         socket.on('postIncrement', function (integer) {
             $("#number-of-posts-all-time").html(parseInt($('#number-of-posts-all-time').html(), 10) + integer + " posts")
+        });
+
+        socket.on('update', function (events) {
+            populateAdditionalMarkers(events);
+            updateMarkers(events);
         })
+
         // End Socket_IO
 
         {% if check_first_time %}
@@ -210,7 +194,6 @@
             });
         {% endif %}
         fetchNotificationPreferences();
-        window.setInterval(fetchEvents, 1000);
         window.setInterval(updateTime, 1000);
         window.setInterval(getCurrentLocationMainMap, 1000);
     }
