@@ -394,20 +394,18 @@ function updateMarkers(events) {
             let foundEvent = events[j];
             if (foundEvent.id === foundMarker.get('event_id')) {
                 found = true;
-
+                modifyMarkerOnClick(foundEvent, foundMarker);
                 if (foundMarker.get("people_going") !== foundEvent.people_going) {
                     foundMarker.set("people_going", foundEvent.people_going);
                     $("#attendance_info_" + foundEvent.id).find("#numberOfPeopleGoing").text(foundEvent.people_going);
                 }
                 if (foundMarker.get("going_percentage") !== foundEvent.going_percentage) {
                     foundMarker.set("going_percentage", foundEvent.going_percentage);
-                    $("#attendance_info_" + foundEvent.id).find("#goingPercentage").
-                    text(foundEvent.going_percentage);
+                    $("#attendance_info_" + foundEvent.id).find("#goingPercentage").text(foundEvent.going_percentage);
                 }
                 if (foundMarker.get("host_message") !== foundEvent.host_message) {
                     foundMarker.set("host_message", foundEvent.host_message);
-                    $("#attendance_info_" + foundEvent.id).find("#isHostThere").
-                    text(foundEvent.host_message);
+                    $("#attendance_info_" + foundEvent.id).find("#isHostThere").text(foundEvent.host_message);
                 }
                 // If end_time is different, update
                 if (foundMarker.get("event_end_time") !== foundEvent.end_time) {
@@ -498,9 +496,6 @@ function updateMarkers(events) {
                             '                Flag This Event As Ending\n' +
                             '            </button>')
                     }
-                    // Also changes the infowindow content, so it can display the content
-                    // when the infowindow is reopened
-                    modifyMarkerOnClick(foundEvent, foundMarker);
                 }
                 let currentMarkerPictureDict = foundMarker.get("event_pictures");
                 let eventPictureDict = {};
@@ -521,12 +516,11 @@ function updateMarkers(events) {
                     let toBeRemovedPictureURLs = Array.from(new Set(
                         [...currentMarkerPictureSet].filter(x => !eventPictureSet.has(x))));
                     // Incoming event set minus current set
-                    let tobeAddedPictureURLs = Array.from(new Set(
-                        [...eventPictureSet].filter(x => !currentMarkerPictureSet.has(x))));
+                    // let tobeAddedPictureURLs = Array.from(new Set(
+                    //     [...eventPictureSet].filter(x => !currentMarkerPictureSet.has(x))));
                     for (let i = 0; i < toBeRemovedPictureURLs.length; i++) {
                         removeEventImage(toBeRemovedPictureURLs[i]);
                     }
-                    modifyMarkerOnClick(foundEvent, foundMarker);
                     foundMarker.set("event_pictures", eventPictureDict);
                     $("#images_" + foundMarker.get("event_id")).empty();
                     loadImagesWhileInfoWindowIsOpen(foundMarker);
