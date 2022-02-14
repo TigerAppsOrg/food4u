@@ -11,6 +11,7 @@ import cloudinary
 from better_profanity import profanity as pf
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeSerializer
+from casclient import CasClient
 
 app.config['MAIL_SERVER'] = 'smtp.sendgrid.net'
 app.config['MAIL_PORT'] = 465
@@ -343,10 +344,10 @@ def get_attendance(event):
 
 
 def fetch_events():
-    username = "ben"
-    username = username.lower().strip()
-    # username = CasClient().authenticate()
+    # username = "ben"
     # username = username.lower().strip()
+    username = CasClient().authenticate()
+    username = username.lower().strip()
 
     events_dict_list = []
     events = Event.query.all()
