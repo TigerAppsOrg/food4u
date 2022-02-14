@@ -5,11 +5,11 @@ from app.casclient import CasClient
 from app.helpers import delete_data, legal_title, set_color_get_time
 from app.helpers import legal_location, legal_duration, send_notifications
 from app.helpers import legal_description, legal_lat_lng, handle_and_edit_pics
-from app.helpers import legal_email, legal_fields, send_feedback_email, send_flag_email
+from app.helpers import legal_email, legal_fields, send_feedback_email, send_flag_email, get_attendance
 from flask import redirect, flash, url_for
 from flask_socketio import SocketIO
 from app import app, db
-from app.models import Event, Picture, Users, NotificationSubscribers
+from app.models import Event, Picture, Users, NotificationSubscribers, Attendees
 from itsdangerous import URLSafeSerializer, BadData
 from sqlalchemy.sql import functions
 
@@ -268,6 +268,7 @@ def fetch_events():
             pictures = event.pictures.all()
             db.session.commit()
             pictureList = [[picture.event_picture, picture.name] for picture in pictures]
+            number_of_people_going, going_percentage, host_message = get_attendance(event)
             if username == event.net_id:
                 ongoing, marker_color_address, remaining_minutes = set_color_get_time(
                     event, True)
@@ -282,10 +283,165 @@ def fetch_events():
                  'remaining': remaining_minutes, 'id': event.id,
                  'net_id': event.net_id.lower().strip(),
                  'end_time': event.end_time.isoformat(),
-                 'username': username
+                 'username': username,
+                 'people_going': number_of_people_going,
+                 'going_percentage': going_percentage,
+                 'host_message': host_message,
                  })
         return jsonify(events_dict_list)
     return jsonify(events_dict_list)
+
+
+@app.route('/handleGoing', methods=['POST'])
+def going_to_event():
+    # username = "ben"
+    # username = username.lower().strip()
+    username = CasClient().authenticate()
+    username = username.lower().strip()
+
+    switch_on = request.form.getlist('goingSwitch')
+    going_event_id = request.form['idForGoing']
+
+    going_event_search = Event.query.filter_by(id=going_event_id)
+    user_search = db.session.query(Users).filter(Users.net_id == username)
+
+    is_event = going_event_search.first()
+    # is_user = user_search.first()
+
+    if is_event is None:
+        message = "Your event has not been found. It may have been already deleted."
+        return jsonify(message=message), 400
+
+    # if not the op
+    if username != is_event.net_id:
+        attendee_search = Attendees.query.filter(Attendees.event_id == going_event_id).filter(
+            Attendees.net_id == username)
+        is_attendee = attendee_search.first()
+        # if not on attendees list
+        if is_attendee is None:
+            # is going
+            if switch_on:
+                attendee = Attendees(event_id=going_event_id, net_id=username, going=True)
+                db.session.add(attendee)
+                user_search.update(
+                    {"events_going": Users.events_going + 1,
+                     "events_responded": Users.events_responded + 1},
+                    synchronize_session=False)
+                going_event_search.update({"planning_to_go": Event.planning_to_go + 1}, synchronize_session=False)
+                db.session.commit()
+                message = "You successfully responded that you are going to this event!"
+                return jsonify(message=message), 200
+            else:
+                # is not
+                attendee = Attendees(event_id=going_event_id, net_id=username, going=False)
+                db.session.add(attendee)
+                user_search.update(
+                    {"events_responded": Users.events_responded + 1},
+                    synchronize_session=False)
+                going_event_search.update({"not_planning_to_go": Event.not_planning_to_go + 1},
+                                          synchronize_session=False)
+                db.session.commit()
+                message = "You successfully responded that you are not going to this event!"
+                return jsonify(message=message), 200
+        else:
+            # If already on attendees list
+            if switch_on and is_attendee.going:
+                message = "You already responded that you were going to this event!"
+                return jsonify(message=message), 400
+            elif switch_on and not is_attendee.going:
+                attendee_search.update({"going": True}, synchronize_session=False)
+                user_search.update(
+                    {"events_going": Users.events_going + 1},
+                    synchronize_session=False)
+                going_event_search.update({"not_planning_to_go": Event.not_planning_to_go - 1,
+                                           "planning_to_go": Event.planning_to_go + 1},
+                                          synchronize_session=False)
+                db.session.commit()
+                message = "You successfully responded that you are going to this event!"
+                return jsonify(message=message), 200
+            elif not switch_on and not is_attendee.going:
+                message = "You already responded that you were not going to this event!"
+                return jsonify(message=message), 400
+            else:
+                # not switch and going
+                attendee_search.update({"going": False}, synchronize_session=False)
+                user_search.update(
+                    {"events_going": Users.events_going - 1},
+                    synchronize_session=False)
+                going_event_search.update({"not_planning_to_go": Event.not_planning_to_go + 1,
+                                           "planning_to_go": Event.planning_to_go - 1},
+                                          synchronize_session=False)
+                db.session.commit()
+                message = "You successfully responded that you are not going to this event!"
+                return jsonify(message=message), 200
+
+    # if original poster
+    if username == is_event.net_id:
+        attendee_search = Attendees.query.filter(Attendees.event_id == going_event_id).filter(
+            Attendees.net_id == username)
+        is_attendee = attendee_search.first()
+        # if not on attendees list
+        if is_attendee is None:
+            # is going
+            if switch_on:
+                attendee = Attendees(event_id=going_event_id, net_id=username, going=True)
+                db.session.add(attendee)
+                going_event_search.update({"host_staying": True},
+                                          synchronize_session=False)
+                user_search.update(
+                    {"events_going": Users.events_going + 1,
+                     "events_responded": Users.events_responded + 1},
+                    synchronize_session=False)
+                going_event_search.update({"planning_to_go": Event.planning_to_go + 1}, synchronize_session=False)
+                db.session.commit()
+                message = "You successfully responded that you are going to this event!"
+                return jsonify(message=message), 200
+            else:
+                # is not
+                attendee = Attendees(event_id=going_event_id, net_id=username, going=False)
+                db.session.add(attendee)
+                going_event_search.update({"host_staying": False,
+                                           "not_planning_to_go": Event.not_planning_to_go + 1},
+                                          synchronize_session=False)
+                user_search.update(
+                    {"events_responded": Users.events_responded + 1},
+                    synchronize_session=False)
+                db.session.commit()
+                message = "You successfully responded that you are not going to this event!"
+                return jsonify(message=message), 200
+        else:
+            # If already on attendees list
+            if switch_on and is_attendee.going:
+                message = "You already responded that you were going to this event!"
+                return jsonify(message=message), 400
+            elif switch_on and not is_attendee.going:
+                attendee_search.update({"going": True}, synchronize_session=False)
+                user_search.update(
+                    {"events_going": Users.events_going + 1},
+                    synchronize_session=False)
+                going_event_search.update({"not_planning_to_go": Event.not_planning_to_go - 1,
+                                           "planning_to_go": Event.planning_to_go + 1,
+                                           "host_staying": True},
+                                          synchronize_session=False)
+                db.session.commit()
+                message = "You successfully responded that you are going to this event!"
+                return jsonify(message=message), 200
+            elif not switch_on and not is_attendee.going:
+                message = "You already responded that you were not going to this event!"
+                return jsonify(message=message), 400
+            else:
+                # not switch and going
+                attendee_search.update({"going": False}, synchronize_session=False)
+                user_search.update(
+                    {"events_going": Users.events_going - 1},
+                    synchronize_session=False)
+                going_event_search.update({"not_planning_to_go": Event.not_planning_to_go + 1,
+                                           "planning_to_go": Event.planning_to_go - 1,
+                                           "host_staying": False},
+                                          synchronize_session=False)
+                db.session.commit()
+                message = "You successfully responded that you are not going to this event!"
+                return jsonify(message=message), 200
 
 
 @app.route('/handleEventDelete', methods=['POST'])
@@ -304,8 +460,9 @@ def delete_event():
 
     if username != deleted_event.net_id:
         message = "Deletions must be from the original poster. Please contact them to delete the event."
-        return jsonify(message=message), 400
-    _ = delete_data(deleted_event)
+        return jsonify(message=message),
+
+    delete_data(deleted_event)
     message = "Your event has been successfully deleted."
     user_search = db.session.query(Users).filter(Users.net_id == username)
     user_search.update(
@@ -653,9 +810,15 @@ def get_infowindow_poster():
 
     event_id = request.args.get('event_id')
     event = Event.query.filter_by(id=event_id).first()
+    ongoing, marker_color_address, remaining_minutes = set_color_get_time(
+        event)
+    number_of_people_going, going_percentage, is_host_there = get_attendance(event)
 
     html = render_template(
-        "infowindow_poster.html", event=event)
+        "infowindow_poster.html", event=event, event_remaining_minutes=remaining_minutes,
+        number_of_people_going=number_of_people_going, going_percentage=going_percentage,
+        is_host_there=is_host_there
+    )
     response = make_response(html)
     return response
 
@@ -668,9 +831,12 @@ def get_infowindow_consumer():
     event = Event.query.filter_by(id=event_id).first()
     ongoing, marker_color_address, remaining_minutes = set_color_get_time(
         event)
+    number_of_people_going, going_percentage, is_host_there = get_attendance(event)
 
     html = render_template(
-        "infowindow_consumer.html", event=event, event_remaining_minutes=remaining_minutes)
+        "infowindow_consumer.html", event=event, event_remaining_minutes=remaining_minutes,
+        number_of_people_going=number_of_people_going, going_percentage=going_percentage,
+        is_host_there=is_host_there)
     response = make_response(html)
     return response
 

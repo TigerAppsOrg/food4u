@@ -2,7 +2,7 @@ from flask import url_for
 import re
 from app import app, db
 from app.models import Event, Picture
-from app.models import NotificationSubscribers
+from app.models import NotificationSubscribers, Attendees
 import cloudinary.uploader
 import math
 import datetime
@@ -140,8 +140,19 @@ def delete_all_pics(event):
             result = cloudinary.uploader.destroy(pic_to_be_deleted.public_id, invalidate=True)
 
 
+def delete_all_going(event):
+    event_id = event.id
+    people_going = Attendees.query.filter_by(
+        event_id=event_id).all()
+    if people_going:
+        for people in people_going:
+            db.session.delete(people)
+    db.session.commit()
+
+
 def delete_data(event):
     delete_all_pics(event)
+    delete_all_going(event)
     db.session.delete(event)
     db.session.commit()
 
@@ -313,3 +324,19 @@ def legal_fields(title, building, room):
 def clean_html(raw_html):
     html_tags = re.findall('<.*?>', raw_html)
     return html_tags
+
+
+def get_attendance(event):
+    number_of_people_going = event.planning_to_go
+    try:
+        going_percentage = int(number_of_people_going / (number_of_people_going + event.not_planning_to_go) * 100)
+    except ZeroDivisionError:
+        going_percentage = 0
+    is_host_there = event.host_staying
+    if is_host_there is None:
+        host_message = "No response"
+    elif is_host_there:
+        host_message = "Yes"
+    else:
+        host_message = "No"
+    return number_of_people_going, going_percentage, host_message

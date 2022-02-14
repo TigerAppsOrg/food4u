@@ -15,9 +15,41 @@
         </strong>
     </h1>
     <div id=bodyContent>
-        <p>
-            Posted by: <strong>{{ event.net_id }}</strong>
-        </p>
+        <div id="goingLineOptional_{{ event.id }}">
+            {% if event_remaining_minutes > 0 %}
+                <span id="going_line_{{ event.id }}">
+            Going to this Event?
+            <button type="submit" class="btn btn-success btn-xs shadow-none"
+                    id="goingButton" form="goingForm" onclick="goingWithoutRefresh(); return false">
+                Yes
+            </button>
+            <button type="submit" class="btn btn-danger btn-xs"
+                    id="goingButton" form="goingForm" onclick="notGoingWithoutRefresh(); return false">
+                No
+            </button>
+            <div>
+                <form action="/handleGoing" id="goingForm" method="post" enctype="multipart/form-data">
+                    <input type="text" class="input-hidden" id="idForGoing" name="idForGoing"
+                           value="{{ event.id }}">
+                    <input type="checkbox" id="goingSwitch" name="goingSwitch" hidden>
+                </form>
+            </div>
+            <br>
+            </span>
+            {% endif %}
+        </div>
+
+
+
+        <div id="attendance_info_{{ event.id }}">
+            <span>Total Number of People Going: <strong><span id="numberOfPeopleGoing">{{ number_of_people_going }}</span>
+                people </strong></span> <br>
+            <span>Going "Yes" Percentage: <strong> <span id="goingPercentage">{{ going_percentage }}</span>% </strong></span> <br>
+            <span>Host is Staying at Event? <strong><span id="isHostThere">{{ is_host_there }} </span> </strong> </span> <br>
+            {#            <span>Number of Attendees Since Last Edit: </span> <br>#}
+        </div>
+        <br>
+
         <p id="remaining_time_{{ event.id }}">
             <strong>{{ remaining_time_message }}
             </strong>
@@ -47,6 +79,9 @@
         <div id="images_{{ event.id }}"></div>
 
 
+        </p>
+        <p>
+            Posted by: <strong>{{ event.net_id }}</strong>
         </p>
     </div>
 

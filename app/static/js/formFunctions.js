@@ -302,3 +302,71 @@ function deleteWithoutRefresh() {
         }
     })
 }
+
+function goingWithoutRefresh() {
+    Swal.fire({
+        title: 'Are you sure you will be at the event?',
+        text: "You can change your attendance anytime within the marker's event text-box" +
+            "as long as the event is active or if you are the host",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $("#goingSwitch").prop('checked', true);
+            let goingForm = $("form#goingForm")[0];
+            let formData = new FormData(goingForm);
+            $.ajax({
+                type: 'POST',
+                url: '/handleGoing',
+                contentType: false,
+                dataType: "json",
+                cache: false,
+                processData: false,
+                data: formData,
+                success: function (data, textStatus, jqXHR) {
+                    notyf.success(jqXHR.responseJSON.message);
+                },
+                error: function (jqXHR) {
+                    notyf.error(jqXHR.responseJSON.message);
+                }
+            })
+        }
+    })
+}
+
+function notGoingWithoutRefresh() {
+    Swal.fire({
+        title: 'Are you sure you will not be at the event?',
+        text: "You can change your attendance anytime within the marker's event text-box " +
+            "as long as the event is active or if you are the host",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $("#goingSwitch").prop('checked', false);
+            let goingForm = $("form#goingForm")[0];
+            let formData = new FormData(goingForm);
+            $.ajax({
+                type: 'POST',
+                url: '/handleGoing',
+                contentType: false,
+                dataType: "json",
+                cache: false,
+                processData: false,
+                data: formData,
+                success: function (data, textStatus, jqXHR) {
+                    notyf.success(jqXHR.responseJSON.message);
+                },
+                error: function (jqXHR) {
+                    notyf.error(jqXHR.responseJSON.message);
+                }
+            })
+        }
+    })
+}

@@ -32,7 +32,7 @@ body {
     background: #f58025;
 }
 
-#addFoodButton {
+#addFoodButton, #recenterMapButton, #openNotificationSettings {
     border: 1px solid black;
     font-family: "Poppins", sans-serif;
     color: black;
@@ -48,7 +48,8 @@ body {
 
 #addFoodButton:hover, [id^=directionsButton_]:hover, #editButton:hover, #deleteButton:hover,
 #notificationSubmit:hover, #feedbackSubmitButton:hover, #extendButton:hover, #flagButton:hover,
-#currentLocationButton:hover, #submitFood:hover, #cancelFood:hover, #editDeleteButton:hover, #editFood:hover {
+#currentLocationButton:hover, #submitFood:hover, #cancelFood:hover, #editDeleteButton:hover, #editFood:hover,
+#openNotificationSettings:hover, #recenterMapButton:hover{
     cursor: pointer;
     color: white;
     background: #f58025;
@@ -716,4 +717,9 @@ input {
 
 input:checked + .slider {
     background-color: green !important;
+}
+
+.btn:focus {
+  outline: none;
+  box-shadow: none;
 }

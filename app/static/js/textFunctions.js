@@ -82,20 +82,25 @@ function prePopulateEditForm(event_id) {
 function prePopulateNotificationPreferences(notificationPreferences) {
     if (notificationPreferences.name !== undefined) {
         $("#notificationName").val(notificationPreferences.name);
+    } else {
+        $("#notificationName").val($('#notificationName').data('name'));
     }
+
     if (notificationPreferences.emailAddress !== undefined) {
         $("#notificationEmailAddress").val(notificationPreferences.emailAddress);
+    } else {
+        $("#notificationEmailAddress").val($('#notificationEmailAddress').data('email'));
     }
+
     if (notificationPreferences.wantsEmail !== undefined) {
         $("#notificationEmailSwitch").prop('checked', notificationPreferences.wantsEmail);
-        $("#notificationEmailAddress").prop('required', notificationPreferences.wantsEmail);
     }
 
     if (notificationPreferences.wantsEmail === undefined) {
         if ($("#notificationEmailSwitch").is(':checked')) {
             // pass
         } else {
-            $("#notificationEmailSwitch").prop('checked', true)
+            $("#notificationEmailSwitch").prop('checked', true);
         }
     }
 }

@@ -15,6 +15,9 @@ class Event(db.Model):
     latitude = db.Column(db.Float(5))
     longitude = db.Column(db.Float(5))
     description = db.Column(db.String(500))
+    planning_to_go = db.Column(db.Integer, default=0)
+    not_planning_to_go = db.Column(db.Integer, default=0)
+    host_staying = db.Column(db.Boolean, default=None)
 
     def __repr__(self):
         return '<Event ID: {}>'.format(self.id)
@@ -38,9 +41,21 @@ class Picture(db.Model):
 class Users(db.Model):
     net_id = db.Column(db.String(20), primary_key=True)
     posts_made = db.Column(db.Integer, default=0)
+    events_going = db.Column(db.Integer, default=0)
+    events_responded = db.Column(db.Integer, default=0)
 
     def __repr__(self):
         return '<User: {}>'.format(self.net_id)
+
+
+class Attendees(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), primary_key=False)
+    net_id = db.Column(db.String(20), primary_key=False)
+    going = db.Column(db.Boolean, default=None)
+
+    def __repr__(self):
+        return '<Attendee: {}>'.format(self.net_id)
 
 
 class NotificationSubscribers(db.Model):
@@ -52,4 +67,4 @@ class NotificationSubscribers(db.Model):
     wants_text = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
-        return '<User: {}>'.format(self.net_id)
+        return '<Notification Subscriber: {}>'.format(self.net_id)
