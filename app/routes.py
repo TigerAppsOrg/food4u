@@ -5,7 +5,8 @@ from app.casclient import CasClient
 from app.helpers import delete_data, legal_title, set_color_get_time
 from app.helpers import legal_location, legal_duration, send_notifications
 from app.helpers import legal_description, legal_lat_lng, handle_and_edit_pics
-from app.helpers import legal_email, legal_fields, send_feedback_email, send_flag_email, get_attendance
+from app.helpers import legal_email, legal_fields, send_feedback_email, send_flag_email, \
+    get_attendance, fetch_events
 from flask import redirect, flash, url_for
 from flask_socketio import SocketIO
 from app import app, db
@@ -247,51 +248,6 @@ def fetch_notification_preferences():
             return jsonify(notifications_dict)
 
 
-@app.route('/fetchEvents', methods=['GET'])
-def fetch_events():
-    # username = "ben"
-    # username = username.lower().strip()
-    username = CasClient().authenticate()
-    username = username.lower().strip()
-
-    events_dict_list = []
-    if request.content_type and request.content_type.startswith(
-            'application/json'
-    ):
-        events = Event.query.all()
-        db.session.commit()
-        for event in events:
-            ongoing, marker_color_address, remaining_minutes = set_color_get_time(
-                event)
-            if not ongoing:
-                continue
-            pictures = event.pictures.all()
-            db.session.commit()
-            pictureList = [[picture.event_picture, picture.name] for picture in pictures]
-            number_of_people_going, going_percentage, host_message = get_attendance(event)
-            if username == event.net_id:
-                ongoing, marker_color_address, remaining_minutes = set_color_get_time(
-                    event, True)
-            events_dict_list.append(
-                {'title': event.title, 'building': event.building,
-                 'room': event.room,
-                 'latitude': event.latitude,
-                 'longitude': event.longitude,
-                 'description': event.description,
-                 'pictures': pictureList,
-                 'icon': marker_color_address,
-                 'remaining': remaining_minutes, 'id': event.id,
-                 'net_id': event.net_id.lower().strip(),
-                 'end_time': event.end_time.isoformat(),
-                 'username': username,
-                 'people_going': number_of_people_going,
-                 'going_percentage': going_percentage,
-                 'host_message': host_message,
-                 })
-        return jsonify(events_dict_list)
-    return jsonify(events_dict_list)
-
-
 @app.route('/handleGoing', methods=['POST'])
 def going_to_event():
     # username = "ben"
@@ -330,6 +286,7 @@ def going_to_event():
                 going_event_search.update({"planning_to_go": Event.planning_to_go + 1}, synchronize_session=False)
                 db.session.commit()
                 message = "You successfully responded that you are going to this event!"
+                socket_io.emit('update', fetch_events(), broadcast=True)
                 return jsonify(message=message), 200
             else:
                 # is not
@@ -342,6 +299,7 @@ def going_to_event():
                                           synchronize_session=False)
                 db.session.commit()
                 message = "You successfully responded that you are not going to this event!"
+                socket_io.emit('update', fetch_events(), broadcast=True)
                 return jsonify(message=message), 200
         else:
             # If already on attendees list
@@ -358,6 +316,7 @@ def going_to_event():
                                           synchronize_session=False)
                 db.session.commit()
                 message = "You successfully responded that you are going to this event!"
+                socket_io.emit('update', fetch_events(), broadcast=True)
                 return jsonify(message=message), 200
             elif not switch_on and not is_attendee.going:
                 message = "You already responded that you were not going to this event!"
@@ -373,6 +332,7 @@ def going_to_event():
                                           synchronize_session=False)
                 db.session.commit()
                 message = "You successfully responded that you are not going to this event!"
+                socket_io.emit('update', fetch_events(), broadcast=True)
                 return jsonify(message=message), 200
 
     # if original poster
@@ -395,6 +355,7 @@ def going_to_event():
                 going_event_search.update({"planning_to_go": Event.planning_to_go + 1}, synchronize_session=False)
                 db.session.commit()
                 message = "You successfully responded that you are going to this event!"
+                socket_io.emit('update', fetch_events(), broadcast=True)
                 return jsonify(message=message), 200
             else:
                 # is not
@@ -408,6 +369,7 @@ def going_to_event():
                     synchronize_session=False)
                 db.session.commit()
                 message = "You successfully responded that you are not going to this event!"
+                socket_io.emit('update', fetch_events(), broadcast=True)
                 return jsonify(message=message), 200
         else:
             # If already on attendees list
@@ -425,6 +387,7 @@ def going_to_event():
                                           synchronize_session=False)
                 db.session.commit()
                 message = "You successfully responded that you are going to this event!"
+                socket_io.emit('update', fetch_events(), broadcast=True)
                 return jsonify(message=message), 200
             elif not switch_on and not is_attendee.going:
                 message = "You already responded that you were not going to this event!"
@@ -441,6 +404,7 @@ def going_to_event():
                                           synchronize_session=False)
                 db.session.commit()
                 message = "You successfully responded that you are not going to this event!"
+                socket_io.emit('update', fetch_events(), broadcast=True)
                 return jsonify(message=message), 200
 
 
@@ -473,6 +437,7 @@ def delete_event():
     user_search.update(
         {"posts_made": Users.posts_made - 1},
         synchronize_session=False)
+    socket_io.emit('update', fetch_events(), broadcast=True)
     return jsonify(message=message), 200
 
 
@@ -517,6 +482,7 @@ def extend_event():
     db.session.commit()
 
     message = "Your event has been successfully extended."
+    socket_io.emit('update', fetch_events(), broadcast=True)
     return jsonify(message=message), 200
 
 
@@ -554,6 +520,7 @@ def flag_event():
 
     send_flag_email(username, flagged_event.net_id, flagged_event)
     message = "The event has been successfully flagged and reduced to 10 minutes."
+    socket_io.emit('update', fetch_events(), broadcast=True)
     return jsonify(message=message), 200
 
 
