@@ -11,7 +11,7 @@ import cloudinary
 from better_profanity import profanity as pf
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeSerializer
-from casclient import CasClient
+from app.casclient import CasClient
 
 app.config['MAIL_SERVER'] = 'smtp.sendgrid.net'
 app.config['MAIL_PORT'] = 465
