@@ -180,7 +180,7 @@ body {
     color: lightgrey;
 }
 
-#title, #location_building, #location_room, #time-left, #description, #feedback, #orignalposter {
+#title, #location_building, #location_room, #time-left, #description, #feedback {
     background: black;
     font-family: "Poppins", sans-serif;
     color: lightgrey;
@@ -724,4 +724,10 @@ input:checked + .slider {
 .btn:focus {
     outline: none;
     box-shadow: none;
+}
+
+#orignalposter {
+    font-family: "Poppins", sans-serif;
+    font-size: 14px;
+    color: black;
 }
