@@ -3,6 +3,8 @@ body {
     height: 100% !important;
     -webkit-overflow-scrolling: touch !important;
     overflow: auto !important;
+    font-family: "Poppins", sans-serif !important;
+
 }
 
 body {
@@ -49,7 +51,7 @@ body {
 #addFoodButton:hover, [id^=directionsButton_]:hover, #editButton:hover, #deleteButton:hover,
 #notificationSubmit:hover, #feedbackSubmitButton:hover, #extendButton:hover, #flagButton:hover,
 #currentLocationButton:hover, #submitFood:hover, #cancelFood:hover, #editDeleteButton:hover, #editFood:hover,
-#openNotificationSettings:hover, #recenterMapButton:hover{
+#openNotificationSettings:hover, #recenterMapButton:hover {
     cursor: pointer;
     color: white;
     background: #f58025;
@@ -720,6 +722,6 @@ input:checked + .slider {
 }
 
 .btn:focus {
-  outline: none;
-  box-shadow: none;
+    outline: none;
+    box-shadow: none;
 }
