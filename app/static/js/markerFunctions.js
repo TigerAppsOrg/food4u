@@ -394,39 +394,43 @@ function updateMarkers(events) {
             let foundEvent = events[j];
             if (foundEvent.id === foundMarker.get('event_id')) {
                 found = true;
-
                 if (foundMarker.get("people_going") !== foundEvent.people_going) {
                     foundMarker.set("people_going", foundEvent.people_going);
                     $("#attendance_info_" + foundEvent.id).find("#numberOfPeopleGoing").text(foundEvent.people_going);
+                    modifyMarkerOnClick(foundEvent, foundMarker);
                 }
                 if (foundMarker.get("going_percentage") !== foundEvent.going_percentage) {
                     foundMarker.set("going_percentage", foundEvent.going_percentage);
-                    $("#attendance_info_" + foundEvent.id).find("#goingPercentage").
-                    text(foundEvent.going_percentage);
+                    $("#attendance_info_" + foundEvent.id).find("#goingPercentage").text(foundEvent.going_percentage);
+                    modifyMarkerOnClick(foundEvent, foundMarker);
                 }
                 if (foundMarker.get("host_message") !== foundEvent.host_message) {
                     foundMarker.set("host_message", foundEvent.host_message);
-                    $("#attendance_info_" + foundEvent.id).find("#isHostThere").
-                    text(foundEvent.host_message);
+                    $("#attendance_info_" + foundEvent.id).find("#isHostThere").text(foundEvent.host_message);
+                    modifyMarkerOnClick(foundEvent, foundMarker);
                 }
                 // If end_time is different, update
                 if (foundMarker.get("event_end_time") !== foundEvent.end_time) {
                     foundMarker.set("event_end_time", foundEvent.end_time);
+                    modifyMarkerOnClick(foundEvent, foundMarker);
                 }
                 if (foundMarker.title !== foundEvent.title) {
                     foundMarker.setTitle(foundEvent.title);
                     $("#event_title_" + foundEvent.id).text(foundEvent.title);
                     foundMarker.set("event_title", foundEvent.title);
+                    modifyMarkerOnClick(foundEvent, foundMarker);
                 }
                 if (foundMarker.get("event_building") !== foundEvent.building) {
                     foundMarker.set("event_building", foundEvent.building);
                     $("#event_building_" + foundEvent.id).text(foundEvent.building);
                     foundMarker.set("event_building", foundEvent.building);
+                    modifyMarkerOnClick(foundEvent, foundMarker);
                 }
                 if (foundMarker.get("event_room") !== foundEvent.room) {
                     foundMarker.set("event_room", foundEvent.room);
                     $("#event_room_" + foundEvent.id).text(foundEvent.room);
                     foundMarker.set("event_room", foundEvent.room);
+                    modifyMarkerOnClick(foundEvent, foundMarker);
                 }
                 if (foundMarker.get("event_description") !== foundEvent.description) {
                     foundMarker.set("event_description", foundEvent.description);
@@ -440,12 +444,14 @@ function updateMarkers(events) {
                         $("#event_description_" + foundEvent.id).text(foundEvent.description);
                     }
                     foundMarker.set("event_description", foundEvent.description);
+                    modifyMarkerOnClick(foundEvent, foundMarker);
                 }
                 if ((foundMarker.get("event_latitude") !== foundEvent.latitude ||
                     foundMarker.get("event_longitude") !== foundEvent.longitude)) {
                     foundMarker.set("event_latitude", foundEvent.latitude);
                     foundMarker.set("event_longitude", foundEvent.longitude);
                     foundMarker.setPosition({lat: foundEvent.latitude, lng: foundEvent.longitude});
+                    modifyMarkerOnClick(foundEvent, foundMarker);
                 }
                 if (foundMarker.icon.url !== foundEvent.icon) {
                     let img = {
