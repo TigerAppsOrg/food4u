@@ -180,7 +180,7 @@ body {
     color: lightgrey;
 }
 
-#title, #location_building, #location_room, #time-left, #description, #feedback {
+#title, #location_building, #location_room, #time-left, #description, #feedback, #orignalposter {
     background: black;
     font-family: "Poppins", sans-serif;
     color: lightgrey;
