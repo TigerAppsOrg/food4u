@@ -735,3 +735,7 @@ input:checked + .slider {
 .gm-style .gm-style-iw-t::after {
     width: 0px !important;
 }
+
+input {
+    font-size: 16px;
+}
