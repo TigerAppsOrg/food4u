@@ -1,6 +1,6 @@
 function initFormMap() {
     formMap = new google.maps.Map(document.getElementById("map_canvas"), {
-        zoom: 15.3,
+        zoom: 17,
         center: princetonCoords,
         clickableIcons: false,
         streetViewControl: false,
@@ -83,7 +83,7 @@ function initFormMap() {
 
 function initEditFormMap() {
     editFormMap = new google.maps.Map(document.getElementById("map_canvas_edit"), {
-        zoom: 15.3,
+        zoom: 17,
         center: princetonCoords,
         clickableIcons: false,
         fullscreenControl: true,
