@@ -358,7 +358,7 @@ def going_to_event():
                     synchronize_session=False)
                 going_event_search.update({"planning_to_go": Event.planning_to_go + 1}, synchronize_session=False)
                 db.session.commit()
-                message = "You successfully responded that you are going to this event!"
+                message = "You successfully responded that you are staying at your event!"
                 events_dict = fetch_events()
                 socket_io.emit('update', events_dict, broadcast=True)
                 return jsonify(message=message), 200
@@ -373,14 +373,14 @@ def going_to_event():
                     {"events_responded": Users.events_responded + 1},
                     synchronize_session=False)
                 db.session.commit()
-                message = "You successfully responded that you are not going to this event!"
+                message = "You successfully responded that you are not staying at your event!"
                 events_dict = fetch_events()
                 socket_io.emit('update', events_dict, broadcast=True)
                 return jsonify(message=message), 200
         else:
             # If already on attendees list
             if switch_on and is_attendee.going:
-                message = "You already responded that you were going to this event!"
+                message = "You already responded that you are staying at your event!"
                 return jsonify(message=message), 400
             elif switch_on and not is_attendee.going:
                 attendee_search.update({"going": True}, synchronize_session=False)
@@ -392,12 +392,12 @@ def going_to_event():
                                            "host_staying": True},
                                           synchronize_session=False)
                 db.session.commit()
-                message = "You successfully responded that you are going to this event!"
+                message = "You successfully responded that you are staying at your event!"
                 events_dict = fetch_events()
                 socket_io.emit('update', events_dict, broadcast=True)
                 return jsonify(message=message), 200
             elif not switch_on and not is_attendee.going:
-                message = "You already responded that you were not going to this event!"
+                message = "You already responded that you are not staying at your event!"
                 return jsonify(message=message), 400
             else:
                 # not switch and going
@@ -410,7 +410,7 @@ def going_to_event():
                                            "host_staying": False},
                                           synchronize_session=False)
                 db.session.commit()
-                message = "You successfully responded that you are not going to this event!"
+                message = "You successfully responded that you are not staying at your event!"
                 events_dict = fetch_events()
                 socket_io.emit('update', events_dict, broadcast=True)
                 return jsonify(message=message), 200
