@@ -302,7 +302,7 @@ function deleteWithoutRefresh() {
 function goingWithoutRefresh() {
     Swal.fire({
         title: 'Are you sure you will be at the event?',
-        text: "You can change your attendance anytime within the marker's event text-box" +
+        text: "You can change your attendance anytime within the marker's event text-box " +
             "as long as the event is active or if you are the host",
         icon: 'warning',
         showCancelButton: true,
