@@ -749,3 +749,7 @@ input, textarea {
     pointer-events: none;
     cursor: auto;
 }
+
+.dropdown-menu {
+    min-width: 0px !important;
+}
