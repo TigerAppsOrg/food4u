@@ -202,8 +202,7 @@ def index(event_id=None):
              'username': username})
     subscribers_count = NotificationSubscribers.query.filter_by(
         wants_email=True).count()
-    active_events_count = Event.query.filter(
-        Event.end_time >= datetime.datetime.utcnow()).count()
+    active_events_count = fetch_active_events_count()
     unique_visitors_count = db.session.query(Users.net_id).count()
     posts_all_time_count = db.session.query(functions.sum(Users.posts_made)).scalar()
     if not event_id:
