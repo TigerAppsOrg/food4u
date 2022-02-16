@@ -353,17 +353,25 @@ def fetch_events():
     events = Event.query.all()
     db.session.commit()
     for event in events:
-        ongoing, marker_color_address, remaining_minutes = set_color_get_time(
-            event)
+        if username == event.net_id:
+            ongoing, marker_color_address, remaining_minutes = set_color_get_time(
+                event, True)
+        else:
+            ongoing, marker_color_address, remaining_minutes = set_color_get_time(
+                event)
+
         if not ongoing:
             continue
+        # if (marker_color_address == '/static/images/red_logo_mini.png'
+        #         or marker_color_address == '/static/images/red_logo_poster_mini.png'):
+        #     active_events_count = Event.query.filter(
+        #         Event.end_time >= datetime.datetime.utcnow()).count()
+        #     socket_io.emit('active_event_count', active_events_count, broadcast=True)
         pictures = event.pictures.all()
         db.session.commit()
         pictureList = [[picture.event_picture, picture.name] for picture in pictures]
         number_of_people_going, going_percentage, host_message = get_attendance(event)
-        if username == event.net_id:
-            ongoing, marker_color_address, remaining_minutes = set_color_get_time(
-                event, True)
+
         events_dict_list.append(
             {'title': event.title, 'building': event.building,
              'room': event.room,
@@ -380,13 +388,11 @@ def fetch_events():
              'going_percentage': going_percentage,
              'host_message': host_message,
              })
-        return events_dict_list
     return events_dict_list
 
 
 def fetch_active_events_count():
     CasClient().authenticate()
-
     active_events_count = Event.query.filter(
         Event.end_time >= datetime.datetime.utcnow()).count()
     return active_events_count
