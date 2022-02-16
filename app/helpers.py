@@ -362,7 +362,7 @@ def fetch_events():
              'longitude': event.longitude,
              'description': event.description,
              'pictures': pictureList,
-             'icon': marker_color_address,
+             'icon': marker_color,
              'remaining': remaining_minutes, 'id': event.id,
              'net_id': event.net_id.lower().strip(),
              'end_time': event.end_time.isoformat(),
