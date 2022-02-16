@@ -281,37 +281,25 @@ def handle_and_edit_pics(pics, event, created_event, pics_to_delete=None):
     return 0
 
 
-def set_color_get_time(event, poster=False):
+def set_color_get_time(event):
     if not event:
         return False, "", 0
     # set default color to green
-    marker_color_address = url_for(
-        'static', filename='images/green_logo_mini.png')
-    if poster:
-        marker_color_address = url_for(
-            'static', filename='images/green_logo_poster_mini.png')
+    marker_color = "green"
     # swap color to yellow, query event host
     time = datetime.datetime.utcnow()
     remaining_minutes = math.ceil(
         (event.end_time - time).total_seconds() / 60)
     remaining_minutes = max(remaining_minutes, 0)
     if (event.end_time - datetime.timedelta(minutes=10)) < time:
-        marker_color_address = url_for(
-            'static', filename='images/yellow_logo_mini.png')
-        if poster:
-            marker_color_address = url_for(
-                'static', filename='images/yellow_logo_poster_mini.png')
+        marker_color = "yellow"
         # swap color to red, prep for removal
     if event.end_time < time:
-        marker_color_address = url_for(
-            'static', filename='images/red_logo_mini.png')
-        if poster:
-            marker_color_address = url_for(
-                'static', filename='images/red_logo_poster_mini.png')
+        marker_color = "red"
     # remove if past event expiration date by considerable time
     if (event.end_time + datetime.timedelta(hours=1)) < time:
         return False, "", 0
-    return True, marker_color_address, remaining_minutes
+    return True, marker_color, remaining_minutes
 
 
 def legal_email(email_address):
@@ -355,20 +343,13 @@ def fetch_events():
     events = Event.query.all()
     db.session.commit()
     for event in events:
-        if username == event.net_id:
-            ongoing, marker_color_address, remaining_minutes = set_color_get_time(
-                event, True)
-        else:
-            ongoing, marker_color_address, remaining_minutes = set_color_get_time(
-                event)
+
+        ongoing, marker_color, remaining_minutes = set_color_get_time(
+            event, True)
 
         if not ongoing:
             continue
-        # if (marker_color_address == '/static/images/red_logo_mini.png'
-        #         or marker_color_address == '/static/images/red_logo_poster_mini.png'):
-        #     active_events_count = Event.query.filter(
-        #         Event.end_time >= datetime.datetime.utcnow()).count()
-        #     socket_io.emit('active_event_count', active_events_count, broadcast=True)
+
         pictures = event.pictures.all()
         db.session.commit()
         pictureList = [[picture.event_picture, picture.name] for picture in pictures]

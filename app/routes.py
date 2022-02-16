@@ -178,23 +178,20 @@ def index(event_id=None):
     events = Event.query.all()
     db.session.commit()
     for event in events:
-        ongoing, marker_color_address, remaining_minutes = set_color_get_time(
+        ongoing, marker_color, remaining_minutes = set_color_get_time(
             event)
         if not ongoing:
             continue
         pictures = event.pictures.all()
         db.session.commit()
         pictureList = [[picture.event_picture, picture.name] for picture in pictures]
-        if username == event.net_id:
-            ongoing, marker_color_address, remaining_minutes = set_color_get_time(
-                event, True)
         events_dict_list.append(
             {'title': event.title, 'building': event.building,
              'room': event.room,
              'latitude': event.latitude, 'longitude': event.longitude,
              'description': event.description,
              'pictures': pictureList,
-             'icon': marker_color_address,
+             'icon': marker_color,
              'remaining': remaining_minutes,
              'id': event.id,
              'net_id': event.net_id.lower().strip(),
@@ -473,7 +470,7 @@ def extend_event():
         message = "Your event has not been found. It may have been already deleted."
         return jsonify(message=message), 400
 
-    ongoing, marker_color_address, remaining_minutes = set_color_get_time(extended_event)
+    ongoing, marker_color, remaining_minutes = set_color_get_time(extended_event)
 
     if remaining_minutes + extension_duration > 180:
         message = "Your event's total time cannot exceed 3 hours."
@@ -516,7 +513,7 @@ def flag_event():
         message = "The event has not been found. It may have been already deleted."
         return jsonify(message=message), 400
 
-    ongoing, marker_color_address, remaining_minutes = set_color_get_time(flagged_event)
+    ongoing, marker_color, remaining_minutes = set_color_get_time(flagged_event)
 
     if remaining_minutes <= 10:
         message = "The event is already less than 10 minutes."
@@ -797,7 +794,7 @@ def get_infowindow_poster():
 
     event_id = request.args.get('event_id')
     event = Event.query.filter_by(id=event_id).first()
-    ongoing, marker_color_address, remaining_minutes = set_color_get_time(
+    ongoing, marker_color, remaining_minutes = set_color_get_time(
         event)
     number_of_people_going, going_percentage, is_host_there = get_attendance(event)
 
@@ -816,7 +813,7 @@ def get_infowindow_consumer():
 
     event_id = request.args.get('event_id')
     event = Event.query.filter_by(id=event_id).first()
-    ongoing, marker_color_address, remaining_minutes = set_color_get_time(
+    ongoing, marker_color, remaining_minutes = set_color_get_time(
         event)
     number_of_people_going, going_percentage, is_host_there = get_attendance(event)
 
