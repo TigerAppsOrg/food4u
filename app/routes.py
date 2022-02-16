@@ -178,16 +178,20 @@ def index(event_id=None):
     events = Event.query.all()
     db.session.commit()
     for event in events:
-        ongoing, marker_color_address, remaining_minutes = set_color_get_time(
-            event)
-        if not ongoing:
-            continue
-        pictures = event.pictures.all()
-        db.session.commit()
-        pictureList = [[picture.event_picture, picture.name] for picture in pictures]
         if username == event.net_id:
             ongoing, marker_color_address, remaining_minutes = set_color_get_time(
                 event, True)
+        else:
+            ongoing, marker_color_address, remaining_minutes = set_color_get_time(
+                event)
+
+        if not ongoing:
+            continue
+
+        pictures = event.pictures.all()
+        db.session.commit()
+        pictureList = [[picture.event_picture, picture.name] for picture in pictures]
+
         events_dict_list.append(
             {'title': event.title, 'building': event.building,
              'room': event.room,
