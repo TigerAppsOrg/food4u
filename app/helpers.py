@@ -334,11 +334,6 @@ def get_attendance(event):
 
 
 def fetch_events():
-    # username = "ben"
-    # username = username.lower().strip()
-    username = CasClient().authenticate()
-    username = username.lower().strip()
-
     events_dict_list = []
     events = Event.query.all()
     db.session.commit()
