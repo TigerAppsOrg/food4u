@@ -353,17 +353,19 @@ def fetch_events():
     events = Event.query.all()
     db.session.commit()
     for event in events:
-        ongoing, marker_color_address, remaining_minutes = set_color_get_time(
-            event)
+        if username == event.net_id:
+            ongoing, marker_color_address, remaining_minutes = set_color_get_time(
+                event, True)
+        else:
+            ongoing, marker_color_address, remaining_minutes = set_color_get_time(
+                event)
         if not ongoing:
             continue
         pictures = event.pictures.all()
         db.session.commit()
         pictureList = [[picture.event_picture, picture.name] for picture in pictures]
         number_of_people_going, going_percentage, host_message = get_attendance(event)
-        if username == event.net_id:
-            ongoing, marker_color_address, remaining_minutes = set_color_get_time(
-                event, True)
+
         events_dict_list.append(
             {'title': event.title, 'building': event.building,
              'room': event.room,
