@@ -744,3 +744,8 @@ input, textarea {
     pointer-events: none;
     cursor: text
 }
+
+.navbar-brand {
+    pointer-events: none;
+    cursor: auto;
+}
