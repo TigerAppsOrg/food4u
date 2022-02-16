@@ -177,7 +177,9 @@
             populateAdditionalMarkers(events);
             updateMarkers(events);
         })
-
+        socket.on('active_event_count', function (count) {
+            $("#active-event-count").html(count);
+        })
         // End Socket_IO
 
         {% if check_first_time %}

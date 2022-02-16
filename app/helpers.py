@@ -382,3 +382,11 @@ def fetch_events():
              })
         return events_dict_list
     return events_dict_list
+
+
+def fetch_active_events_count():
+    CasClient().authenticate()
+
+    active_events_count = Event.query.filter(
+        Event.end_time >= datetime.datetime.utcnow()).count()
+    return active_events_count

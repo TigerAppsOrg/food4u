@@ -6,7 +6,7 @@ from app.helpers import delete_data, legal_title, set_color_get_time
 from app.helpers import legal_location, legal_duration, send_notifications
 from app.helpers import legal_description, legal_lat_lng, handle_and_edit_pics
 from app.helpers import legal_email, legal_fields, send_feedback_email, send_flag_email, \
-    get_attendance, fetch_events
+    get_attendance, fetch_events, fetch_active_events_count
 from flask import redirect, flash, url_for
 from flask_socketio import SocketIO
 from app import app, db
@@ -448,7 +448,9 @@ def delete_event():
         {"posts_made": Users.posts_made - 1},
         synchronize_session=False)
     events_dict = fetch_events()
+    active_event_count = fetch_active_events_count()
     socket_io.emit('update', events_dict, broadcast=True)
+    socket_io.emit('active_event_count', active_event_count, broadcast=True)
     return jsonify(message=message), 200
 
 
@@ -767,7 +769,9 @@ def handle_data():
     db.session.commit()
     send_notifications(e)
     events_dict = fetch_events()
+    active_event_count = fetch_active_events_count()
     socket_io.emit('update', events_dict, broadcast=True)
+    socket_io.emit('active_event_count', active_event_count, broadcast=True)
     return jsonify(success=True)
 
 
