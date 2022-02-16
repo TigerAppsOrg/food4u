@@ -45,12 +45,6 @@ function loadImage(path, target) {
             });
         });
 }
-
-function loadEventImage(eventPictureURL, eventID, marker) {
-    loadImage(eventPictureURL.replace(/^http:\/\//i, 'https://'), '#images_' + eventID, marker)
-}
-
-
 function removeEventImage(eventPictureURL) {
     removeImage(eventPictureURL);
 }

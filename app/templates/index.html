@@ -4,7 +4,6 @@
 <head>
     <!-- Title -->
     <title>food 4 u</title>
-
     <link rel="icon" href="{{ url_for('static', filename='images/orange_logo_mini.png') }}">
 
     <!-- Link Fonts -->
@@ -195,7 +194,7 @@
         {% endif %}
         fetchNotificationPreferences();
         window.setInterval(updateTime, 1000);
-        window.setInterval(getCurrentLocationMainMap, 1000);
+        window.setInterval(getCurrentLocationMainMap, 10000);
     }
 
     // Get the image modal
