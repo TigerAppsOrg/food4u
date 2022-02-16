@@ -741,5 +741,6 @@ input, textarea {
 }
 
 #activeCount {
-    cursor: pointer;
+    pointer-events: none;
+    cursor: text
 }
