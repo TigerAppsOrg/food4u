@@ -202,6 +202,8 @@ def index(event_id=None):
              'username': username})
     subscribers_count = NotificationSubscribers.query.filter_by(
         wants_email=True).count()
+    active_events_count = Event.query.filter(
+        Event.end_time >= datetime.datetime.utcnow()).count()
     unique_visitors_count = db.session.query(Users.net_id).count()
     posts_all_time_count = db.session.query(functions.sum(Users.posts_made)).scalar()
     if not event_id:
@@ -209,20 +211,20 @@ def index(event_id=None):
             "index.html", events=json.dumps(events_dict_list),
             username=username, check_first_time=check_first_time,
             deeplinkEventID=None, subscribers_count=subscribers_count, unique_visitors_count=unique_visitors_count,
-            posts_all_time_count=posts_all_time_count)
+            posts_all_time_count=posts_all_time_count, active_events_count=active_events_count)
     elif Event.query.filter_by(id=event_id).first() is None:
         flash("The free food event has already ended.", "error")
         html = render_template(
             "index.html", events=json.dumps(events_dict_list),
             username=username, check_first_time=check_first_time,
             deeplinkEventID=None, subscribers_count=subscribers_count, unique_visitors_count=unique_visitors_count,
-            posts_all_time_count=posts_all_time_count)
+            posts_all_time_count=posts_all_time_count, active_events_count=active_events_count)
     else:
         html = render_template(
             "index.html", events=json.dumps(events_dict_list),
             username=username, check_first_time=check_first_time,
             deeplinkEventID=event_id, subscribers_count=subscribers_count, unique_visitors_count=unique_visitors_count,
-            posts_all_time_count=posts_all_time_count)
+            posts_all_time_count=posts_all_time_count, active_events_count=active_events_count)
     response = make_response(html)
     return response
 

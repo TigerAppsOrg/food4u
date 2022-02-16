@@ -27,6 +27,9 @@
         <div class="collapse navbar-collapse" id="main-navbar">
 
             <ul class="nav navbar-nav nav">
+                <li>
+                    <a href="#">Number of Currently Active Events: <span id="active-event-count">{{ active_events_count }}</span></a>
+                </li>
                 <button href="#" class="btn btn-primary navbar-btn"
                         id="recenterMapButton" onclick="centerMap()">Recenter Map
                 </button>
@@ -37,6 +40,7 @@
                         data-target="#inputFormModal">
                     Add Free Food
                 </button>
+
                 <li class="dropdown pull-right">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false">
