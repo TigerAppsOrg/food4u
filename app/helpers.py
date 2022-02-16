@@ -369,6 +369,5 @@ def fetch_events():
 
 
 def fetch_active_events_count():
-    CasClient().authenticate()
     active_events_count = Event.query.count()
     return active_events_count
