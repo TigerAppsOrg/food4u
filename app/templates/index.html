@@ -177,8 +177,13 @@
             populateAdditionalMarkers(events);
             updateMarkers(events);
         })
+
         socket.on('active_event_count', function (count) {
             $("#active-event-count").html(count);
+        })
+
+        socket.on('client_update', function () {
+            socket.emit('update');
         })
         // End Socket_IO
 
