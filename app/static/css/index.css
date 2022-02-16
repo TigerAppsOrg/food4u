@@ -739,3 +739,7 @@ input:checked + .slider {
 input, textarea {
     font-size: 16px !important;
 }
+
+#activeCount {
+    cursor: pointer;
+}
