@@ -12,6 +12,7 @@ from better_profanity import profanity as pf
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeSerializer
 from app.casclient import CasClient
+from app.routes import socket_io
 
 app.config['MAIL_SERVER'] = 'smtp.sendgrid.net'
 app.config['MAIL_PORT'] = 465
