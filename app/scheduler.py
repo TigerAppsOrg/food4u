@@ -2,7 +2,7 @@ from extensions import scheduler_trash_markers
 from app.helpers import delete_data
 import datetime
 from app import db
-from app import app
+from __init__ import app
 from app.models import Event
 from app.routes import socket_io
 from app.helpers import fetch_events, fetch_active_events_count
@@ -21,8 +21,6 @@ def get_update():
                 events_dict = fetch_events()
                 socket_io.emit('update', events_dict, broadcast=True)
                 active_event_count = fetch_active_events_count()
-                print(events_dict)
-                print(active_event_count)
                 socket_io.emit('active_event_count', active_event_count, broadcast=True)
 
 
