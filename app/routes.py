@@ -498,9 +498,9 @@ def extend_event():
 
     db.session.commit()
 
-    message = "Your event has been successfully extended."
     events_dict = fetch_events()
     socket_io.emit('update', events_dict, broadcast=True)
+    message = "Your event has been successfully extended."
     return jsonify(message=message), 200
 
 
