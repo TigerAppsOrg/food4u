@@ -1,4 +1,5 @@
 let socket = io();
+let username = $('#my-data').data('name');
 let main_map;
 const princetonCoords = {lat: 40.346916, lng: -74.655304};
 let formMarker;
