@@ -1,8 +1,7 @@
-from app.helpers import delete_data, fetch_events, fetch_active_events_count
+from app.routes import delete_data
 import datetime
 from app import db
 from app.models import Event
-from app.routes import socket_io
 from extensions import scheduler_trash_markers
 
 

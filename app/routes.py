@@ -2,7 +2,7 @@ from flask import render_template, request, make_response, jsonify
 import json
 import datetime
 from app.casclient import CasClient
-from app.helpers import delete_data, legal_title, set_color_get_time
+from app.helpers import legal_title, set_color_get_time, delete_all_pics, delete_all_going
 from app.helpers import legal_location, legal_duration, send_notifications
 from app.helpers import legal_description, legal_lat_lng, handle_and_edit_pics
 from app.helpers import legal_email, legal_fields, send_feedback_email, send_flag_email, \
@@ -836,3 +836,22 @@ def logout():
 def fetch_events_emit():
     events = fetch_events()
     socket_io.emit("update", events, broadcast=False)
+
+
+# @socket_io.on("get_attendees")
+# def fetch_attendees_emit(event_id):
+#     attendees = fetch_attendees(event_id)
+#     socket_io.emit("get_attendees", attendees, broadcast=False)
+
+
+def delete_data(event):
+    delete_all_pics(event)
+    delete_all_going(event)
+    db.session.delete(event)
+    db.session.commit()
+    events_dict = fetch_events()
+    print('event_dict', events_dict)
+    socket_io.emit('update', events_dict, broadcast=True)
+    active_event_count = fetch_active_events_count()
+    print('count', active_event_count)
+    socket_io.emit('active_event_count', active_event_count, broadcast=True)
