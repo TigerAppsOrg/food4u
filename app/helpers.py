@@ -282,6 +282,8 @@ def handle_and_edit_pics(pics, event, created_event, pics_to_delete=None):
 
 
 def set_color_get_time(event, poster=False):
+    if not event:
+        return False, "", 0
     # set default color to green
     marker_color_address = url_for(
         'static', filename='images/green_logo_mini.png')
