@@ -11,8 +11,8 @@ db = SQLAlchemy(app)
 db.init_app(app)
 migrate = Migrate(app, db)
 
-from app import routes, models, scheduler
-from scheduler import scheduler_trash_markers
+from app import routes, models
+from app.scheduler import scheduler_trash_markers
 
 scheduler_trash_markers.init_app(app)
 scheduler_trash_markers.start()
