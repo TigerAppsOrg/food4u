@@ -28,7 +28,7 @@ function populateAdditionalMarkers(events) {
                     event_net_id
             }), 1000)
 
-            if (events[i].username === event_net_id) {
+            if (username === event_net_id) {
                 setTimeout(clickMarkerByEventID.bind(null, event_id), 1000);
             }
         }
@@ -212,7 +212,7 @@ function addMarker(event) {
     let isPoster = false;
     let infoWindowInfo = null;
 
-    if (event.username === event.net_id) {
+    if (username === event.net_id) {
         isPoster = true;
         // provides separate views for poster and consumers
         fetch('/get_infowindow_poster?' +
@@ -289,7 +289,7 @@ function modifyMarkerOnClick(associatedEvent, associatedMarker) {
     let isPoster = false;
     let infoWindowInfo = null;
 
-    if (associatedEvent.username === associatedEvent.net_id) {
+    if (username === associatedEvent.net_id) {
         isPoster = true;
         // provides separate views for poster and consumers
         fetch('/get_infowindow_poster?' +

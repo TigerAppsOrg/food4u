@@ -2,9 +2,11 @@
 <html>
 
 <head>
+    <meta id="my-data" data-name="{{ username | safe }}">
     <!-- Title -->
     <title>food 4 u</title>
     <link rel="icon" href="{{ url_for('static', filename='images/orange_logo_mini.png') }}">
+
 
     <!-- Link Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -134,6 +136,8 @@
 <script>
 
     'use strict';
+
+    let username = $('#my-data').data('name');
 
     let requestNotificationPreferences = null;
 
