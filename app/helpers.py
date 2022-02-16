@@ -345,7 +345,7 @@ def fetch_events():
     for event in events:
 
         ongoing, marker_color, remaining_minutes = set_color_get_time(
-            event, True)
+            event)
 
         if not ongoing:
             continue
