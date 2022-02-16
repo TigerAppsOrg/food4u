@@ -385,7 +385,6 @@ def fetch_events():
              'remaining': remaining_minutes, 'id': event.id,
              'net_id': event.net_id.lower().strip(),
              'end_time': event.end_time.isoformat(),
-             'username': username,
              'people_going': number_of_people_going,
              'going_percentage': going_percentage,
              'host_message': host_message,

@@ -4,6 +4,7 @@ import datetime
 from app import db
 from app.models import Event
 from app.routes import socket_io
+from app.helpers import fetch_events
 
 
 def get_update():
@@ -13,7 +14,8 @@ def get_update():
     for event in events:
         if event.end_time is None or time > (event.end_time + datetime.timedelta(hours=1)):
             delete_data(event)
-            socket_io.emit('client_update', broadcast=True)
+            events_dict = fetch_events()
+            socket_io.emit('update', events_dict, broadcast=True)
             active_event_count = Event.query.count()
             socket_io.emit('active_event_count', active_event_count, broadcast=True)
 
