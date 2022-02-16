@@ -19,7 +19,16 @@ from app import db
 from app.models import Event
 from app.routes import socket_io
 from app.helpers import fetch_events
-from flask_apscheduler import APScheduler
+from flask_apscheduler import APScheduler as _BaseAPScheduler
+
+
+class APScheduler(_BaseAPScheduler):
+    def run_job(self, id, jobstore=None):
+        with self.app.app_context():
+            super().run_job(id=id, jobstore=jobstore)
+
+
+scheduler_trash_markers = APScheduler()
 
 scheduler_trash_markers = APScheduler()
 
