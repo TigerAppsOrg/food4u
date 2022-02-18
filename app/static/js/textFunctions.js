@@ -24,7 +24,11 @@ function updateTime() {
     for (let i = 0; i < allMarkers.length; i++) {
         let event_endtime = allMarkers[i].get("event_end_time");
         let time_remaining = getTimeRemaining(event_endtime);
-        var remaining_time_message = time_remaining.total > 0 ?
+        if ((time_remaining.minutes === 10 && time_remaining.seconds === 0) ||
+            (time_remaining.minutes === 0 && time_remaining.seconds === 0) ) {
+            socket.emit("update");
+        }
+        let remaining_time_message = time_remaining.total > 0 ?
             "<strong>" + (time_remaining.hours + "h "
                 + time_remaining.minutes + "m " + time_remaining.seconds + "s " + " " +
                 "remaining for event") + "</strong>" :

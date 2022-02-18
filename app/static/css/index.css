@@ -739,3 +739,17 @@ input:checked + .slider {
 input, textarea {
     font-size: 16px !important;
 }
+
+#activeCount {
+    pointer-events: none;
+    cursor: text
+}
+
+.navbar-brand {
+    pointer-events: none;
+    cursor: auto;
+}
+
+.dropdown-menu {
+    min-width: 0px !important;
+}

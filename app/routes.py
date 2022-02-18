@@ -2,11 +2,11 @@ from flask import render_template, request, make_response, jsonify
 import json
 import datetime
 from app.casclient import CasClient
-from app.helpers import delete_data, legal_title, set_color_get_time
+from app.helpers import legal_title, set_color_get_time, delete_all_pics, delete_all_going
 from app.helpers import legal_location, legal_duration, send_notifications
 from app.helpers import legal_description, legal_lat_lng, handle_and_edit_pics
 from app.helpers import legal_email, legal_fields, send_feedback_email, send_flag_email, \
-    get_attendance, fetch_events
+    get_attendance, fetch_events, fetch_active_events_count
 from flask import redirect, flash, url_for
 from flask_socketio import SocketIO
 from app import app, db
@@ -178,23 +178,20 @@ def index(event_id=None):
     events = Event.query.all()
     db.session.commit()
     for event in events:
-        ongoing, marker_color_address, remaining_minutes = set_color_get_time(
+        ongoing, marker_color, remaining_minutes = set_color_get_time(
             event)
         if not ongoing:
             continue
         pictures = event.pictures.all()
         db.session.commit()
         pictureList = [[picture.event_picture, picture.name] for picture in pictures]
-        if username == event.net_id:
-            ongoing, marker_color_address, remaining_minutes = set_color_get_time(
-                event, True)
         events_dict_list.append(
             {'title': event.title, 'building': event.building,
              'room': event.room,
              'latitude': event.latitude, 'longitude': event.longitude,
              'description': event.description,
              'pictures': pictureList,
-             'icon': marker_color_address,
+             'icon': marker_color,
              'remaining': remaining_minutes,
              'id': event.id,
              'net_id': event.net_id.lower().strip(),
@@ -202,6 +199,7 @@ def index(event_id=None):
              'username': username})
     subscribers_count = NotificationSubscribers.query.filter_by(
         wants_email=True).count()
+    active_events_count = fetch_active_events_count()
     unique_visitors_count = db.session.query(Users.net_id).count()
     posts_all_time_count = db.session.query(functions.sum(Users.posts_made)).scalar()
     if not event_id:
@@ -209,20 +207,20 @@ def index(event_id=None):
             "index.html", events=json.dumps(events_dict_list),
             username=username, check_first_time=check_first_time,
             deeplinkEventID=None, subscribers_count=subscribers_count, unique_visitors_count=unique_visitors_count,
-            posts_all_time_count=posts_all_time_count)
+            posts_all_time_count=posts_all_time_count, active_events_count=active_events_count)
     elif Event.query.filter_by(id=event_id).first() is None:
         flash("The free food event has already ended.", "error")
         html = render_template(
             "index.html", events=json.dumps(events_dict_list),
             username=username, check_first_time=check_first_time,
             deeplinkEventID=None, subscribers_count=subscribers_count, unique_visitors_count=unique_visitors_count,
-            posts_all_time_count=posts_all_time_count)
+            posts_all_time_count=posts_all_time_count, active_events_count=active_events_count)
     else:
         html = render_template(
             "index.html", events=json.dumps(events_dict_list),
             username=username, check_first_time=check_first_time,
             deeplinkEventID=event_id, subscribers_count=subscribers_count, unique_visitors_count=unique_visitors_count,
-            posts_all_time_count=posts_all_time_count)
+            posts_all_time_count=posts_all_time_count, active_events_count=active_events_count)
     response = make_response(html)
     return response
 
@@ -446,7 +444,9 @@ def delete_event():
         {"posts_made": Users.posts_made - 1},
         synchronize_session=False)
     events_dict = fetch_events()
+    active_event_count = fetch_active_events_count()
     socket_io.emit('update', events_dict, broadcast=True)
+    socket_io.emit('active_event_count', active_event_count, broadcast=True)
     return jsonify(message=message), 200
 
 
@@ -470,7 +470,7 @@ def extend_event():
         message = "Your event has not been found. It may have been already deleted."
         return jsonify(message=message), 400
 
-    ongoing, marker_color_address, remaining_minutes = set_color_get_time(extended_event)
+    ongoing, marker_color, remaining_minutes = set_color_get_time(extended_event)
 
     if remaining_minutes + extension_duration > 180:
         message = "Your event's total time cannot exceed 3 hours."
@@ -490,9 +490,9 @@ def extend_event():
 
     db.session.commit()
 
-    message = "Your event has been successfully extended."
     events_dict = fetch_events()
     socket_io.emit('update', events_dict, broadcast=True)
+    message = "Your event has been successfully extended."
     return jsonify(message=message), 200
 
 
@@ -513,7 +513,7 @@ def flag_event():
         message = "The event has not been found. It may have been already deleted."
         return jsonify(message=message), 400
 
-    ongoing, marker_color_address, remaining_minutes = set_color_get_time(flagged_event)
+    ongoing, marker_color, remaining_minutes = set_color_get_time(flagged_event)
 
     if remaining_minutes <= 10:
         message = "The event is already less than 10 minutes."
@@ -765,7 +765,9 @@ def handle_data():
     db.session.commit()
     send_notifications(e)
     events_dict = fetch_events()
+    active_event_count = fetch_active_events_count()
     socket_io.emit('update', events_dict, broadcast=True)
+    socket_io.emit('active_event_count', active_event_count, broadcast=True)
     return jsonify(success=True)
 
 
@@ -792,7 +794,7 @@ def get_infowindow_poster():
 
     event_id = request.args.get('event_id')
     event = Event.query.filter_by(id=event_id).first()
-    ongoing, marker_color_address, remaining_minutes = set_color_get_time(
+    ongoing, marker_color, remaining_minutes = set_color_get_time(
         event)
     number_of_people_going, going_percentage, is_host_there = get_attendance(event)
 
@@ -811,7 +813,7 @@ def get_infowindow_consumer():
 
     event_id = request.args.get('event_id')
     event = Event.query.filter_by(id=event_id).first()
-    ongoing, marker_color_address, remaining_minutes = set_color_get_time(
+    ongoing, marker_color, remaining_minutes = set_color_get_time(
         event)
     number_of_people_going, going_percentage, is_host_there = get_attendance(event)
 
@@ -828,3 +830,27 @@ def logout():
     cas_client = CasClient()
     cas_client.authenticate()
     cas_client.logout('index')
+
+
+@socket_io.on("update")
+def fetch_events_emit():
+    events = fetch_events()
+    socket_io.emit("update", events, broadcast=False)
+
+
+# @socket_io.on("get_attendees")
+# def fetch_attendees_emit(event_id):
+#     attendees = fetch_attendees(event_id)
+#     socket_io.emit("get_attendees", attendees, broadcast=False)
+
+
+def delete_data(event):
+    delete_all_pics(event)
+    delete_all_going(event)
+    db.session.delete(event)
+    db.session.commit()
+    events_dict = fetch_events()
+
+    active_event_count = fetch_active_events_count()
+    print('count', active_event_count)
+    socket_io.emit('active_event_count', active_event_count, broadcast=True)

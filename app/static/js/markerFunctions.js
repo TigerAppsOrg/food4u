@@ -28,7 +28,7 @@ function populateAdditionalMarkers(events) {
                     event_net_id
             }), 1000)
 
-            if (events[i].username === event_net_id) {
+            if (username === event_net_id) {
                 setTimeout(clickMarkerByEventID.bind(null, event_id), 1000);
             }
         }
@@ -45,6 +45,7 @@ function loadImage(path, target) {
             });
         });
 }
+
 function removeEventImage(eventPictureURL) {
     removeImage(eventPictureURL);
 }
@@ -171,11 +172,30 @@ function showDefaultPositionFormEditForm() {
     formEditInfowindow.close();
 }
 
+function getIcon(color, username, net_id) {
+    if (username === net_id) {
+        if (color == "green") {
+            return '/static/images/green_logo_mini.png'
+        } else if (color == "yellow") {
+            return '/static/images/yellow_logo_mini.png'
+        } else {
+            return '/static/images/red_logo_mini.png'
+        }
+    } else {
+        if (color == "green") {
+            return '/static/images/green_logo_poster_mini.png'
+        } else if (color == "yellow") {
+            return '/static/images/yellow_logo_poster_mini.png'
+        } else {
+            return '/static/images/red_logo_poster_mini.png'
+        }
+    }
+}
 
 // Adds a marker to the given map with the event data
 function addMarker(event) {
     let img = {
-        url: event.icon,
+        url: getIcon(event.icon, username, event.net_id),
         scaledSize: new google.maps.Size(66, 51),
     };
 
@@ -212,7 +232,7 @@ function addMarker(event) {
     let isPoster = false;
     let infoWindowInfo = null;
 
-    if (event.username === event.net_id) {
+    if (username === event.net_id) {
         isPoster = true;
         // provides separate views for poster and consumers
         fetch('/get_infowindow_poster?' +
@@ -289,7 +309,7 @@ function modifyMarkerOnClick(associatedEvent, associatedMarker) {
     let isPoster = false;
     let infoWindowInfo = null;
 
-    if (associatedEvent.username === associatedEvent.net_id) {
+    if (username === associatedEvent.net_id) {
         isPoster = true;
         // provides separate views for poster and consumers
         fetch('/get_infowindow_poster?' +
@@ -441,7 +461,7 @@ function updateMarkers(events) {
                 }
                 if (foundMarker.icon.url !== foundEvent.icon) {
                     let img = {
-                        url: foundEvent.icon,
+                        url: getIcon(foundEvent.icon, username, foundEvent.net_id),
                         scaledSize: new google.maps.Size(66, 51),
                     };
                     foundMarker.setIcon(img);

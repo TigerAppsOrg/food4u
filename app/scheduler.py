@@ -1,11 +1,11 @@
-from extensions import scheduler_trash_markers
-from app.helpers import delete_data
+from app.routes import delete_data
 import datetime
 from app import db
 from app.models import Event
+from extensions import scheduler_trash_markers
 
 
-def update_data():
+def get_update():
     time = datetime.datetime.utcnow()
     events = Event.query.all()
     db.session.commit()
@@ -14,4 +14,4 @@ def update_data():
             delete_data(event)
 
 
-scheduler_trash_markers.add_job("job_update", update_data, trigger="interval", seconds=20)
+scheduler_trash_markers.add_job("job_update", get_update, trigger="interval", seconds=20)

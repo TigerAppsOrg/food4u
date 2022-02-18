@@ -156,6 +156,12 @@ def delete_data(event):
     delete_all_going(event)
     db.session.delete(event)
     db.session.commit()
+    events_dict = fetch_events()
+    print('event_dict', events_dict)
+    socket_io.emit('update', events_dict, broadcast=True)
+    active_event_count = fetch_active_events_count()
+    print('count', active_event_count)
+    socket_io.emit('active_event_count', active_event_count, broadcast=True)
 
 
 def legal_title(title):
@@ -281,35 +287,25 @@ def handle_and_edit_pics(pics, event, created_event, pics_to_delete=None):
     return 0
 
 
-def set_color_get_time(event, poster=False):
+def set_color_get_time(event):
+    if not event:
+        return False, "", 0
     # set default color to green
-    marker_color_address = url_for(
-        'static', filename='images/green_logo_mini.png')
-    if poster:
-        marker_color_address = url_for(
-            'static', filename='images/green_logo_poster_mini.png')
+    marker_color = "green"
     # swap color to yellow, query event host
     time = datetime.datetime.utcnow()
     remaining_minutes = math.ceil(
         (event.end_time - time).total_seconds() / 60)
     remaining_minutes = max(remaining_minutes, 0)
     if (event.end_time - datetime.timedelta(minutes=10)) < time:
-        marker_color_address = url_for(
-            'static', filename='images/yellow_logo_mini.png')
-        if poster:
-            marker_color_address = url_for(
-                'static', filename='images/yellow_logo_poster_mini.png')
+        marker_color = "yellow"
         # swap color to red, prep for removal
     if event.end_time < time:
-        marker_color_address = url_for(
-            'static', filename='images/red_logo_mini.png')
-        if poster:
-            marker_color_address = url_for(
-                'static', filename='images/red_logo_poster_mini.png')
+        marker_color = "red"
     # remove if past event expiration date by considerable time
     if (event.end_time + datetime.timedelta(hours=1)) < time:
         return False, "", 0
-    return True, marker_color_address, remaining_minutes
+    return True, marker_color, remaining_minutes
 
 
 def legal_email(email_address):
@@ -344,26 +340,22 @@ def get_attendance(event):
 
 
 def fetch_events():
-    # username = "ben"
-    # username = username.lower().strip()
-    username = CasClient().authenticate()
-    username = username.lower().strip()
-
     events_dict_list = []
     events = Event.query.all()
     db.session.commit()
     for event in events:
-        ongoing, marker_color_address, remaining_minutes = set_color_get_time(
+
+        ongoing, marker_color, remaining_minutes = set_color_get_time(
             event)
+
         if not ongoing:
             continue
+
         pictures = event.pictures.all()
         db.session.commit()
         pictureList = [[picture.event_picture, picture.name] for picture in pictures]
         number_of_people_going, going_percentage, host_message = get_attendance(event)
-        if username == event.net_id:
-            ongoing, marker_color_address, remaining_minutes = set_color_get_time(
-                event, True)
+
         events_dict_list.append(
             {'title': event.title, 'building': event.building,
              'room': event.room,
@@ -371,14 +363,17 @@ def fetch_events():
              'longitude': event.longitude,
              'description': event.description,
              'pictures': pictureList,
-             'icon': marker_color_address,
+             'icon': marker_color,
              'remaining': remaining_minutes, 'id': event.id,
              'net_id': event.net_id.lower().strip(),
              'end_time': event.end_time.isoformat(),
-             'username': username,
              'people_going': number_of_people_going,
              'going_percentage': going_percentage,
              'host_message': host_message,
              })
-        return events_dict_list
     return events_dict_list
+
+
+def fetch_active_events_count():
+    active_events_count = Event.query.count()
+    return active_events_count

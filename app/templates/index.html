@@ -2,9 +2,11 @@
 <html>
 
 <head>
+    <meta id="my-data" data-name="{{ username | safe }}">
     <!-- Title -->
     <title>food 4 u</title>
     <link rel="icon" href="{{ url_for('static', filename='images/orange_logo_mini.png') }}">
+
 
     <!-- Link Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -36,16 +38,6 @@
         let events = {{ events | safe }};
     </script>
 
-    <!-- Initializes all global variables for JS functions -->
-    <script src="{{ url_for('static', filename='js/globalVariables.js') }}"></script>
-
-    <!-- Link Source Files -->
-    <script src="{{ url_for('static', filename='js/imageFunctions.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/textFunctions.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/markerFunctions.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/mapFunctions.js') }}"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
-
     <!-- IntroJS -->
     <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
     <link href="https://unpkg.com/intro.js/minified/introjs.min.css" rel="stylesheet">
@@ -55,6 +47,15 @@
             integrity="sha512-MgkNs0gNdrnOM7k+0L+wgiRc5aLgl74sJQKbIWegVIMvVGPc1+gc1L2oK9Wf/D9pq58eqIJAxOonYPVE5UwUFA=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+    <!-- Initializes all global variables for JS functions -->
+    <script src="{{ url_for('static', filename='js/globalVariables.js') }}"></script>
+
+    <!-- Link Source Files -->
+    <script src="{{ url_for('static', filename='js/imageFunctions.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/textFunctions.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/markerFunctions.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/mapFunctions.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
@@ -160,7 +161,6 @@
         dropzoneInit();
 
         // Start Socket_IO
-        let socket = io();
         socket.on('subscribe', function (integer) {
             $("#subscribers-count").html(parseInt($('#subscribers-count').html(), 10) + integer + " people")
         });
@@ -178,6 +178,9 @@
             updateMarkers(events);
         })
 
+        socket.on('active_event_count', function (count) {
+            $("#active-event-count").html(count);
+        })
         // End Socket_IO
 
         {% if check_first_time %}
