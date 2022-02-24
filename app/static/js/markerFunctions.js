@@ -173,7 +173,7 @@ function showDefaultPositionFormEditForm() {
 }
 
 function getIcon(color, username, net_id) {
-    if (username === net_id) {
+    if (username !== net_id) {
         if (color == "green") {
             return '/static/images/green_logo_mini.png'
         } else if (color == "yellow") {

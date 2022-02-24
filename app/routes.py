@@ -435,11 +435,7 @@ def delete_event():
     delete_data(deleted_event)
     message = "Your event has been successfully deleted."
     user_search = db.session.query(Users).filter(Users.net_id == username)
-    user_search.update(
-        {"posts_made": Users.posts_made - 1},
-        synchronize_session=False)
     socket_io.emit('postIncrement', -1, broadcast=True)
-    # socket_io.emit('fetchEvents', fetch_events(), broadcast=True)
     user_search.update(
         {"posts_made": Users.posts_made - 1},
         synchronize_session=False)
