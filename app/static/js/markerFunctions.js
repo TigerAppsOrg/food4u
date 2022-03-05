@@ -483,16 +483,7 @@ function updateMarkers(events) {
                     if (foundMarker.icon.url === "/static/images/red_logo_mini.png") {
                         $('#going_line_' + foundEvent.id).remove();
                     } else if ($('#goingLineOptional_' + foundEvent.id).children().length === 0) {
-                        let stringToAppend = '<span id=\"going_line_' + foundEvent.id + "\">Going to this Event?"
-                            + "<button type=\"submit\" class=\"btn btn-success btn-xs shadow-none\" " +
-                            " id=\"goingButton\" form=\"goingForm\" onclick=\"goingWithoutRefresh(); return false\">" +
-                            "Yes </button>" + "<button type=\"submit\" class=\"btn btn-danger btn-xs\"" +
-                            "id=\"goingButton\" form=\"goingForm\" onclick=\"notGoingWithoutRefresh(); return false\">" +
-                            "No </button>" + "<div><form action=\"/handleGoing\" id=\"goingForm\" method=\"post\" " +
-                            "encType=\"multipart/form-data\">" +
-                            "<input type=\"text\" class=\"input-hidden\" id=\"idForGoing\" name=\"idForGoing\"" +
-                            ' value=\"' + foundEvent.id + '\">' + '<input type="checkbox" id="goingSwitch" ' +
-                            'name="goingSwitch" hidden>' + "</form></div><br></span>"
+                        let stringToAppend = "         <span id=\"going_line_{{ event.id }}\">\n            Attending this Event?\n            <span>\n                <button type=\"submit\" class=\"btn btn-success btn-xs shadow-none\"\n                        id=\"goingButton\" form=\"goingForm\" onclick=\"goingWithoutRefresh(); return false\">\n                    Yes\n                </button>\n                <button type=\"submit\" class=\"btn btn-danger btn-xs\"\n                        id=\"goingButton\" form=\"goingForm\" onclick=\"notGoingWithoutRefresh(); return false\">\n                    No\n                </button>\n            </span>\n            <div>\n                <form action=\"/handleGoing\" id=\"goingForm\" method=\"post\" enctype=\"multipart/form-data\">\n                    <input type=\"text\" class=\"input-hidden\" id=\"idForGoing\" name=\"idForGoing\"\n                           value=\"{{ event.id }}\">\n                    <input type=\"checkbox\" id=\"goingSwitch\" name=\"goingSwitch\" hidden>\n                </form>\n            </div>\n            <br>\n            </span>"
                         $('#goingLineOptional_' + foundEvent.id).append(stringToAppend);
                     }
                     // handles flag button dynamically when infowindow is open
