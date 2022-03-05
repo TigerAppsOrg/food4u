@@ -754,3 +754,11 @@ input, textarea {
 .dropdown-menu {
     min-width: 0px !important;
 }
+
+.btn-info, .btn-info:hover, .btn-info:active, .btn-info:visited {
+    background-color: #27a0b4 !important;
+}
+
+.badge-info {
+    background-color: #71a264 !important;
+}
