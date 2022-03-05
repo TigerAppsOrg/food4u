@@ -41,29 +41,21 @@
         {% endif %}
 
         <div id="attendance_info_{{ event.id }}">
-            <button type="button" class="btn btn-primary btn-xs" style="pointer-events: none;margin-bottom: 2px;">
+            <button type="button" class="btn btn-info btn-xs" style="pointer-events: none;margin-bottom: 2px;">
                 # of People Attending <span class="badge badge-light"
                                             id="numberOfPeopleGoing">{{ number_of_people_going }}</span>
             </button>
             <br>
-            {#            <span>Total Number of People Going: <strong><span id="numberOfPeopleGoing">{{ number_of_people_going }}</span>#}
-            {#                people </strong></span> <br>#}
-            <button type="button" class="btn btn-primary btn-xs" style="pointer-events: none; margin-bottom: 2px;">
+            <button type="button" class="btn btn-info btn-xs" style="pointer-events: none; margin-bottom: 2px;">
                 Attending Percentage <span class="badge badge-light"
                                            id="goingPercentage">{{ going_percentage }}%</span>
             </button>
             <br>
-            {#            <span>Attending Percentage: <strong> <span#}
-            {#                    id="goingPercentage">{{ going_percentage }}</span>% </strong></span> <br>#}
-
-            <button type="button" class="btn btn-primary btn-xs" style="pointer-events: none;">
+            <button type="button" class="btn btn-info btn-xs" style="pointer-events: none;">
                 Host is Staying <span class="badge badge-light"
                                       id="isHostThere">{{ is_host_there }}</span>
             </button>
-
-            {#            <span>Host is Staying at Event? <strong><span id="isHostThere">{{ is_host_there }} </span> </strong> </span>#}
             <br>
-            {#            <span>Number of Attendees Since Last Edit: </span> <br>#}
         </div>
         <br>
 
@@ -73,8 +65,11 @@
 
         <div>at Building:</div>
         <strong>
-            <div id="event_building_{{ event.id }}"> {{ event.building }}</div>
+            <span class="badge badge-light"
+                                      id="event_building_{{ event.id }}">{{ event.building }}</span>
+{#            <div id="event_building_{{ event.id }}"> {{ event.building }}</div>#}
         </strong>
+
         <div>in Room:</div>
         <strong>
             <div id="event_room_{{ event.id }}"> {{ event.room }} </div>
