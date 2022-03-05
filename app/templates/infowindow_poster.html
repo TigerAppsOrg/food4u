@@ -40,10 +40,17 @@
         {% endif %}
 
         <div id="attendance_info_{{ event.id }}">
-            <span>Total Number of People Going: <strong><span id="numberOfPeopleGoing">{{ number_of_people_going }}</span>
-                people </strong></span> <br>
-            <span>Going "Yes" Percentage: <strong> <span id="goingPercentage">{{ going_percentage }}</span>% </strong></span> <br>
-            <span>Host is Staying at Event? <strong><span id="isHostThere">{{ is_host_there }} </span> </strong> </span> <br>
+            <button type="button" class="btn btn-primary btn-xs" style="pointer-events: none">
+                # of People Attending <span class="badge badge-light"
+                                    id="numberOfPeopleGoing">{{ number_of_people_going }}</span>
+            </button>
+            <br>
+            {#            <span>Total Number of People Going: <strong><span id="numberOfPeopleGoing">{{ number_of_people_going }}</span>#}
+            {#                people </strong></span> <br>#}
+            <span>Attending Percentage: <strong> <span
+                    id="goingPercentage">{{ going_percentage }}</span>% </strong></span> <br>
+            <span>Host is Staying at Event? <strong><span id="isHostThere">{{ is_host_there }} </span> </strong> </span>
+            <br>
             {#            <span>Number of Attendees Since Last Edit: </span> <br>#}
         </div>
         <br>
@@ -65,7 +72,9 @@
             {% if event.description != "N/A" %}
                 <div>Description:
                     <strong>
-                        <div id="event_description_{{ event.id }}" style="white-space: pre-line;">{{ event.description }}</div></strong></div>
+                        <div id="event_description_{{ event.id }}"
+                             style="white-space: pre-line;">{{ event.description }}</div>
+                    </strong></div>
             {% endif %}</div>
         <div id="images_{{ event.id }}"></div>
 
