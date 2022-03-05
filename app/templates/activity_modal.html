@@ -14,7 +14,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="activityModalLabel">Real-Time Statistics
+                <h5 class="modal-title" id="activityModalLabel">Statistics
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -28,27 +28,27 @@
                             Number of Free Food Events All-Time
                             </span>
                         </td>
-{#                        <td style="border-left: 1px solid #000;#}
-{#                     border-color: white">#}
-{#                            <span style="display: table;margin: 0 auto;">#}
-{#                            Number of Free Food Events Today#}
-{#                            </span>#}
-{#                        </td>#}
+                        {#                        <td style="border-left: 1px solid #000;#}
+                        {#                     border-color: white">#}
+                        {#                            <span style="display: table;margin: 0 auto;">#}
+                        {#                            Number of Free Food Events Today#}
+                        {#                            </span>#}
+                        {#                        </td>#}
                     </tr>
                     <tr>
                         <td style="
-                     {#border-right: 1px solid #000; #}
-                     border-color: white">
+                                {#border-right: 1px solid #000; #}
+                                border-color: white">
                             <span id="number-of-posts-all-time" style="display: table;margin: 0 auto;">
-                                {{ posts_all_time_count }} posts
+                                <span class="badge badge-pill badge-info">{{ posts_all_time_count }} posts </span>
                             </span>
                         </td>
-{#                        <td style="border-left: 1px solid #000;#}
-{#                      border-color: white">#}
-{#                            <span id="number-of-posts-today" style="display: table;margin: 0 auto;">#}
-{#                                Coming Soon!#}
-{#                            </span>#}
-{#                        </td>#}
+                        {#                        <td style="border-left: 1px solid #000;#}
+                        {#                      border-color: white">#}
+                        {#                            <span id="number-of-posts-today" style="display: table;margin: 0 auto;">#}
+                        {#                                Coming Soon!#}
+                        {#                            </span>#}
+                        {#                        </td>#}
 
                     </tr>
                 </table>
@@ -71,13 +71,13 @@
                         <td style="
                      border-right: 1px solid #000; border-color: white">
                             <span id="unique-visitors-count" style="display: table;margin: 0 auto;">
-                                {{ unique_visitors_count }} people
+                                <span class="badge badge-pill badge-info">{{ unique_visitors_count }} people</span>
                             </span>
                         </td>
                         <td style="border-left: 1px solid #000;
                       border-color: white">
                             <span id="subscribers-count" style="display: table;margin: 0 auto;">
-                                {{ subscribers_count }} people
+                                <span class="badge badge-pill badge-info">{{ subscribers_count }} people</span>
                             </span>
                         </td>
 
