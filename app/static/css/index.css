@@ -125,6 +125,7 @@ body {
     font-family: "Poppins", sans-serif;
     color: black;
     background: linear-gradient(to bottom, #ffcc00 0%, #f58025 100%);
+    font-size: 14px !important;
 }
 
 #flagButton {
