@@ -733,9 +733,9 @@ input:checked + .slider {
     color: black;
 }
 
-.gm-style .gm-style-iw-t::after {
-    width: 0px !important;
-}
+/*.gm-style .gm-style-iw-t::after {*/
+/*    width: 0px !important;*/
+/*}*/
 
 input, textarea {
     font-size: 16px !important;
