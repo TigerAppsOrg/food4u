@@ -262,11 +262,11 @@ function addMarker(event) {
         let endTimeMilliSeconds = withOffset - offset
 
         const time_remaining = getTimeRemaining(endTime);
-        const remaining_time_message = time_remaining.total > 0 ? "<strong>" +
+        const remaining_time_message = time_remaining.total > 0 ? "<span class='badge badge-warning'>" +
             (time_remaining.hours + "h "
                 + time_remaining.minutes + "m " + time_remaining.seconds + "s " + " " +
-                "remaining for event") + "</strong>" :
-            "<strong>" + "This event has ended.<br>We hope you got some of the good food!" + "</strong>";
+                "remaining for event") + "</span>" :
+            "<span class='badge badge-warning'>" + "This event has ended.<br>We hope you got some of the good food!" + "</span>"
         const threeHoursAfterPresent = ((new Date()).getTime() + 3 * 60 * 60 * 1000);
         // if there are less than 10 minutes remaining then event cannot be flagged
         const maxExtensionMinutes = Math.floor((threeHoursAfterPresent - endTimeMilliSeconds) / (60 * 1000));
@@ -339,11 +339,11 @@ function modifyMarkerOnClick(associatedEvent, associatedMarker) {
         let endTimeMilliSeconds = withOffset - offset
 
         const time_remaining = getTimeRemaining(endTime);
-        const remaining_time_message = time_remaining.total > 0 ? "<strong>" +
+        const remaining_time_message = time_remaining.total > 0 ? "<span class='badge badge-warning'>" +
             (time_remaining.hours + "h "
                 + time_remaining.minutes + "m " + time_remaining.seconds + "s " + " " +
-                "remaining for event") + "</strong>" :
-            "<strong>" + "This event has ended.<br>We hope you got some of the good food!" + "</strong>";
+                "remaining for event") + "</span>" :
+            "<span class='badge badge-warning'>" + "This event has ended.<br>We hope you got some of the good food!" + "</span>";
         const tenMinsAfterPresent = ((new Date()).getTime() + 10 * 60 * 1000);
         const threeHoursAfterPresent = ((new Date()).getTime() + 3 * 60 * 60 * 1000);
         // if there are less than 10 minutes remaining then event cannot be flagged

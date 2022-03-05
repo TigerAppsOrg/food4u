@@ -25,14 +25,14 @@ function updateTime() {
         let event_endtime = allMarkers[i].get("event_end_time");
         let time_remaining = getTimeRemaining(event_endtime);
         if ((time_remaining.minutes === 10 && time_remaining.seconds === 0) ||
-            (time_remaining.minutes === 0 && time_remaining.seconds === 0) ) {
+            (time_remaining.minutes === 0 && time_remaining.seconds === 0)) {
             socket.emit("update");
         }
-        let remaining_time_message = time_remaining.total > 0 ?
-            "<strong>" + (time_remaining.hours + "h "
+        const remaining_time_message = time_remaining.total > 0 ? "<span class='badge badge-warning'>" +
+            (time_remaining.hours + "h "
                 + time_remaining.minutes + "m " + time_remaining.seconds + "s " + " " +
-                "remaining for event") + "</strong>" :
-            "<strong>" + "This event has ended.<br>We hope you got some of the good food!" + "</strong>";
+                "remaining for event") + "</span>" :
+            "<span class='badge badge-warning'>" + "This event has ended.<br>We hope you got some of the good food!" + "</span>"
         $("#remaining_time" + '_' + String(allMarkers[i].get('event_id'))).html(remaining_time_message);
     }
 }
