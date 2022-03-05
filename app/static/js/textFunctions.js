@@ -24,8 +24,8 @@ function updateTime() {
     for (let i = 0; i < allMarkers.length; i++) {
         let event_endtime = allMarkers[i].get("event_end_time");
         let time_remaining = getTimeRemaining(event_endtime);
-        if ((time_remaining.minutes === 10 && time_remaining.seconds === 0) ||
-            (time_remaining.minutes === 0 && time_remaining.seconds === 0)) {
+        if ((time_remaining.minutes === 10 && time_remaining.seconds === 1) ||
+            (time_remaining.minutes === 0 && time_remaining.seconds === 1)) {
             socket.timeout(1000).emit("update");
         }
         const remaining_time_message = time_remaining.total > 0 ? "<span class='badge badge-warning'>" +
