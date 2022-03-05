@@ -19,6 +19,7 @@
             <span id="going_line_{{ event.id }}">
             Staying at Your Event?
             </span>
+            <br>
             <span>
                 <button type="submit" class="btn btn-success btn-xs shadow-none"
                         id="goingButton" form="goingForm" onclick="goingWithoutRefresh(); return false">
@@ -40,16 +41,24 @@
         {% endif %}
 
         <div id="attendance_info_{{ event.id }}">
-            <button type="button" class="btn btn-primary btn-xs" style="pointer-events: none">
+            <button type="button" class="btn btn-info btn-xs" style="pointer-events: none">
                 # of People Attending <span class="badge badge-light"
-                                    id="numberOfPeopleGoing">{{ number_of_people_going }}</span>
+                                            id="numberOfPeopleGoing">{{ number_of_people_going }}</span>
             </button>
             <br>
             {#            <span>Total Number of People Going: <strong><span id="numberOfPeopleGoing">{{ number_of_people_going }}</span>#}
             {#                people </strong></span> <br>#}
-            <span>Attending Percentage: <strong> <span
-                    id="goingPercentage">{{ going_percentage }}</span>% </strong></span> <br>
-            <span>Host is Staying at Event? <strong><span id="isHostThere">{{ is_host_there }} </span> </strong> </span>
+            <button type="button" class="btn btn-info btn-xs" style="pointer-events: none">
+                Attending Percentage <span class="badge badge-light"
+                                            id="goingPercentage">{{ going_percentage }}</span>
+            </button>
+            {#            <span>Attending Percentage: <strong> <span#}
+            {#                    id="goingPercentage">{{ going_percentage }}</span>% </strong></span> <br>#}
+            <button type="button" class="btn btn-info btn-xs" style="pointer-events: none">
+                Host is Staying <span class="badge badge-light"
+                                            id="isHostThere">{{ is_host_there }}</span>
+            </button>
+{#            <span>Host is Staying at Event? <strong><span id="isHostThere">{{ is_host_there }} </span> </strong> </span>#}
             <br>
             {#            <span>Number of Attendees Since Last Edit: </span> <br>#}
         </div>
