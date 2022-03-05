@@ -26,7 +26,7 @@ function updateTime() {
         let time_remaining = getTimeRemaining(event_endtime);
         if ((time_remaining.minutes === 10 && time_remaining.seconds === 0) ||
             (time_remaining.minutes === 0 && time_remaining.seconds === 0)) {
-            setTimeout(socket.emit("update"), 1000);
+            socket.timeout(1000).emit("update");
         }
         const remaining_time_message = time_remaining.total > 0 ? "<span class='badge badge-warning'>" +
             (time_remaining.hours + "h "
