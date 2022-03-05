@@ -124,7 +124,7 @@ body {
     border: 1px solid black;
     font-family: "Poppins", sans-serif;
     color: black;
-    background: linear-gradient(to bottom, #ffcc00 0%, #f58025 100%);
+    background: linear-gradient(to bottom, #ffcc00 0%, #f58025 100%) !important;
     font-size: 14px !important;
 }
 
