@@ -479,7 +479,7 @@ function updateMarkers(events) {
                             '                    Get Directions\n' +
                             '                </a>')
                     }
-                    // handles going going buttons dynamically when infowindow is open
+                    // handles going buttons dynamically when infowindow is open
                     if (foundMarker.icon.url === "/static/images/red_logo_mini.png") {
                         $('#going_line_' + foundEvent.id).remove();
                     } else if ($('#goingLineOptional_' + foundEvent.id).children().length === 0) {
