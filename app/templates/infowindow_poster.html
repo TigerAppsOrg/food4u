@@ -48,7 +48,7 @@
             <br>
             <button type="button" class="btn btn-info btn-xs" style="pointer-events: none; margin-bottom: 2px;">
                 Attending Percentage <span class="badge badge-light"
-                                           id="goingPercentage">{{ going_percentage }}%</span>
+                                           id="goingPercentage">{{ going_percentage }}</span>
             </button>
             <br>
             <button type="button" class="btn btn-info btn-xs" style="pointer-events: none;">
@@ -66,13 +66,15 @@
         <div>at Building:</div>
         <strong>
             <span class="badge badge-info"
-                                      id="event_building_{{ event.id }}">{{ event.building }}</span>
-{#            <div id="event_building_{{ event.id }}"> {{ event.building }}</div>#}
+                  id="event_building_{{ event.id }}">{{ event.building }}</span>
+            {#            <div id="event_building_{{ event.id }}"> {{ event.building }}</div>#}
         </strong>
 
         <div>in Room:</div>
         <strong>
-            <div id="event_room_{{ event.id }}"> {{ event.room }} </div>
+            <span class="badge badge-info"
+                  id="event_room_{{ event.id }}">{{ event.room }}</span>
+{#            <div id="event_room_{{ event.id }}"> {{ event.room }} </div>#}
         </strong>
 
         <div class="descriptionOptional">

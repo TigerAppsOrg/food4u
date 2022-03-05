@@ -415,7 +415,7 @@ function updateMarkers(events) {
                 }
                 if (foundMarker.get("going_percentage") !== foundEvent.going_percentage) {
                     foundMarker.set("going_percentage", foundEvent.going_percentage);
-                    $("#attendance_info_" + foundEvent.id).find("#goingPercentage").text(foundEvent.going_percentage);
+                    $("#attendance_info_" + foundEvent.id).find("#goingPercentage").text(foundEvent.going_percentage + "%");
                 }
                 if (foundMarker.get("host_message") !== foundEvent.host_message) {
                     foundMarker.set("host_message", foundEvent.host_message);
