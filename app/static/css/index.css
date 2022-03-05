@@ -763,3 +763,8 @@ input, textarea {
     background-color: #056ed7 !important;
     text-align: left !important;
 }
+
+.badge-warning {
+    background-color: darkgray !important;
+    text-align: left !important;
+}
