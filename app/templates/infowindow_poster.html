@@ -19,15 +19,16 @@
             <span id="going_line_{{ event.id }}">
             Staying at Your Event?
             </span>
-
-            <button type="submit" class="btn btn-success btn-xs shadow-none"
-                    id="goingButton" form="goingForm" onclick="goingWithoutRefresh(); return false">
-                Yes
-            </button>
-            <button type="submit" class="btn btn-danger btn-xs"
-                    id="goingButton" form="goingForm" onclick="notGoingWithoutRefresh(); return false">
-                No
-            </button>
+            <span>
+                <button type="submit" class="btn btn-success btn-xs shadow-none"
+                        id="goingButton" form="goingForm" onclick="goingWithoutRefresh(); return false">
+                    Yes
+                </button>
+                <button type="submit" class="btn btn-danger btn-xs"
+                        id="goingButton" form="goingForm" onclick="notGoingWithoutRefresh(); return false">
+                    No
+                </button>
+            </span>
             <div id="going_button_{{ event.id }}">
                 <form action="/handleGoing" id="goingForm" method="post" enctype="multipart/form-data">
                     <input type="text" class="input-hidden" id="idForGoing" name="idForGoing"

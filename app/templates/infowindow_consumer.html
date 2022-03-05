@@ -19,14 +19,16 @@
             {% if event_remaining_minutes > 0 %}
                 <span id="going_line_{{ event.id }}">
             Going to this Event?
-            <button type="submit" class="btn btn-success btn-xs shadow-none"
-                    id="goingButton" form="goingForm" onclick="goingWithoutRefresh(); return false">
-                Yes
-            </button>
-            <button type="submit" class="btn btn-danger btn-xs"
-                    id="goingButton" form="goingForm" onclick="notGoingWithoutRefresh(); return false">
-                No
-            </button>
+            <span>
+                <button type="submit" class="btn btn-success btn-xs shadow-none"
+                        id="goingButton" form="goingForm" onclick="goingWithoutRefresh(); return false">
+                    Yes
+                </button>
+                <button type="submit" class="btn btn-danger btn-xs"
+                        id="goingButton" form="goingForm" onclick="notGoingWithoutRefresh(); return false">
+                    No
+                </button>
+            </span>
             <div>
                 <form action="/handleGoing" id="goingForm" method="post" enctype="multipart/form-data">
                     <input type="text" class="input-hidden" id="idForGoing" name="idForGoing"
@@ -40,12 +42,14 @@
         </div>
 
 
-
         <div id="attendance_info_{{ event.id }}">
-            <span>Total Number of People Going: <strong><span id="numberOfPeopleGoing">{{ number_of_people_going }}</span>
+            <span>Total Number of People Going: <strong><span
+                    id="numberOfPeopleGoing">{{ number_of_people_going }}</span>
                 people </strong></span> <br>
-            <span>Going "Yes" Percentage: <strong> <span id="goingPercentage">{{ going_percentage }}</span>% </strong></span> <br>
-            <span>Host is Staying at Event? <strong><span id="isHostThere">{{ is_host_there }} </span> </strong> </span> <br>
+            <span>Going "Yes" Percentage: <strong> <span
+                    id="goingPercentage">{{ going_percentage }}</span>% </strong></span> <br>
+            <span>Host is Staying at Event? <strong><span id="isHostThere">{{ is_host_there }} </span> </strong> </span>
+            <br>
             {#            <span>Number of Attendees Since Last Edit: </span> <br>#}
         </div>
         <br>
@@ -67,44 +71,46 @@
             {% if event.description != "N/A" %}
                 <div>Description:
                     <strong>
-                        <div id="event_description_{{ event.id }}" style="white-space: pre-line;">{{ event.description }}</div></strong></div>
+                        <div id="event_description_{{ event.id }}"
+                             style="white-space: pre-line;">{{ event.description }}</div>
+                    </strong></div>
             {% endif %}</div>
-        </div>
-        <div id="images_{{ event.id }}"></div>
-
-
-        </p>
-        <p id="orignalposter">
-            Posted by: <strong>{{ event.net_id }}</strong>
-        </p>
     </div>
+    <div id="images_{{ event.id }}"></div>
 
-    <div>
 
-        <div id=suffix_button_{{ event.id }}>
-            {% if event_remaining_minutes > 10 %}
-                <form action="/handleEventFlag" id="flagForm" method="post" enctype="multipart/form-data">
-                    <input type="text" class="input-hidden" id="idForFlagging" name="idForFlagging"
-                           value="{{ event.id }}">
-                </form>
-                <button type="submit" id="flagButton" form="flagForm" class="btn btn-primary"
-                        onclick="flagWithoutRefresh(); return false">
-                    Flag This Event As Ending
-                </button>
-            {% endif %}
-        </div>
+    </p>
+    <p id="orignalposter">
+        Posted by: <strong>{{ event.net_id }}</strong>
+    </p>
+</div>
 
-        {% if event_remaining_minutes > 0 %}
-            <div id="directionsOptional_{{ event.id }}">
-                <a id="directionsButton_{{ event.id }}"
-                   href="https://www.google.com/maps/dir/?api=1&destination={{ event.latitude }},{{ event.longitude }}"
-                   target="_blank"
-                   class="btn btn-primary">
-                    Get Directions
-                </a>
-            </div>
+<div>
+
+    <div id=suffix_button_{{ event.id }}>
+        {% if event_remaining_minutes > 10 %}
+            <form action="/handleEventFlag" id="flagForm" method="post" enctype="multipart/form-data">
+                <input type="text" class="input-hidden" id="idForFlagging" name="idForFlagging"
+                       value="{{ event.id }}">
+            </form>
+            <button type="submit" id="flagButton" form="flagForm" class="btn btn-primary"
+                    onclick="flagWithoutRefresh(); return false">
+                Flag This Event As Ending
+            </button>
         {% endif %}
     </div>
+
+    {% if event_remaining_minutes > 0 %}
+        <div id="directionsOptional_{{ event.id }}">
+            <a id="directionsButton_{{ event.id }}"
+               href="https://www.google.com/maps/dir/?api=1&destination={{ event.latitude }},{{ event.longitude }}"
+               target="_blank"
+               class="btn btn-primary">
+                Get Directions
+            </a>
+        </div>
+    {% endif %}
+</div>
 </body>
 
 </html>
