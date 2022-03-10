@@ -27,7 +27,6 @@ function updateTime() {
         if ((time_remaining.minutes === 10 && time_remaining.seconds === 1) ||
             (time_remaining.minutes === 0 && time_remaining.seconds === 1)) {
             socket.timeout(1000).emit("update");
-            $("#active-event-count").html(parseInt($('#active-event-count').html(), 10) - 1)
         }
         const remaining_time_message = time_remaining.total > 0 ? "<span class='badge badge-warning'>" +
             (time_remaining.hours + "h "
