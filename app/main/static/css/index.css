@@ -755,16 +755,17 @@ input, textarea {
     min-width: 0px !important;
 }
 
-.btn-info {
-    background-color: #27a0b4 !important;
-}
+/*.btn-info {*/
+/*    background-color: #abb427 !important;*/
+/*}*/
 
 .badge-info {
-    background-color: #056ed7 !important;
+    background-color: #ffcc00 !important;
     text-align: left !important;
+    color: black !important;
 }
 
 .badge-warning {
-    background-color: darkgray !important;
+    background-color: black !important;
     text-align: left !important;
 }

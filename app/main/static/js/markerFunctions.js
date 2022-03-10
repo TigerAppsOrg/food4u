@@ -445,8 +445,9 @@ function updateMarkers(events) {
                     if (foundEvent.description === 'N/A') {
                         $('.descriptionOptional').empty();
                     } else if ($('.descriptionOptional').children().length === 0) {
-                        $('.descriptionOptional').append("<div>Description: <strong><div id=\"event_description_" +
-                            String(foundEvent.id) + "\">" + foundEvent.description + "</div></strong></div>");
+                        $('.descriptionOptional').append("<div>Description:\n<br>\n<strong>\n<div " +
+                            "class=\"badge badge-info\"\nid=\"event_description_{{ event.id }}\"\nstyle=" +
+                            "\"white-space: pre-line;\">" + foundEvent.description + "</div>\n</strong>\n</div>");
                         $("#event_description_" + foundEvent.id).text(foundEvent.description);
                     } else {
                         $("#event_description_" + foundEvent.id).text(foundEvent.description);
