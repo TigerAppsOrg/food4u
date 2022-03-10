@@ -44,7 +44,7 @@ def send_feedback():
     return redirect(url_for('main.index'))
 
 
-@app.route('/manageNotificationSubscriptions', methods=['POST'])
+@main.route('/manageNotificationSubscriptions', methods=['POST'])
 def manage_notification_subscriptions():
     # username = "ben"
     # username = username.lower().strip()
