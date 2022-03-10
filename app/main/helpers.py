@@ -349,16 +349,15 @@ def fetch_events():
              })
     return events_dict_list
 
+
 def delete_data(event):
     delete_all_pics(event)
     delete_all_going(event)
     db.session.delete(event)
     db.session.commit()
-    events_dict = fetch_events()
-
     active_event_count = fetch_active_events_count()
-    print('count', active_event_count)
     socket_io.emit('active_event_count', active_event_count, broadcast=True)
+
 
 def fetch_active_events_count():
     active_events_count = Event.query.count()
