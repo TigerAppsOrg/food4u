@@ -175,19 +175,19 @@ function showDefaultPositionFormEditForm() {
 function getIcon(color, username, net_id) {
     if (username !== net_id) {
         if (color == "green") {
-            return '/static/images/green_logo_mini.png'
+            return '/main/images/green_logo_mini.png'
         } else if (color == "yellow") {
-            return '/static/images/yellow_logo_mini.png'
+            return '/main/images/yellow_logo_mini.png'
         } else {
-            return '/static/images/red_logo_mini.png'
+            return '/main/images/red_logo_mini.png'
         }
     } else {
         if (color == "green") {
-            return '/static/images/green_logo_poster_mini.png'
+            return '/main/images/green_logo_poster_mini.png'
         } else if (color == "yellow") {
-            return '/static/images/yellow_logo_poster_mini.png'
+            return '/main/images/yellow_logo_poster_mini.png'
         } else {
-            return '/static/images/red_logo_poster_mini.png'
+            return '/main/images/red_logo_poster_mini.png'
         }
     }
 }
@@ -466,7 +466,7 @@ function updateMarkers(events) {
                     };
                     foundMarker.setIcon(img);
                     // handles get directions button dynamically when infowindow is open
-                    if (foundMarker.icon.url === "/static/images/red_logo_mini.png") {
+                    if (foundMarker.icon.url === "/main/images/red_logo_mini.png") {
                         $('#directionsButton_' + foundEvent.id).remove();
                     } else if ($('#directionsOptional_' + foundEvent.id).children().length === 0) {
                         $('#directionsOptional_' + foundEvent.id).append('                <a id="directionsButton_"\n' +
@@ -480,14 +480,14 @@ function updateMarkers(events) {
                             '                </a>')
                     }
                     // handles going buttons dynamically when infowindow is open
-                    if (foundMarker.icon.url === "/static/images/red_logo_mini.png") {
+                    if (foundMarker.icon.url === "/main/images/red_logo_mini.png") {
                         $('#going_line_' + foundEvent.id).remove();
                     } else if ($('#goingLineOptional_' + foundEvent.id).children().length === 0) {
                         let stringToAppend = "         <span id=\"going_line_{{ event.id }}\">\n            Attending this Event?\n            <span>\n                <button type=\"submit\" class=\"btn btn-success btn-xs shadow-none\"\n                        id=\"goingButton\" form=\"goingForm\" onclick=\"goingWithoutRefresh(); return false\">\n                    Yes\n                </button>\n                <button type=\"submit\" class=\"btn btn-danger btn-xs\"\n                        id=\"goingButton\" form=\"goingForm\" onclick=\"notGoingWithoutRefresh(); return false\">\n                    No\n                </button>\n            </span>\n            <div>\n                <form action=\"/handleGoing\" id=\"goingForm\" method=\"post\" enctype=\"multipart/form-data\">\n                    <input type=\"text\" class=\"input-hidden\" id=\"idForGoing\" name=\"idForGoing\"\n                           value=\"{{ event.id }}\">\n                    <input type=\"checkbox\" id=\"goingSwitch\" name=\"goingSwitch\" hidden>\n                </form>\n            </div>\n            <br>\n            </span>"
                         $('#goingLineOptional_' + foundEvent.id).append(stringToAppend);
                     }
                     // handles flag button dynamically when infowindow is open
-                    if (foundMarker.icon.url !== "/static/images/green_logo_mini.png") {
+                    if (foundMarker.icon.url !== "/main/images/green_logo_mini.png") {
                         $('#suffix_button_' + foundEvent.id).empty();
                     } else if ($('#suffix_button_' + foundEvent.id).children().length === 0) {
                         $('#suffix_button_' + foundEvent.id).append('<form action="/handleEventFlag" ' +

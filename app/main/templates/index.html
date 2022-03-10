@@ -5,7 +5,7 @@
     <meta id="my-data" data-name="{{ username | safe }}">
     <!-- Title -->
     <title>food 4 u</title>
-    <link rel="icon" href="{{ url_for('static', filename='images/orange_logo_mini.png') }}">
+    <link rel="icon" href="{{ url_for('main.static', filename='images/orange_logo_mini.png') }}">
 
 
     <!-- Link Fonts -->
@@ -48,14 +48,14 @@
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <!-- Initializes all global variables for JS functions -->
-    <script src="{{ url_for('static', filename='js/globalVariables.js') }}"></script>
+    <script src="{{ url_for('main.static', filename='js/globalVariables.js') }}"></script>
 
     <!-- Link Source Files -->
-    <script src="{{ url_for('static', filename='js/imageFunctions.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/textFunctions.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/markerFunctions.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/mapFunctions.js') }}"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <script src="{{ url_for('main.static', filename='js/imageFunctions.js') }}"></script>
+    <script src="{{ url_for('main.static', filename='js/textFunctions.js') }}"></script>
+    <script src="{{ url_for('main.static', filename='js/markerFunctions.js') }}"></script>
+    <script src="{{ url_for('main.static', filename='js/mapFunctions.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('main.static', filename='css/index.css') }}">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
@@ -69,7 +69,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
 <!-- Link Notyf JS Library -->
 <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
-<script src="{{ url_for('static', filename='js/alertFunctions.js') }}"></script>
+<script src="{{ url_for('main.static', filename='js/alertFunctions.js') }}"></script>
 
 
 {% with errors = get_flashed_messages(category_filter=["error"]) %}
@@ -129,8 +129,8 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9TRCt7oxBmM7I22eTFTFbb-_1k3BhaNw&callback=initMap&v=weekly&channel=2"
         async></script>
 
-<script src="{{ url_for('static', filename='js/formFunctions.js') }}"></script>
-<script src="{{ url_for('static', filename='js/intro.js') }}"></script>
+<script src="{{ url_for('main.static', filename='js/formFunctions.js') }}"></script>
+<script src="{{ url_for('main.static', filename='js/intro.js') }}"></script>
 
 
 <script>

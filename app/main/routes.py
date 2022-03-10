@@ -1,23 +1,23 @@
 from flask import render_template, request, make_response, jsonify
+import os
 import json
 import datetime
-from app.casclient import CasClient
-from app.helpers import legal_title, set_color_get_time, delete_all_pics, delete_all_going
-from app.helpers import legal_location, legal_duration, send_notifications
-from app.helpers import legal_description, legal_lat_lng, handle_and_edit_pics
-from app.helpers import legal_email, legal_fields, send_feedback_email, send_flag_email, \
+from . import main
+from .casclient import CasClient
+from .helpers import legal_title, set_color_get_time, delete_all_pics, delete_all_going
+from .helpers import legal_location, legal_duration, send_notifications
+from .helpers import legal_description, legal_lat_lng, handle_and_edit_pics
+from .helpers import legal_email, legal_fields, send_feedback_email, send_flag_email, \
     get_attendance, fetch_events, fetch_active_events_count
 from flask import redirect, flash, url_for
-from flask_socketio import SocketIO
-from app import app, db
+from app import socket_io, db
 from app.models import Event, Picture, Users, NotificationSubscribers, Attendees
+from .helpers import delete_data
 from itsdangerous import URLSafeSerializer, BadData
 from sqlalchemy.sql import functions
 
-socket_io = SocketIO(app)
 
-
-@app.route('/feedbackSubmissionForm', methods=['POST'])
+@main.route('/feedbackSubmissionForm', methods=['POST'])
 def send_feedback():
     # username = "ben"
     # username = username.lower().strip()
@@ -29,19 +29,19 @@ def send_feedback():
 
     if is_illegal == 1:
         flash("Feedback contains URLs. Please fix errors and submit again.", "error")
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
     if is_illegal == 2:
         flash(
             "Feedback contains profanity. Please fix errors and submit again.", "error")
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
     if is_illegal == 3:
         flash(
             "Feedback has word longer than 20 characters. Please fix errors and submit again.", "error")
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
 
     send_feedback_email(username, feedback)
     flash("Feedback has been successfully submitted. food 4 u appreciates your input!")
-    return redirect(url_for('index'))
+    return redirect(url_for('main.index'))
 
 
 @app.route('/manageNotificationSubscriptions', methods=['POST'])
@@ -77,7 +77,7 @@ def manage_notification_subscriptions():
     if text_subscription and not re.fullmatch(regex_number, phone_number):
         flash(
             "Please enter a valid phone number. We want to make sure we can share the free food!")
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
 
     if text_subscription:
         wants_text = True """
@@ -126,23 +126,23 @@ def manage_notification_subscriptions():
             return jsonify(message=message), 200
 
 
-@app.route('/unsubscribe/<token>', methods=['GET'])
+@main.route('/unsubscribe/<token>', methods=['GET'])
 def unsubscribe_token(token):
     CasClient().authenticate()
 
-    s = URLSafeSerializer(app.secret_key, salt='unsubscribe')
+    s = URLSafeSerializer(os.environ.get('SECRET_KEY'), salt='unsubscribe')
 
     try:
         email = s.loads(token)
     except BadData:
         flash("Error: bad data encountered!", "error")
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
 
     subscriber = NotificationSubscribers.query.filter_by(email_address=email).first()
     if not subscriber.wants_email:
         flash("You have successfully unsubscribed from email notifications from food 4 u!", "success")
         socket_io.emit('subscribe', -1, broadcast=True)
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
     else:
         subscriber_search = db.session.query(NotificationSubscribers).filter(NotificationSubscribers.email_address
                                                                              == email)
@@ -155,12 +155,12 @@ def unsubscribe_token(token):
 
     flash("You have successfully unsubscribed from email notifications from food 4 u!", "success")
     socket_io.emit('subscribe', -1, broadcast=True)
-    return redirect(url_for('index'))
+    return redirect(url_for('main.index'))
 
 
-@app.route('/', methods=['GET'])
-@app.route('/index', methods=['GET'])
-@app.route('/index/<event_id>', methods=['GET'])
+@main.route('/', methods=['GET'])
+@main.route('/index', methods=['GET'])
+@main.route('/index/<event_id>', methods=['GET'])
 def index(event_id=None):
     # username = "ben"
     # username = username.lower().strip()
@@ -225,7 +225,7 @@ def index(event_id=None):
     return response
 
 
-@app.route('/fetchNotificationPreferences', methods=['GET'])
+@main.route('/fetchNotificationPreferences', methods=['GET'])
 def fetch_notification_preferences():
     # username = "ben"
     # username = username.lower().strip()
@@ -246,7 +246,7 @@ def fetch_notification_preferences():
             return jsonify(notifications_dict)
 
 
-@app.route('/handleGoing', methods=['POST'])
+@main.route('/handleGoing', methods=['POST'])
 def going_to_event():
     # username = "ben"
     # username = username.lower().strip()
@@ -414,7 +414,7 @@ def going_to_event():
                 return jsonify(message=message), 200
 
 
-@app.route('/handleEventDelete', methods=['POST'])
+@main.route('/handleEventDelete', methods=['POST'])
 def delete_event():
     # username = "ben"
     # username = username.lower().strip()
@@ -446,7 +446,7 @@ def delete_event():
     return jsonify(message=message), 200
 
 
-@app.route('/handleEventExtend', methods=['POST'])
+@main.route('/handleEventExtend', methods=['POST'])
 def extend_event():
     # username = "ben"
     # username = username.lower().strip()
@@ -495,7 +495,7 @@ def extend_event():
 # if longer than 10 minutes are left in flagged event, reduces time left to 10 minutes in db
 
 
-@app.route('/handleEventFlag', methods=['POST'])
+@main.route('/handleEventFlag', methods=['POST'])
 def flag_event():
     # username = "ben"
     # username = username.lower().strip()
@@ -531,7 +531,7 @@ def flag_event():
     return jsonify(message=message), 200
 
 
-@app.route('/handleDataEdit', methods=['POST'])
+@main.route('/handleDataEdit', methods=['POST'])
 def handle_data_edit():
     # username = "ben"
     # username = username.lower().strip()
@@ -655,7 +655,7 @@ def handle_data_edit():
     return jsonify(success=True)
 
 
-@app.route('/handleFormData', methods=['POST'])
+@main.route('/handleFormData', methods=['POST'])
 def handle_data():
     # username = "ben"
     # username = username.lower().strip()
@@ -767,7 +767,7 @@ def handle_data():
     return jsonify(success=True)
 
 
-@app.route('/show_data', methods=['GET'])
+@main.route('/show_data', methods=['GET'])
 def show_data():
     username = CasClient().authenticate()
     username = username.lower().strip()
@@ -784,7 +784,7 @@ def show_data():
         "show_data.html", events=events, pictures=pictures, notifications=notifications)
 
 
-@app.route('/get_infowindow_poster', methods=['GET'])
+@main.route('/get_infowindow_poster', methods=['GET'])
 def get_infowindow_poster():
     CasClient().authenticate()
 
@@ -803,7 +803,7 @@ def get_infowindow_poster():
     return response
 
 
-@app.route('/get_infowindow_consumer', methods=['GET'])
+@main.route('/get_infowindow_consumer', methods=['GET'])
 def get_infowindow_consumer():
     CasClient().authenticate()
 
@@ -821,7 +821,7 @@ def get_infowindow_consumer():
     return response
 
 
-@app.route('/logout', methods=['GET'])
+@main.route('/logout', methods=['GET'])
 def logout():
     cas_client = CasClient()
     cas_client.authenticate()
@@ -840,13 +840,4 @@ def fetch_events_emit():
 #     socket_io.emit("get_attendees", attendees, broadcast=False)
 
 
-def delete_data(event):
-    delete_all_pics(event)
-    delete_all_going(event)
-    db.session.delete(event)
-    db.session.commit()
-    events_dict = fetch_events()
 
-    active_event_count = fetch_active_events_count()
-    print('count', active_event_count)
-    socket_io.emit('active_event_count', active_event_count, broadcast=True)

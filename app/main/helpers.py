@@ -1,29 +1,20 @@
-from flask import url_for
-import re
-from app import app, db
-from app.models import Event, Picture
-from app.models import NotificationSubscribers, Attendees
-import cloudinary.uploader
-import math
 import datetime
+import math
 import os
-import cloudinary
-from better_profanity import profanity as pf
-from flask_mail import Mail, Message
-from itsdangerous import URLSafeSerializer
-from app.casclient import CasClient
+import re
 
-app.config['MAIL_SERVER'] = 'smtp.sendgrid.net'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'apikey'
-app.config['MAIL_PASSWORD'] = os.environ.get('SENDGRID_PASSWORD')
-app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USE_SSL'] = True
-mail = Mail(app)
+import cloudinary
+import cloudinary.uploader
+from better_profanity import profanity as pf
+from flask_mail import Message
+from itsdangerous import URLSafeSerializer
+
+from app import mail, db, socket_io
+from app.models import Event, Picture, NotificationSubscribers, Attendees
 
 
 def unsubscribe_token(email):
-    s = URLSafeSerializer(app.secret_key, salt='unsubscribe')
+    s = URLSafeSerializer(os.environ.get('SECRET_KEY'), salt='unsubscribe')
     token = s.dumps(email)
     return token
 
@@ -151,19 +142,6 @@ def delete_all_going(event):
     db.session.commit()
 
 
-def delete_data(event):
-    delete_all_pics(event)
-    delete_all_going(event)
-    db.session.delete(event)
-    db.session.commit()
-    events_dict = fetch_events()
-    print('event_dict', events_dict)
-    socket_io.emit('update', events_dict, broadcast=True)
-    active_event_count = fetch_active_events_count()
-    print('count', active_event_count)
-    socket_io.emit('active_event_count', active_event_count, broadcast=True)
-
-
 def legal_title(title):
     if len(title) > 100:
         return "", "", 2
@@ -263,9 +241,7 @@ def handle_and_edit_pics(pics, event, created_event, pics_to_delete=None):
             api_secret=os.getenv('API_SECRET'))
         for pic in pics:
             if pic and allowed_file_lower(pic.filename):
-                app.logger.info('%s file_to_upload', pic)
                 upload_result = cloudinary.uploader.upload(pic)
-                app.logger.info(upload_result)
                 url_split = upload_result['url'].split(".")
                 public_id = upload_result['public_id']
                 url_split[-1] = "jpg"
@@ -373,7 +349,21 @@ def fetch_events():
              })
     return events_dict_list
 
+def delete_data(event):
+    delete_all_pics(event)
+    delete_all_going(event)
+    db.session.delete(event)
+    db.session.commit()
+    events_dict = fetch_events()
+
+    active_event_count = fetch_active_events_count()
+    print('count', active_event_count)
+    socket_io.emit('active_event_count', active_event_count, broadcast=True)
 
 def fetch_active_events_count():
     active_events_count = Event.query.count()
     return active_events_count
+
+
+def fetch_attendees(event_id):
+    attendees_desc_time_query = db.session.query(Attendees).filter(Attendees.event_id == event_id)
