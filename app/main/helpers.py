@@ -1,6 +1,7 @@
 import datetime
 import math
 import os
+import pytz
 import re
 
 import cloudinary
@@ -273,6 +274,8 @@ def set_color_get_time(event):
     remaining_minutes = math.ceil(
         (event.end_time - time).total_seconds() / 60)
     remaining_minutes = max(remaining_minutes, 0)
+    if is_start_time_more_than_utc_now(event.start_time):
+        return True, "orange", remaining_minutes
     if (event.end_time - datetime.timedelta(minutes=10)) < time:
         marker_color = "yellow"
         # swap color to red, prep for removal
@@ -340,8 +343,12 @@ def fetch_events():
              'description': event.description,
              'pictures': pictureList,
              'icon': marker_color,
-             'remaining': remaining_minutes, 'id': event.id,
+             'remaining': remaining_minutes,
+             'id': event.id,
              'net_id': event.net_id.lower().strip(),
+             'post_time': event.post_time.isoformat(),
+             'start_time': event.start_time.isoformat(),
+             'start_time_est_string': get_est_time_string_from_utc_dt(event.start_time),
              'end_time': event.end_time.isoformat(),
              'people_going': number_of_people_going,
              'going_percentage': going_percentage,
@@ -366,3 +373,28 @@ def fetch_active_events_count():
 
 def fetch_attendees(event_id):
     attendees_desc_time_query = db.session.query(Attendees).filter(Attendees.event_id == event_id)
+
+
+def is_dst(zonename):
+    tz = pytz.timezone(zonename)
+    now = pytz.utc.localize(datetime.datetime.utcnow())
+    return now.astimezone(tz).dst() != datetime.timedelta(0)
+
+
+def get_utc_start_time_from_est_time_string(later_date_string):
+    local = pytz.timezone("America/New_York")
+    naive = datetime.datetime.strptime(later_date_string, '%m/%d/%Y %H:%M %p')
+    local_dt = local.localize(naive, is_dst=is_dst("America/New_York"))
+    start_time = local_dt.astimezone(pytz.utc)
+    return start_time
+
+
+def get_est_time_string_from_utc_dt(utc_dt):
+    local_dt = utc_dt.replace(tzinfo=pytz.utc).astimezone(tz=None)
+    local_dt_string = local_dt.strftime('%b %d, %Y, %I:%M %p')
+    return local_dt_string
+
+
+def is_start_time_more_than_utc_now(start_time_utc_dt):
+    datetime_now = datetime.datetime.utcnow()
+    return start_time_utc_dt > datetime_now

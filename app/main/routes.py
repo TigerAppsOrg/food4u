@@ -4,11 +4,12 @@ import json
 import datetime
 from . import main
 from .casclient import CasClient
-from .helpers import legal_title, set_color_get_time, delete_all_pics, delete_all_going
+from .helpers import legal_title, set_color_get_time
 from .helpers import legal_location, legal_duration, send_notifications
 from .helpers import legal_description, legal_lat_lng, handle_and_edit_pics
 from .helpers import legal_email, legal_fields, send_feedback_email, send_flag_email, \
-    get_attendance, fetch_events, fetch_active_events_count
+    get_attendance, fetch_events, fetch_active_events_count, get_utc_start_time_from_est_time_string, \
+    get_est_time_string_from_utc_dt, is_start_time_more_than_utc_now
 from flask import redirect, flash, url_for
 from app import socket_io, db
 from app.models import Event, Picture, Users, NotificationSubscribers, Attendees
@@ -185,18 +186,26 @@ def index(event_id=None):
         pictures = event.pictures.all()
         db.session.commit()
         pictureList = [[picture.event_picture, picture.name] for picture in pictures]
+        number_of_people_going, going_percentage, host_message = get_attendance(event)
         events_dict_list.append(
             {'title': event.title, 'building': event.building,
              'room': event.room,
-             'latitude': event.latitude, 'longitude': event.longitude,
+             'latitude': event.latitude,
+             'longitude': event.longitude,
              'description': event.description,
              'pictures': pictureList,
              'icon': marker_color,
              'remaining': remaining_minutes,
              'id': event.id,
              'net_id': event.net_id.lower().strip(),
+             'post_time': event.post_time.isoformat(),
+             'start_time': event.start_time.isoformat(),
+             'start_time_est_string': get_est_time_string_from_utc_dt(event.start_time),
              'end_time': event.end_time.isoformat(),
-             'username': username})
+             'people_going': number_of_people_going,
+             'going_percentage': going_percentage,
+             'host_message': host_message,
+             })
     subscribers_count = NotificationSubscribers.query.filter_by(
         wants_email=True).count()
     active_events_count = fetch_active_events_count()
@@ -266,8 +275,13 @@ def going_to_event():
         message = "Your event has not been found. It may have been already deleted."
         return jsonify(message=message), 400
 
+    ongoing, marker_color, remaining_minutes = set_color_get_time(is_event)
+
     # if not the op
     if username != is_event.net_id:
+        if remaining_minutes < 0:
+            message = "The event has already ended. You cannot add your attendance any more."
+            return jsonify(message=message), 400
         attendee_search = Attendees.query.filter(Attendees.event_id == going_event_id).filter(
             Attendees.net_id == username)
         is_attendee = attendee_search.first()
@@ -628,6 +642,18 @@ def handle_data_edit():
     if username != edited_event.first().net_id:
         message = "Edits must be from the original poster. Please contact them to edit the event."
         return jsonify(message=message), 400
+
+    post_time = datetime.datetime.utcnow()
+    if request.form['optradio'] == 'later':
+        if request.form['later-date'] == '':
+            message = "Start time for within one week was not found to be inputted. Please submit again."
+            return jsonify(message=message), 400
+        start_time = get_utc_start_time_from_est_time_string(request.form['later-date'])
+        end_time = start_time + datetime.timedelta(minutes=duration)
+    elif request.form['optradio'] == 'now':
+        start_time = post_time
+        end_time = post_time + datetime.timedelta(minutes=duration)
+
     edited_event.update(
         {"title": title,
          "building": building,
@@ -635,8 +661,10 @@ def handle_data_edit():
          "description": desc,
          "longitude": longitude,
          "latitude": latitude,
+         "start_time": start_time,
          "end_time": end_time},
         synchronize_session=False)
+
     pics = request.files.to_dict().values()
     result = request.form["pic_URLs_for_deletion"]
     pics_to_delete = None if result == '' else json.loads(result)
@@ -734,10 +762,21 @@ def handle_data():
         message = "Coordinates were not on Princeton campus. Please fix errors and submit again."
         return jsonify(message=message), 400
 
+    post_time = datetime.datetime.utcnow()
+    if request.form['optradio'] == 'later':
+        if request.form['later-date'] == '':
+            message = "Start time for within one week was not found to be inputted. Please edit again."
+            return jsonify(message=message), 400
+        start_time = get_utc_start_time_from_est_time_string(request.form['later-date'])
+        end_time = start_time + datetime.timedelta(minutes=duration)
+    elif request.form['optradio'] == 'now':
+        start_time = post_time
+        end_time = post_time + datetime.timedelta(minutes=duration)
+
     e = Event(
         net_id=username.lower().strip(),
         post_time=post_time,
-        start_time=post_time, title=title, building=building,
+        start_time=start_time, title=title, building=building,
         room=room,
         latitude=latitude, longitude=longitude,
         description=desc,
@@ -794,10 +833,12 @@ def get_infowindow_poster():
         event)
     number_of_people_going, going_percentage, is_host_there = get_attendance(event)
 
+    event_post_time = get_est_time_string_from_utc_dt(event.post_time)
+
     html = render_template(
         "infowindow_poster.html", event=event, event_remaining_minutes=remaining_minutes,
         number_of_people_going=number_of_people_going, going_percentage=going_percentage,
-        is_host_there=is_host_there
+        is_host_there=is_host_there, event_post_time=event_post_time,
     )
     response = make_response(html)
     return response
@@ -813,10 +854,12 @@ def get_infowindow_consumer():
         event)
     number_of_people_going, going_percentage, is_host_there = get_attendance(event)
 
+    event_post_time = get_est_time_string_from_utc_dt(event.post_time)
+
     html = render_template(
         "infowindow_consumer.html", event=event, event_remaining_minutes=remaining_minutes,
         number_of_people_going=number_of_people_going, going_percentage=going_percentage,
-        is_host_there=is_host_there)
+        is_host_there=is_host_there, event_post_time=event_post_time)
     response = make_response(html)
     return response
 
@@ -826,6 +869,3 @@ def logout():
     cas_client = CasClient()
     cas_client.authenticate()
     cas_client.logout('index')
-
-
-
