@@ -518,7 +518,7 @@ function updateMarkers(events) {
                             '            <button type="submit" id="flagButton" form="flagForm" ' +
                             'class="btn btn-primary" onclick="flagWithoutRefresh();' +
                             ' return false">\n' +
-                            '                Flag this Event as Ending\n' +
+                            '                Flag This Event as Ending\n' +
                             '            </button>')
                     }
                 }
