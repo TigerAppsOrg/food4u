@@ -27,8 +27,10 @@ intro.setOptions({
         {
             intro: "<h4><b>Finding Free Food</b></h4> On the map, you'll see markers with the food 4 u logo in" +
                 " different colors. These indicate " +
-                "free food events around campus." + "<br> <br> Markers are initially " +
-                "green. Those with 10 minutes left are yellow. The markers that are red are events with no more time" +
+                "free food events around campus." + "<br> <br> The markers that are orange are going to be" +
+                " active later (within a week). " +
+                "The markers are green if their events are currently active. " +
+                "Those with 10 minutes left are yellow. The markers that are red are events with no more time" +
                 " left. If you find an event that is running out of food and has more than 10 minutes left, please" +
                 " flag it to automatically set the remaining time to 10 minutes and prevent our community" +
                 " from pursuing an event that will not feed them. <br> <br>Click on a marker to find information" +
@@ -104,8 +106,10 @@ introAgain.setOptions({
         {
             intro: "<h4><b>Finding Free Food</b></h4> On the map, you'll see markers with the food 4 u logo in" +
                 " different colors. These indicate " +
-                "free food events around campus." + "<br> <br> Markers are initially " +
-                "green. Those with 10 minutes left are yellow. The markers that are red are events with no more time" +
+                "free food events around campus." + "<br> <br> The markers that are orange are going to be" +
+                " active later (within a week). " +
+                "The markers are green if their events are currently active. " +
+                "Those with 10 minutes left are yellow. The markers that are red are events with no more time" +
                 " left. If you find an event that is running out of food and has more than 10 minutes left, please" +
                 " flag it to automatically set the remaining time to 10 minutes and prevent our community" +
                 " from pursuing an event that will not feed them. <br> <br>Click on a marker to find information" +
@@ -120,8 +124,8 @@ introAgain.setOptions({
         {
             element: "#openNotificationSettings",
             intro: "<h4><b>Notification Settings</b></h4> If you would like" +
-                " to be notified about free food events, " +
-                "select \"Notification Settings\". There, you can" +
+                " to be notified about free food events, click on the dropdown menu" +
+                " in the top right then select \"Notification Settings\". There, you can" +
                 " subscribe to email notifications for new events.",
             position: 'left'
         },
