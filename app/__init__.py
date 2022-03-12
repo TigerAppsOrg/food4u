@@ -48,7 +48,7 @@ def register_scheduler(app):
             events = Event.query.all()
             db.session.commit()
             for event in events:
-                if event.end_time is None or time > (event.end_time + datetime.timedelta(hours=1)):
+                if event.end_time is None or current_time > (event.end_time + datetime.timedelta(hours=1)):
                     delete_data(event)
                     continue
                 if event.start_time > current_time and (not event.sent_emails or event.sent_emails is None):
