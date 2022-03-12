@@ -326,7 +326,8 @@ def going_to_event():
                 message = "You already responded that you were going to this event!"
                 return jsonify(message=message), 400
             elif switch_on and not is_attendee.going:
-                attendee_search.update({"going": True}, synchronize_session=False)
+                response_time = datetime.datetime.utcnow()
+                attendee_search.update({"going": True, "response_time": response_time}, synchronize_session=False)
                 user_search.update(
                     {"events_going": Users.events_going + 1},
                     synchronize_session=False)
@@ -344,7 +345,8 @@ def going_to_event():
                 return jsonify(message=message), 400
             else:
                 # not switch and going
-                attendee_search.update({"going": False}, synchronize_session=False)
+                response_time = datetime.datetime.utcnow()
+                attendee_search.update({"going": True, "response_time": response_time}, synchronize_session=False)
                 user_search.update(
                     {"events_going": Users.events_going - 1},
                     synchronize_session=False)
