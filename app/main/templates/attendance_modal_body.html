@@ -1,0 +1,48 @@
+<div id="attendanceCheck" data-event-id="{{ event.id }}">
+{#    <div id="goingLineOptional_{{ event.id }}">#}
+{#        {% if event_remaining_minutes > 0 %}#}
+{#            <span id="going_line_{{ event.id }}">#}
+{#            Attending This Event?#}
+{#            <span>#}
+{#                <button type="submit" class="btn btn-success btn-xs shadow-none"#}
+{#                        id="goingButton" form="goingForm" onclick="goingWithoutRefresh(); return false">#}
+{#                    Yes#}
+{#                </button>#}
+{#                <button type="submit" class="btn btn-danger btn-xs"#}
+{#                        id="goingButton" form="goingForm" onclick="notGoingWithoutRefresh(); return false">#}
+{#                    No#}
+{#                </button>#}
+{#            </span>#}
+{#            <div>#}
+{#                <form action="/handleGoing" id="goingForm" method="post" enctype="multipart/form-data">#}
+{#                    <input type="text" class="input-hidden" id="idForGoing" name="idForGoing"#}
+{#                           value="{{ event.id }}">#}
+{#                    <input type="checkbox" id="goingSwitch" name="goingSwitch" hidden>#}
+{#                </form>#}
+{#            </div>#}
+{#            <br>#}
+{#            </span>#}
+{#        {% endif %}#}
+{##}
+{#    </div>#}
+    <div class="panel panel-default">
+        <table class="table table-striped table-bordered table-hover table-small">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">NetID</th>
+                <th scope="col">Time Posted Attending</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for attendee in event_attendees %}
+                <tr>
+                    <th scope="row">{{ loop.index }}</th>
+                    <td>{{ attendee.net_id }}</td>
+                    <td>{{ get_est_time_string_from_utc_dt(attendee.response_time) }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

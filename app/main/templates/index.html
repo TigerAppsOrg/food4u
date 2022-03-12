@@ -2,11 +2,16 @@
 <html>
 
 <head>
-    <link rel="apple-touch-icon" sizes="180x180" href={{ url_for('main.static', filename='images/favicon_package_v0.16/apple-touch-icon.png') }}>
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('main.static', filename='images/favicon_package_v0.16/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('main.static', filename='images/favicon_package_v0.16/favicon-16x16.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180"
+          href={{ url_for('main.static', filename='images/favicon_package_v0.16/apple-touch-icon.png') }}>
+    <link rel="icon" type="image/png" sizes="32x32"
+          href="{{ url_for('main.static', filename='images/favicon_package_v0.16/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16"
+          href="{{ url_for('main.static', filename='images/favicon_package_v0.16/favicon-16x16.png') }}">
     <link rel="manifest" href="{{ url_for('main.static', filename='images/favicon_package_v0.16/site.webmanifest') }}">
-    <link rel="mask-icon" href="{{ url_for('main.static', filename='images/favicon_package_v0.16/safari-pinned-tab.svg') }}" color="#5bbad5">
+    <link rel="mask-icon"
+          href="{{ url_for('main.static', filename='images/favicon_package_v0.16/safari-pinned-tab.svg') }}"
+          color="#5bbad5">
 
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
@@ -204,6 +209,11 @@
 
         socket.on('active_event_count', function (count) {
             $("#active-event-count").html(count);
+        })
+
+        socket.on('update_attendees', function () {
+            // if current view needs to be updated
+            getAttendance($("#attendanceCheck").data("event-id"));
         })
         // End Socket_IO
 

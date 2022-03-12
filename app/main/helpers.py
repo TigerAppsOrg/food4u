@@ -12,6 +12,7 @@ from itsdangerous import URLSafeSerializer
 
 from app import mail, db, socket_io
 from app.models import Event, Picture, NotificationSubscribers, Attendees
+from . import main
 
 
 def unsubscribe_token(email):
@@ -371,8 +372,11 @@ def fetch_active_events_count():
     return active_events_count
 
 
-def fetch_attendees(event_id):
-    attendees_desc_time_query = db.session.query(Attendees).filter(Attendees.event_id == event_id)
+def fetch_attendees(event):
+    attendees_desc_time_query = db.session.query(Attendees).filter(Attendees.event_id == event.id,
+                                                                   Attendees.going).order_by(
+        Attendees.response_time.asc())
+    return attendees_desc_time_query.all()
 
 
 def is_dst(zonename):
@@ -389,6 +393,7 @@ def get_utc_start_time_from_est_time_string(later_date_string):
     return start_time
 
 
+@main.app_template_global()
 def get_est_time_string_from_utc_dt(utc_dt):
     local_dt = utc_dt.replace(tzinfo=pytz.utc).astimezone(tz=pytz.timezone("America/New_York"))
     local_dt_string = local_dt.strftime('%b %d, %Y, %I:%M %p')

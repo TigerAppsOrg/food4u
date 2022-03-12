@@ -148,3 +148,12 @@ function changeDateFormat(inputDateString) {
     let outputStringDate = stringArray.slice(0, -2).join("/") + " " + stringArray.slice(-2).join(" ");
     return outputStringDate;
 }
+
+function getAttendance(event_id) {
+    fetch('/get_attendance?' +
+        '&event_id=' + event_id)
+        .then(response => response.text()).then(data => {
+        $("#attendanceBody").empty();
+        $("#attendanceBody").append(data);
+    });
+}

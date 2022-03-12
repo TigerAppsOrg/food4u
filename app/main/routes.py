@@ -5,7 +5,7 @@ import json
 import datetime
 from . import main
 from .casclient import CasClient
-from .helpers import legal_title, set_color_get_time
+from .helpers import legal_title, set_color_get_time, fetch_attendees
 from .helpers import legal_location, legal_duration, send_notifications
 from .helpers import legal_description, legal_lat_lng, handle_and_edit_pics
 from .helpers import legal_email, legal_fields, send_feedback_email, send_flag_email, \
@@ -302,6 +302,7 @@ def going_to_event():
                 message = "You successfully responded that you are going to this event!"
                 events_dict = fetch_events()
                 socket_io.emit('update', events_dict, broadcast=True)
+                socket_io.emit('update_attendees', broadcast=True)
                 return jsonify(message=message), 200
             else:
                 # is not
@@ -317,6 +318,7 @@ def going_to_event():
                 message = "You successfully responded that you are not going to this event!"
                 events_dict = fetch_events()
                 socket_io.emit('update', events_dict, broadcast=True)
+                socket_io.emit('update_attendees', broadcast=True)
                 return jsonify(message=message), 200
         else:
             # If already on attendees list
@@ -335,6 +337,7 @@ def going_to_event():
                 message = "You successfully responded that you are going to this event!"
                 events_dict = fetch_events()
                 socket_io.emit('update', events_dict, broadcast=True)
+                socket_io.emit('update_attendees', broadcast=True)
                 return jsonify(message=message), 200
             elif not switch_on and not is_attendee.going:
                 message = "You already responded that you were not going to this event!"
@@ -352,6 +355,7 @@ def going_to_event():
                 message = "You successfully responded that you are not going to this event!"
                 events_dict = fetch_events()
                 socket_io.emit('update', events_dict, broadcast=True)
+                socket_io.emit('update_attendees', broadcast=True)
                 return jsonify(message=message), 200
 
     # if original poster
@@ -377,6 +381,7 @@ def going_to_event():
                 message = "You successfully responded that you are staying at your event!"
                 events_dict = fetch_events()
                 socket_io.emit('update', events_dict, broadcast=True)
+                socket_io.emit('update_attendees', broadcast=True)
                 return jsonify(message=message), 200
             else:
                 # is not
@@ -393,6 +398,7 @@ def going_to_event():
                 message = "You successfully responded that you are not staying at your event!"
                 events_dict = fetch_events()
                 socket_io.emit('update', events_dict, broadcast=True)
+                socket_io.emit('update_attendees', broadcast=True)
                 return jsonify(message=message), 200
         else:
             # If already on attendees list
@@ -412,6 +418,7 @@ def going_to_event():
                 message = "You successfully responded that you are staying at your event!"
                 events_dict = fetch_events()
                 socket_io.emit('update', events_dict, broadcast=True)
+                socket_io.emit('update_attendees', broadcast=True)
                 return jsonify(message=message), 200
             elif not switch_on and not is_attendee.going:
                 message = "You already responded that you are not staying at your event!"
@@ -430,6 +437,7 @@ def going_to_event():
                 message = "You successfully responded that you are not staying at your event!"
                 events_dict = fetch_events()
                 socket_io.emit('update', events_dict, broadcast=True)
+                socket_io.emit('update_attendees', broadcast=True)
                 return jsonify(message=message), 200
 
 
@@ -872,6 +880,20 @@ def get_infowindow_consumer():
         "infowindow_consumer.html", event=event, event_remaining_minutes=remaining_minutes,
         number_of_people_going=number_of_people_going, going_percentage=going_percentage,
         is_host_there=is_host_there, event_post_time=event_post_time)
+    response = make_response(html)
+    return response
+
+
+@main.route('/get_attendance', methods=['GET'])
+def get_attendance_modal_body():
+    # username = CasClient().authenticate()
+
+    event_id = request.args.get('event_id')
+    event = Event.query.filter_by(id=event_id).first()
+    event_attendees = fetch_attendees(event)
+
+    html = render_template(
+        "attendance_modal_body.html", event_attendees=event_attendees, event=event)
     response = make_response(html)
     return response
 
