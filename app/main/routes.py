@@ -346,7 +346,7 @@ def going_to_event():
             else:
                 # not switch and going
                 response_time = datetime.datetime.utcnow()
-                attendee_search.update({"going": True, "response_time": response_time}, synchronize_session=False)
+                attendee_search.update({"going": False, "response_time": response_time}, synchronize_session=False)
                 user_search.update(
                     {"events_going": Users.events_going - 1},
                     synchronize_session=False)
