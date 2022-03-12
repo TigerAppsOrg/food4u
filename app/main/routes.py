@@ -890,6 +890,7 @@ def get_infowindow_consumer():
 def get_attendance_modal_body():
     # username = "ben"
     username = CasClient().authenticate()
+    username = username.lower().strip()
 
     event_id = request.args.get('event_id')
     event = Event.query.filter_by(id=event_id).first()
