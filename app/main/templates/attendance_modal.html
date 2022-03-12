@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=UTF-8>
+    <title>Attendance</title>
+</head>
+
+<body>
+
+<!-- Attendance Modal -->
+<div class="modal fade" id="attendanceModal" tabindex="-1" role="dialog" aria-labelledby="attendanceModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="attendanceModalLabel">Attendance
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </h5>
+            </div>
+            <div class="modal-body">
+                <div class="panel panel-default">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"># of Free Food Events All-Time
+                            <span id="number-of-posts-all-time"
+                                  class="badge badge-pill badge-warning">{{ posts_all_time_count }}</span>
+                        </li>
+
+                        <li class="list-group-item"># of Users
+                            <span id="unique-visitors-count"
+                                  class="badge badge-pill badge-warning">{{ unique_visitors_count }}</span>
+
+                        </li>
+                        <li class="list-group-item"># of Notification Subscribers
+                            <span id="subscribers-count"
+                                  class="badge badge-pill badge-warning">{{ subscribers_count }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
