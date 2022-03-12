@@ -27,7 +27,6 @@ def create_app():
     register_scheduler(app)
 
     with app.app_context():
-
         from .main import main as main_blueprint
         app.register_blueprint(main_blueprint, url_prefix="")
 
@@ -42,16 +41,21 @@ def register_scheduler(app):
     from app import db
     from app.models import Event
 
-    def get_update():
+    def update():
         with app.app_context():
-            from .main.helpers import delete_data
-            time = datetime.datetime.utcnow()
+            from .main.helpers import delete_data, send_notifications
+            current_time = datetime.datetime.utcnow()
             events = Event.query.all()
             db.session.commit()
             for event in events:
                 if event.end_time is None or time > (event.end_time + datetime.timedelta(hours=1)):
                     delete_data(event)
+                    continue
+                if event.start_time > current_time and (not event.sent_emails or event.sent_emails is None):
+                    send_notifications(event)
+                    event.sent_emails = True
+                    db.session.commit()
 
-    scheduler_trash_markers.add_job("job_update", get_update, trigger="interval", seconds=20)
+    scheduler_trash_markers.add_job("job_update", update, trigger="interval", seconds=20)
     scheduler_trash_markers.init_app(app)
     scheduler_trash_markers.start()

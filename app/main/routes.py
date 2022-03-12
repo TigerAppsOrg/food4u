@@ -773,9 +773,11 @@ def handle_data():
             return jsonify(message=message), 400
         start_time = get_utc_start_time_from_est_time_string(request.form['later-date'])
         end_time = start_time + datetime.timedelta(minutes=duration)
+        send_emails_flag = False
     elif request.form['optradio'] == 'now':
         start_time = post_time
         end_time = post_time + datetime.timedelta(minutes=duration)
+        send_emails_flag = True
 
     e = Event(
         net_id=username.lower().strip(),
@@ -784,7 +786,7 @@ def handle_data():
         room=room,
         latitude=latitude, longitude=longitude,
         description=desc,
-        end_time=end_time, duration=duration)
+        end_time=end_time, duration=duration, sent_emails=send_emails_flag)
     db.session.add(e)
     pics = request.files.to_dict().values()
     create = True
@@ -802,7 +804,8 @@ def handle_data():
         synchronize_session=False)
     socket_io.emit('postIncrement', 1, broadcast=True)
     db.session.commit()
-    send_notifications(e)
+    if send_emails_flag:
+        send_notifications(e)
     events_dict = fetch_events()
     active_event_count = fetch_active_events_count()
     socket_io.emit('update', events_dict, broadcast=True)

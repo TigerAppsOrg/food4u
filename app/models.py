@@ -18,6 +18,7 @@ class Event(db.Model):
     planning_to_go = db.Column(db.Integer, default=0)
     not_planning_to_go = db.Column(db.Integer, default=0)
     host_staying = db.Column(db.Boolean, default=None)
+    sent_emails = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return '<Event ID: {}>'.format(self.id)
