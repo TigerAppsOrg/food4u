@@ -183,15 +183,15 @@
 
         // Start Socket_IO
         socket.on('subscribe', function (integer) {
-            $("#subscribers-count").html(parseInt($('#subscribers-count').html(), 10) + integer + " people")
+            $("#subscribers-count").html(parseInt($('#subscribers-count').html(), 10) + integer)
         });
 
         socket.on('uniqueVisitor', function (integer) {
-            $("#unique-visitors-count").html(parseInt($('#unique-visitors-count').html(), 10) + integer + " people")
+            $("#unique-visitors-count").html(parseInt($('#unique-visitors-count').html(), 10) + integer)
         });
 
         socket.on('postIncrement', function (integer) {
-            $("#number-of-posts-all-time").html(parseInt($('#number-of-posts-all-time').html(), 10) + integer + " posts")
+            $("#number-of-posts-all-time").html(parseInt($('#number-of-posts-all-time').html(), 10) + integer)
         });
 
         socket.on('update', function (events) {
