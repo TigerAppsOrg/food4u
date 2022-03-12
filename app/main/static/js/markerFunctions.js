@@ -268,7 +268,7 @@ function addMarker(event) {
                     "<span class='badge badge-warning'>" + "This event has ended.<br>We hope you got some of the good food!" + "</span>";
             } else {
                 remaining_time_message = "<span class='badge badge-warning'>" +
-                    "Event starts on " + startTimeEstString + " EST" + "</span>"
+                    "This event starts on " + startTimeEstString + " EST" + "</span>"
             }
 
             const threeHoursAfterPresent = ((new Date()).getTime() + 3 * 60 * 60 * 1000);
@@ -356,7 +356,7 @@ function modifyMarkerOnClick(associatedEvent, associatedMarker) {
                 "<span class='badge badge-warning'>" + "This event has ended.<br>We hope you got some of the good food!" + "</span>";
         } else {
             remaining_time_message = "<span class='badge badge-warning'>" +
-                "Event starts on " + startTimeEstString + " EST" + "</span>"
+                "This event starts on " + startTimeEstString + " EST" + "</span>"
         }
 
         const tenMinsAfterPresent = ((new Date()).getTime() + 10 * 60 * 1000);
@@ -503,7 +503,7 @@ function updateMarkers(events) {
                     if (foundMarker.icon.url === "/main/images/red_logo_mini.png") {
                         $('#going_line_' + foundEvent.id).remove();
                     } else if ($('#goingLineOptional_' + foundEvent.id).children().length === 0) {
-                        let stringToAppend = "         <span id=\"going_line_{{ event.id }}\">\n            Attending this Event?\n            <span>\n                <button type=\"submit\" class=\"btn btn-success btn-xs shadow-none\"\n                        id=\"goingButton\" form=\"goingForm\" onclick=\"goingWithoutRefresh(); return false\">\n                    Yes\n                </button>\n                <button type=\"submit\" class=\"btn btn-danger btn-xs\"\n                        id=\"goingButton\" form=\"goingForm\" onclick=\"notGoingWithoutRefresh(); return false\">\n                    No\n                </button>\n            </span>\n            <div>\n                <form action=\"/handleGoing\" id=\"goingForm\" method=\"post\" enctype=\"multipart/form-data\">\n                    <input type=\"text\" class=\"input-hidden\" id=\"idForGoing\" name=\"idForGoing\"\n                           value=\"{{ event.id }}\">\n                    <input type=\"checkbox\" id=\"goingSwitch\" name=\"goingSwitch\" hidden>\n                </form>\n            </div>\n            <br>\n            </span>"
+                        let stringToAppend = "         <span id=\"going_line_{{ event.id }}\">\n            Attending this event?\n            <span>\n                <button type=\"submit\" class=\"btn btn-success btn-xs shadow-none\"\n                        id=\"goingButton\" form=\"goingForm\" onclick=\"goingWithoutRefresh(); return false\">\n                    Yes\n                </button>\n                <button type=\"submit\" class=\"btn btn-danger btn-xs\"\n                        id=\"goingButton\" form=\"goingForm\" onclick=\"notGoingWithoutRefresh(); return false\">\n                    No\n                </button>\n            </span>\n            <div>\n                <form action=\"/handleGoing\" id=\"goingForm\" method=\"post\" enctype=\"multipart/form-data\">\n                    <input type=\"text\" class=\"input-hidden\" id=\"idForGoing\" name=\"idForGoing\"\n                           value=\"{{ event.id }}\">\n                    <input type=\"checkbox\" id=\"goingSwitch\" name=\"goingSwitch\" hidden>\n                </form>\n            </div>\n            <br>\n            </span>"
                         $('#goingLineOptional_' + foundEvent.id).append(stringToAppend);
                     }
                     // handles flag button dynamically when infowindow is open
@@ -518,7 +518,7 @@ function updateMarkers(events) {
                             '            <button type="submit" id="flagButton" form="flagForm" ' +
                             'class="btn btn-primary" onclick="flagWithoutRefresh();' +
                             ' return false">\n' +
-                            '                Flag This Event As Ending\n' +
+                            '                Flag this Event as Ending\n' +
                             '            </button>')
                     }
                 }
