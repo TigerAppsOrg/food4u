@@ -28,10 +28,20 @@
 
     <!-- Link Dropzone -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/dropzone.js"></script>
-    <!-- Link Bootstrap -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <!-- Link jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <!-- Moment JS  -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
+
+    <!-- Link BootStrap -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
 
     <!-- Link Marker Spidifier -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/OverlappingMarkerSpiderfier/1.0.3/oms.min.js"></script>
@@ -42,7 +52,7 @@
 
     <!-- Initializes event markers before loading the main Google Map -->
     <script>
-        let events = {{ events | safe }};
+        let initEvents = {{ events | safe }};
     </script>
 
     <!-- IntroJS -->
@@ -63,6 +73,10 @@
     <script src="{{ url_for('main.static', filename='js/markerFunctions.js') }}"></script>
     <script src="{{ url_for('main.static', filename='js/mapFunctions.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('main.static', filename='css/index.css') }}">
+
+
+    <!-- BootStrap JS Files -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
@@ -205,6 +219,7 @@
         fetchNotificationPreferences();
         window.setInterval(updateTime, 1000);
         window.setInterval(getCurrentLocationMainMap, 10000);
+        showHideCalendar();
     }
 
     // Get the image modal

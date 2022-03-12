@@ -70,6 +70,42 @@
                     <input type="text" class="input-hidden" id="edit_lat" name="lat" required readonly>
                     <input type="text" class="input-hidden" id="edit_lng" name="lng" required readonly>
                     <input type="text" class="input-hidden" id="edit_event_id" name="eventId" required readonly>
+
+                                        <div class="form-group">
+                        <label for="description" class="col-form-label required-field">Start Time</label>
+                        <br>
+                        <label class="radio-inline"><input class="radio-final" id="now-final" type="radio" name="optradio"
+                                                           value="now" autocomplete="off"
+                                                           required>Now</label>
+                        <label class="radio-inline"><input class="radio-final" id="later-final" type="radio"
+                                                           name="optradio" value="later" autocomplete="off">Within One
+                            Week (in EST Time)</label>
+                    </div>
+
+                    <div class="container datetimepicker-final" style="display: none;">
+                        <div class="row">
+                            <div class='col-sm-6'>
+                                <div class="form-group">
+                                    <div class='input-group date' id='datetimepicker2'>
+                                        <input type='text' class="form-control" id="later-date-final" name="later-date"/>
+                                        <span class="input-group-addon">
+               <span class="glyphicon glyphicon-calendar"></span>
+               </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <script type="text/javascript">
+                                $(function () {
+                                    $('#datetimepicker2').datetimepicker({
+                                            minDate: dateToday,
+                                            maxDate: dateNextWeek
+                                        }
+                                    );
+                                });
+                            </script>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label for="edit_time" class="col-form-label required-field">Time Available (Minutes)</label>
                         <input type="number" id="edit_time" class="form-control" name="time-left" value="60"

@@ -60,7 +60,7 @@
         <br>
 
         <p id="remaining_time_{{ event.id }}">
-            <strong>{{ remaining_time_message }}
+            <strong>
             </strong>
 
         <div>at Building:</div>
@@ -91,7 +91,8 @@
 
         </p>
         <p id="orignalposter">
-            Posted by: <strong>{{ event.net_id }}</strong>
+            Posted by <strong>{{ event.net_id }}</strong>: <strong>{{ event_post_time }} EST </strong>
+
         </p>
     </div>
     <div>
@@ -100,7 +101,7 @@
             <input type=text class=input-hidden id=idForDeletion name=idForDeletion value={{ event.id }}>
         </form>
     </div>
-    <div class=mini-footer>
+    <div class=mini-footer style="margin-bottom: 1rem">
         <table>
             <tr>
                 <td align=left>

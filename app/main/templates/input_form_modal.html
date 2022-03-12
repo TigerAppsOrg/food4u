@@ -21,7 +21,8 @@
                 </h5>
 
             </div>
-            <form action="{{ url_for('main.handle_data') }}" id="submit-form" method="post" enctype="multipart/form-data">
+            <form action="{{ url_for('main.handle_data') }}" id="submit-form" method="post"
+                  enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="title" class="col-form-label required-field">Title</label>
@@ -69,6 +70,42 @@
                     <!-- Get User Location in Lat,Lng format; need to integrate with form above's input -->
                     <input type="text" class="input-hidden" id="lat" name="lat" required readonly>
                     <input type="text" class="input-hidden" id="lng" name="lng" required readonly>
+
+                    <div class="form-group">
+                        <label for="description" class="col-form-label required-field">Start Time</label>
+                        <br>
+                        <label class="radio-inline"><input class="radio-init" id="now-init" type="radio" name="optradio"
+                                                           value="now" autocomplete="off"
+                                                           required>Now</label>
+                        <label class="radio-inline"><input class="radio-init" id="later-init" type="radio"
+                                                           name="optradio" autocomplete="off" value="later">Within One
+                            Week (in EST Time)</label>
+                    </div>
+
+                    <div class="container datetimepicker-init" style="display: none;">
+                        <div class="row">
+                            <div class='col-sm-6'>
+                                <div class="form-group">
+                                    <div class='input-group date' id='datetimepicker1'>
+                                        <input type='text' class="form-control" id="later-date-init" name="later-date"/>
+                                        <span class="input-group-addon">
+               <span class="glyphicon glyphicon-calendar"></span>
+               </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <script type="text/javascript">
+                                $(function () {
+                                    $('#datetimepicker1').datetimepicker({
+                                            minDate: dateToday,
+                                            maxDate: dateNextWeek
+                                        }
+                                    );
+                                });
+                            </script>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label for="time-left" class="col-form-label required-field">Time Available (Minutes)</label>
                         <input type="number" id="time-left" class="form-control" name="time-left" value="60"
@@ -76,7 +113,6 @@
                     </div>
                     <div class="form-group">
                         <label class="col-form-label">Photos</label>
-
                         <div class="submit-container">
                             <!-- HTML heavily inspired by https://blueimp.github.io/jQuery-File-Upload/ -->
                             <div id="submit-actions" class="row">
