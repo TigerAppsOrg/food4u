@@ -732,8 +732,6 @@ def handle_data():
                   "Please fix input a number of minutes between 5 and 180 and submit again."
         return jsonify(message=message), 400
 
-    post_time = datetime.datetime.utcnow()
-    end_time = post_time + datetime.timedelta(minutes=duration)
     desc, is_illegal = legal_description(request.form['description'],
                                          urlTitle, urlBuilding, urlRoom, title, building, room)
     if is_illegal == 1:
