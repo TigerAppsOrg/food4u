@@ -23,31 +23,31 @@ background-color: #5cb85c !important;" onclick="getAttendance('{{ event.id }}')"
             View/Add Attendance
         </button>
 
-        <div id="goingLineOptional_{{ event.id }}">
-            {% if event_remaining_minutes > 0 %}
-                <span id="going_line_{{ event.id }}">
-            Attending This Event?
-            <span>
-                <button type="submit" class="btn btn-success btn-xs shadow-none"
-                        id="goingButton" form="goingForm" onclick="goingWithoutRefresh(); return false">
-                    Yes
-                </button>
-                <button type="submit" class="btn btn-danger btn-xs"
-                        id="goingButton" form="goingForm" onclick="notGoingWithoutRefresh(); return false">
-                    No
-                </button>
-            </span>
-            <div>
-                <form action="/handleGoing" id="goingForm" method="post" enctype="multipart/form-data">
-                    <input type="text" class="input-hidden" id="idForGoing" name="idForGoing"
-                           value="{{ event.id }}">
-                    <input type="checkbox" id="goingSwitch" name="goingSwitch" hidden>
-                </form>
-            </div>
-            <br>
-            </span>
-            {% endif %}
-        </div>
+{#        <div id="goingLineOptional_{{ event.id }}">#}
+{#            {% if event_remaining_minutes > 0 %}#}
+{#                <span id="going_line_{{ event.id }}">#}
+{#            Attending This Event?#}
+{#            <span>#}
+{#                <button type="submit" class="btn btn-success btn-xs shadow-none"#}
+{#                        id="goingButton" form="goingForm" onclick="goingWithoutRefresh(); return false">#}
+{#                    Yes#}
+{#                </button>#}
+{#                <button type="submit" class="btn btn-danger btn-xs"#}
+{#                        id="goingButton" form="goingForm" onclick="notGoingWithoutRefresh(); return false">#}
+{#                    No#}
+{#                </button>#}
+{#            </span>#}
+{#            <div>#}
+{#                <form action="/handleGoing" id="goingForm" method="post" enctype="multipart/form-data">#}
+{#                    <input type="text" class="input-hidden" id="idForGoing" name="idForGoing"#}
+{#                           value="{{ event.id }}">#}
+{#                    <input type="checkbox" id="goingSwitch" name="goingSwitch" hidden>#}
+{#                </form>#}
+{#            </div>#}
+{#            <br>#}
+{#            </span>#}
+{#            {% endif %}#}
+{#        </div>#}
 
 
         <div id="attendance_info_{{ event.id }}">
