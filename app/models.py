@@ -53,6 +53,7 @@ class Attendees(db.Model):
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'), primary_key=False)
     net_id = db.Column(db.String(20), primary_key=False)
     going = db.Column(db.Boolean, default=None)
+    response_time = db.Column(db.DateTime, index=True, default=datetime.datetime.utcnow())
 
     def __repr__(self):
         return '<Attendee: {}>'.format(self.net_id)

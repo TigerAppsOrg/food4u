@@ -289,7 +289,8 @@ def going_to_event():
         if is_attendee is None:
             # is going
             if switch_on:
-                attendee = Attendees(event_id=going_event_id, net_id=username, going=True)
+                response_time = datetime.datetime.utcnow()
+                attendee = Attendees(event_id=going_event_id, net_id=username, going=True, response_time=response_time)
                 db.session.add(attendee)
                 user_search.update(
                     {"events_going": Users.events_going + 1,
@@ -303,7 +304,8 @@ def going_to_event():
                 return jsonify(message=message), 200
             else:
                 # is not
-                attendee = Attendees(event_id=going_event_id, net_id=username, going=False)
+                response_time = datetime.datetime.utcnow()
+                attendee = Attendees(event_id=going_event_id, net_id=username, going=False, response_time=response_time)
                 db.session.add(attendee)
                 user_search.update(
                     {"events_responded": Users.events_responded + 1},
@@ -360,7 +362,8 @@ def going_to_event():
         if is_attendee is None:
             # is going
             if switch_on:
-                attendee = Attendees(event_id=going_event_id, net_id=username, going=True)
+                response_time = datetime.datetime.utcnow()
+                attendee = Attendees(event_id=going_event_id, net_id=username, going=True, response_time=response_time)
                 db.session.add(attendee)
                 going_event_search.update({"host_staying": True},
                                           synchronize_session=False)
@@ -376,7 +379,8 @@ def going_to_event():
                 return jsonify(message=message), 200
             else:
                 # is not
-                attendee = Attendees(event_id=going_event_id, net_id=username, going=False)
+                response_time = datetime.datetime.utcnow()
+                attendee = Attendees(event_id=going_event_id, net_id=username, going=False, response_time=response_time)
                 db.session.add(attendee)
                 going_event_search.update({"host_staying": False,
                                            "not_planning_to_go": Event.not_planning_to_go + 1},
