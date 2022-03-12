@@ -769,3 +769,8 @@ input, textarea {
     background-color: black !important;
     text-align: left !important;
 }
+
+.form-control {
+    background-color: black !important;
+    color: white !important;
+}
