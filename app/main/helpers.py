@@ -390,7 +390,7 @@ def get_utc_start_time_from_est_time_string(later_date_string):
 
 
 def get_est_time_string_from_utc_dt(utc_dt):
-    local_dt = utc_dt.replace(tzinfo=pytz.utc).astimezone(tz=None)
+    local_dt = utc_dt.replace(tzinfo=pytz.utc).astimezone(tz=pytz.timezone("America/New_York"))
     local_dt_string = local_dt.strftime('%b %d, %Y, %I:%M %p')
     return local_dt_string
 
