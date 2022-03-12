@@ -40,17 +40,20 @@
 
 
         <div id="attendance_info_{{ event.id }}">
-            <button type="button" class="btn btn-light btn-xs" style="pointer-events: none;margin-bottom: 2px;">
+            <button type="button" class="btn btn-light btn-xs" style="pointer-events: none;margin-bottom: 2px;
+            background-color: #dddddd">
                 # of People Attending <span class="badge badge-dark"
                                             id="numberOfPeopleGoing">{{ number_of_people_going }}</span>
             </button>
             <br>
-            <button type="button" class="btn btn-light btn-xs" style="pointer-events: none; margin-bottom: 2px;">
+            <button type="button" class="btn btn-light btn-xs" style="pointer-events: none; margin-bottom: 2px;
+background-color: #dddddd">
                 Attending Percentage <span class="badge badge-dark"
                                            id="goingPercentage">{{ going_percentage }}%</span>
             </button>
             <br>
-            <button type="button" class="btn btn-light btn-xs" style="pointer-events: none;">
+            <button type="button" class="btn btn-light btn-xs" style="pointer-events: none;
+background-color: #dddddd">
                 Host is Staying <span class="badge badge-dark"
                                       id="isHostThere">{{ is_host_there }}</span>
             </button>
