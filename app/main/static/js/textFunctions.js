@@ -22,17 +22,27 @@ function getTimeRemaining(event_endtime) {
 
 function updateTime() {
     for (let i = 0; i < allMarkers.length; i++) {
-        let event_endtime = allMarkers[i].get("event_end_time");
-        let time_remaining = getTimeRemaining(event_endtime);
-        if ((time_remaining.minutes === 10 && time_remaining.seconds === 1) ||
-            (time_remaining.minutes === 0 && time_remaining.seconds === 1)) {
+        let eventStartTime = allMarkers[i].get("event_start_time")
+        let eventEndTime = allMarkers[i].get("event_end_time");
+        let startTimeEstString = allMarkers[i].get("event_start_time_est_string");
+        let startTimeRemaining = getTimeRemaining(eventStartTime);
+        let endTimeRemaining = getTimeRemaining(eventEndTime);
+
+        if ((endTimeRemaining.minutes === 10 && endTimeRemaining.seconds === 1) ||
+            (endTimeRemaining.minutes === 0 && endTimeRemaining.seconds === 1)) {
             socket.timeout(1000).emit("update");
         }
-        const remaining_time_message = time_remaining.total > 0 ? "<span class='badge badge-warning'>" +
-            (time_remaining.hours + "h "
-                + time_remaining.minutes + "m " + time_remaining.seconds + "s " + " " +
-                "remaining for event") + "</span>" :
-            "<span class='badge badge-warning'>" + "This event has ended.<br>We hope you got some of the good food!" + "</span>"
+        let remaining_time_message;
+        if (startTimeRemaining.total < 0) {
+            remaining_time_message = endTimeRemaining.total > 0 ? "<span class='badge badge-warning'>" +
+                (endTimeRemaining.hours + "h "
+                    + endTimeRemaining.minutes + "m " + endTimeRemaining.seconds + "s " + " " +
+                    "remaining for event") + "</span>" :
+                "<span class='badge badge-warning'>" + "This event has ended.<br>We hope you got some of the good food!" + "</span>";
+        } else {
+            remaining_time_message = "<span class='badge badge-warning'>" +
+                "Event starts at " + startTimeEstString + " EST" + "</span>"
+        }
         $("#remaining_time" + '_' + String(allMarkers[i].get('event_id'))).html(remaining_time_message);
     }
 }
@@ -56,10 +66,28 @@ function prePopulateEditForm(event_id) {
             $("#edit_lat").val(foundLatitude);
             $("#edit_lng").val(foundLongitude);
 
-            let event_endtime = foundMarker.get("event_end_time");
-            let time_remaining = getTimeRemaining(event_endtime);
-            let total_minutes_remaining = time_remaining.total >= 0 ? Math.floor((time_remaining.total / 1000 / 60))
+            let eventStartTime = foundMarker.get("event_start_time");
+            const startTimeRemaining = getTimeRemaining(eventStartTime);
+
+            let eventEndTime = foundMarker.get("event_end_time");
+            let endTimeRemaining = getTimeRemaining(eventEndTime);
+
+            let total_minutes_remaining = endTimeRemaining.total >= 0 ? Math.floor((endTimeRemaining.total / 1000 / 60))
                 : 0;
+
+            if (startTimeRemaining.total > 0) {
+                total_minutes_remaining = total_minutes_remaining -
+                    (startTimeRemaining.total >= 0 ? Math.floor((startTimeRemaining.total / 1000 / 60))
+                        : 0);
+                $("#later-final").prop("checked", true);
+                $(".datetimepicker-final").show();
+                let eventStartTimeEstString = foundMarker.get("event_start_time_est_string");
+                $("#later-date-final").val(changeDateFormat(eventStartTimeEstString));
+            } else {
+                $("#now-final").prop("checked", true);
+                $(".datetimepicker-final").hide();
+            }
+
             $("#edit_time").val(total_minutes_remaining);
 
             // Edit form title insertion
@@ -107,4 +135,16 @@ function prePopulateNotificationPreferences(notificationPreferences) {
             $("#notificationEmailSwitch").prop('checked', true);
         }
     }
+}
+
+function changeDateFormat(inputDateString) {
+    let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    let stringArray = inputDateString.split(",").join("").split(" ");
+
+    const isMonth = (element) => element === stringArray[0];
+
+    stringArray[0] = String(months.findIndex(isMonth) + 1);
+    let outputStringDate = stringArray.slice(0, -2).join("/") + " " + stringArray.slice(-2).join(" ");
+    return outputStringDate;
 }

@@ -366,3 +366,21 @@ function notGoingWithoutRefresh() {
         }
     })
 }
+
+// show/hide start date
+function showHideCalendar() {
+    $(".radio-init").change(function () {
+        if ($('#now-init').is(':checked')) {
+            $(".datetimepicker-init").hide();
+        } else if ($('#later-init').is(':checked')) {
+            $(".datetimepicker-init").show();
+        }
+    });
+    $(".radio-final").change(function () {
+        if ($('#now-final').is(':checked')) {
+            $(".datetimepicker-final").hide();
+        } else if ($('#later-final').is(':checked')) {
+            $(".datetimepicker-final").show();
+        }
+    });
+}

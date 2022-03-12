@@ -15,16 +15,16 @@ function populateInitMarkers(events) {
     }
 }
 
-function populateAdditionalMarkers(events) {
+function populateAdditionalMarkers(incomingEvents) {
     let currentMarkerIDs = getCurrentEventIDs(allMarkers);
-    for (let i = 0; i < events.length; i++) {
-        let event_id = events[i].id;
-        let event_net_id = events[i].net_id;
+    for (let i = 0; i < incomingEvents.length; i++) {
+        let event_id = incomingEvents[i].id;
+        let event_net_id = incomingEvents[i].net_id;
         if (!(currentMarkerIDs.has(event_id))) {
-            addMarker(events[i]);
+            addMarker(incomingEvents[i]);
             setTimeout(notyf.open.bind(notyf, {
                 type: "new-food",
-                message: "A free food event titled \"" + events[i].title + "\" has just been added to the map by " +
+                message: "A free food event titled \"" + incomingEvents[i].title + "\" has just been added to the map by " +
                     event_net_id
             }), 1000)
 
@@ -33,17 +33,6 @@ function populateAdditionalMarkers(events) {
             }
         }
     }
-}
-
-function loadImage(path, target) {
-    $('<img src="' + path + ' "style="width:100%;max-width:310px;margin-top:2%" class="image">')
-        .on('load', function () {
-            $(this).appendTo(target);
-            $(this).on("click", function () {
-                modalImg.style.display = "block";
-                modalImgContent.src = this.src;
-            });
-        });
 }
 
 function removeEventImage(eventPictureURL) {
@@ -178,6 +167,8 @@ function getIcon(color, username, net_id) {
             return '/main/images/green_logo_mini.png'
         } else if (color == "yellow") {
             return '/main/images/yellow_logo_mini.png'
+        } else if (color == "orange") {
+            return '/main/images/original_orange_logo_mini.png'
         } else {
             return '/main/images/red_logo_mini.png'
         }
@@ -186,6 +177,8 @@ function getIcon(color, username, net_id) {
             return '/main/images/green_logo_poster_mini.png'
         } else if (color == "yellow") {
             return '/main/images/yellow_logo_poster_mini.png'
+        } else if (color == "orange") {
+            return '/main/images/original_orange_logo_poster_mini.png'
         } else {
             return '/main/images/red_logo_poster_mini.png'
         }
@@ -210,11 +203,12 @@ function addMarker(event) {
     marker.set("event_building", event.building);
     marker.set("event_room", event.room);
     marker.set("event_description", event.description);
+    marker.set("event_start_time", event.start_time);
+    marker.set("event_start_time_est_string", event.start_time_est_string);
     marker.set("event_end_time", event.end_time);
     marker.set("event_remaining_minutes", event.remaining);
     marker.set("event_latitude", event.latitude);
     marker.set("event_longitude", event.longitude);
-    marker.set("clickOnFirstTime", true);
     marker.set("people_going", event.people_going);
     marker.set("going_percentage", event.going_percentage);
     marker.set("host_message", event.host_message);
@@ -250,54 +244,65 @@ function addMarker(event) {
 
     marker.addListener("spider_click", () => {
 
-        infoWindow.close();
+            infoWindow.close();
 
-        // logic provides sensible timeliness information
-        let endTime = marker.get("event_end_time")
-        const endDate = new Date(endTime);
+            // logic provides sensible timeliness information
+            let startTime = marker.get("event_start_time");
+            let endTime = marker.get("event_end_time");
+            let startTimeEstString = marker.get("event_start_time_est_string");
+            const endDate = new Date(endTime);
 
-        let offset = endDate.getTimezoneOffset() * 60 * 1000;
-        let withOffset = endDate.getTime();
+            let offset = endDate.getTimezoneOffset() * 60 * 1000;
+            let withOffset = endDate.getTime();
 
-        let endTimeMilliSeconds = withOffset - offset
+            let endTimeMilliSeconds = withOffset - offset
 
-        const time_remaining = getTimeRemaining(endTime);
-        const remaining_time_message = time_remaining.total > 0 ? "<span class='badge badge-warning'>" +
-            (time_remaining.hours + "h "
-                + time_remaining.minutes + "m " + time_remaining.seconds + "s " + " " +
-                "remaining for event") + "</span>" :
-            "<span class='badge badge-warning'>" + "This event has ended.<br>We hope you got some of the good food!" + "</span>"
-        const threeHoursAfterPresent = ((new Date()).getTime() + 3 * 60 * 60 * 1000);
-        // if there are less than 10 minutes remaining then event cannot be flagged
-        const maxExtensionMinutes = Math.floor((threeHoursAfterPresent - endTimeMilliSeconds) / (60 * 1000));
+            const startTimeRemaining = getTimeRemaining(startTime);
+            const endTimeRemaining = getTimeRemaining(endTime);
+            let remaining_time_message;
+            if (startTimeRemaining.total < 0) {
+                remaining_time_message = endTimeRemaining.total > 0 ? "<span class='badge badge-warning'>" +
+                    (endTimeRemaining.hours + "h "
+                        + endTimeRemaining.minutes + "m " + endTimeRemaining.seconds + "s " + " " +
+                        "remaining for event") + "</span>" :
+                    "<span class='badge badge-warning'>" + "This event has ended.<br>We hope you got some of the good food!" + "</span>";
+            } else {
+                remaining_time_message = "<span class='badge badge-warning'>" +
+                    "Event starts at " + startTimeEstString + " EST" + "</span>"
+            }
 
-        // provides separate views for poster and consumers
-        if (isPoster) {
-            infoWindow.setContent(infoWindowInfo);
-            google.maps.event.addListener(infoWindow, 'domready', function () {
-                $('#remaining_time_' + event.id).html(remaining_time_message);
-                $('#durationOfExtension').attr({
-                    "max": maxExtensionMinutes,
+            const threeHoursAfterPresent = ((new Date()).getTime() + 3 * 60 * 60 * 1000);
+            // if there are less than 10 minutes remaining then event cannot be flagged
+            const maxExtensionMinutes = Math.floor((threeHoursAfterPresent - endTimeMilliSeconds) / (60 * 1000));
+
+            // provides separate views for poster and consumers
+            if (isPoster) {
+                infoWindow.setContent(infoWindowInfo);
+                google.maps.event.addListener(infoWindow, 'domready', function () {
+                    $('#remaining_time_' + event.id).html(remaining_time_message);
+                    $('#durationOfExtension').attr({
+                        "max": maxExtensionMinutes,
+                    });
+                    $("#editButton").click(function () {
+                        let event_id = $(this).data("event-id");
+                        prePopulateEditForm(event_id);
+                        dropzoneEdit(event_id);
+                    });
                 });
-                $("#editButton").click(function () {
-                    let event_id = $(this).data("event-id");
-                    prePopulateEditForm(event_id);
-                    dropzoneEdit(event_id);
+            } else {
+                infoWindow.setContent(infoWindowInfo);
+                google.maps.event.addListener(infoWindow, 'domready', function () {
+                    $('#remaining_time_' + event.id).html(remaining_time_message);
                 });
-            });
-        } else {
-            infoWindow.setContent(infoWindowInfo);
-            google.maps.event.addListener(infoWindow, 'domready', function () {
-                $('#remaining_time_' + event.id).html(remaining_time_message);
-            });
+            }
+
+
+            infoWindow.setPosition({lat: marker.getPosition().lat(), lng: marker.getPosition().lng()});
+            infoWindow.open(main_map);
+
+            loadEventImages(marker);
         }
-
-
-        infoWindow.setPosition({lat: marker.getPosition().lat(), lng: marker.getPosition().lng()});
-        infoWindow.open(main_map);
-
-        loadEventImages(marker);
-    })
+    )
 
     oms.addMarker(marker);
 }
@@ -330,7 +335,9 @@ function modifyMarkerOnClick(associatedEvent, associatedMarker) {
         infoWindow.close();
 
         // logic provides sensible timeliness information
-        let endTime = associatedMarker.get("event_end_time")
+        let startTime = associatedMarker.get("event_start_time");
+        let endTime = associatedMarker.get("event_end_time");
+        let startTimeEstString = associatedMarker.get("event_start_time_est_string");
         const endDate = new Date(endTime);
 
         let offset = endDate.getTimezoneOffset() * 60 * 1000;
@@ -338,12 +345,20 @@ function modifyMarkerOnClick(associatedEvent, associatedMarker) {
 
         let endTimeMilliSeconds = withOffset - offset
 
-        const time_remaining = getTimeRemaining(endTime);
-        const remaining_time_message = time_remaining.total > 0 ? "<span class='badge badge-warning'>" +
-            (time_remaining.hours + "h "
-                + time_remaining.minutes + "m " + time_remaining.seconds + "s " + " " +
-                "remaining for event") + "</span>" :
-            "<span class='badge badge-warning'>" + "This event has ended.<br>We hope you got some of the good food!" + "</span>";
+        const startTimeRemaining = getTimeRemaining(startTime);
+        const endTimeRemaining = getTimeRemaining(endTime);
+        let remaining_time_message;
+        if (startTimeRemaining.total < 0) {
+            remaining_time_message = endTimeRemaining.total > 0 ? "<span class='badge badge-warning'>" +
+                (endTimeRemaining.hours + "h "
+                    + endTimeRemaining.minutes + "m " + endTimeRemaining.seconds + "s " + " " +
+                    "remaining for event") + "</span>" :
+                "<span class='badge badge-warning'>" + "This event has ended.<br>We hope you got some of the good food!" + "</span>";
+        } else {
+            remaining_time_message = "<span class='badge badge-warning'>" +
+                "Event starts at " + startTimeEstString + " EST" + "</span>"
+        }
+
         const tenMinsAfterPresent = ((new Date()).getTime() + 10 * 60 * 1000);
         const threeHoursAfterPresent = ((new Date()).getTime() + 3 * 60 * 60 * 1000);
         // if there are less than 10 minutes remaining then event cannot be flagged
@@ -420,6 +435,10 @@ function updateMarkers(events) {
                 if (foundMarker.get("host_message") !== foundEvent.host_message) {
                     foundMarker.set("host_message", foundEvent.host_message);
                     $("#attendance_info_" + foundEvent.id).find("#isHostThere").text(foundEvent.host_message);
+                }
+                if (foundMarker.get("event_start_time") !== foundEvent.start_time) {
+                    foundMarker.set("event_start_time", foundEvent.start_time);
+                    foundMarker.set("event_start_time_est_string", foundEvent.start_time_est_string);
                 }
                 // If end_time is different, update
                 if (foundMarker.get("event_end_time") !== foundEvent.end_time) {

@@ -1,4 +1,6 @@
 let socket = io();
+let dateToday = new Date();
+let dateNextWeek = new Date(dateToday.getTime() + 7 * 24 * 60 * 60 * 1000);
 let username = $('#my-data').data('name');
 let main_map;
 const princetonCoords = {lat: 40.346916, lng: -74.655304};

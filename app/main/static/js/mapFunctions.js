@@ -150,7 +150,7 @@ function initMap() {
         ignoreMapClick: true
     });
 
-    populateInitMarkers(events);
+    populateInitMarkers(initEvents);
 
     initFormMap();
 
