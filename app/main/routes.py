@@ -851,7 +851,7 @@ def get_infowindow_poster():
 
     event_id = request.args.get('event_id')
     event = Event.query.filter_by(id=event_id).first()
-    ongoing, marker_color, remaining_minutes = set_color_get_time(
+    _, _, remaining_minutes = set_color_get_time(
         event)
     number_of_people_going, going_percentage, is_host_there = get_attendance(event)
 
@@ -872,7 +872,7 @@ def get_infowindow_consumer():
 
     event_id = request.args.get('event_id')
     event = Event.query.filter_by(id=event_id).first()
-    ongoing, marker_color, remaining_minutes = set_color_get_time(
+    _, _, remaining_minutes = set_color_get_time(
         event)
     number_of_people_going, going_percentage, is_host_there = get_attendance(event)
 
@@ -888,14 +888,19 @@ def get_infowindow_consumer():
 
 @main.route('/get_attendance', methods=['GET'])
 def get_attendance_modal_body():
-    # username = CasClient().authenticate()
+    # username = "ben"
+    username = CasClient().authenticate()
 
     event_id = request.args.get('event_id')
     event = Event.query.filter_by(id=event_id).first()
+    _, _, remaining_minutes = set_color_get_time(
+        event)
     event_attendees = fetch_attendees(event)
 
     html = render_template(
-        "attendance_modal_body.html", event_attendees=event_attendees, event=event)
+        "attendance_modal_body.html", event_attendees=event_attendees, event=event,
+        event_remaining_minutes=remaining_minutes, original_poster_net_id=event.net_id
+        , username=username)
     response = make_response(html)
     return response
 
