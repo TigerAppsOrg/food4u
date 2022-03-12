@@ -1,3 +1,4 @@
+import pytz
 from flask import render_template, request, make_response, jsonify
 import os
 import json
@@ -647,12 +648,15 @@ def handle_data_edit():
         message = "Edits must be from the original poster. Please contact them to edit the event."
         return jsonify(message=message), 400
 
-    post_time = datetime.datetime.utcnow()
+    post_time = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
     if request.form['optradio'] == 'later':
         if request.form['later-date'] == '':
             message = "Start time for within one week was not found to be inputted. Please submit again."
             return jsonify(message=message), 400
         start_time = get_utc_start_time_from_est_time_string(request.form['later-date'])
+        if post_time + datetime.timedelta(days=7) < start_time:
+            message = "Start time is not within one week. Please edit again."
+            return jsonify(message=message), 400
         end_time = start_time + datetime.timedelta(minutes=duration)
     elif request.form['optradio'] == 'now':
         start_time = post_time
@@ -764,12 +768,15 @@ def handle_data():
         message = "Coordinates were not on Princeton campus. Please fix errors and submit again."
         return jsonify(message=message), 400
 
-    post_time = datetime.datetime.utcnow()
+    post_time = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
     if request.form['optradio'] == 'later':
         if request.form['later-date'] == '':
             message = "Start time for within one week was not found to be inputted. Please edit again."
             return jsonify(message=message), 400
         start_time = get_utc_start_time_from_est_time_string(request.form['later-date'])
+        if post_time + datetime.timedelta(days=7) < start_time:
+            message = "Start time is not within one week. Please edit again."
+            return jsonify(message=message), 400
         end_time = start_time + datetime.timedelta(minutes=duration)
         send_emails_flag = False
     elif request.form['optradio'] == 'now':
