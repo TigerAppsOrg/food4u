@@ -39,7 +39,7 @@ function updateTime() {
                 "<span class='badge badge-warning' style='white-space: pre-line'>" + "This event has ended.<br>We hope you got some of the good food!" + "</span>";
         } else {
             remaining_time_message = "<span class='badge badge-warning' style='white-space: pre-line'>" +
-                "This event starts on \n" + startTimeEstString + " EST" + "</span>"
+                "This event starts on \n" + startTimeEstString + " ET" + "</span>"
         }
         $("#remaining_time" + '_' + String(allMarkers[i].get('event_id'))).html(remaining_time_message);
     }

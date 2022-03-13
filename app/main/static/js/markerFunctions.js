@@ -268,7 +268,7 @@ function addMarker(event) {
                     "<span class='badge badge-warning' style='white-space: pre-line'>" + "This event has ended.<br>We hope you got some of the good food!" + "</span>";
             } else {
                 remaining_time_message = "<span class='badge badge-warning' style='white-space: pre-line'>" +
-                    "This event starts on \n" + startTimeEstString + " EST" + "</span>"
+                    "This event starts on \n" + startTimeEstString + " ET" + "</span>"
             }
 
             const threeHoursAfterPresent = ((new Date()).getTime() + 3 * 60 * 60 * 1000);
@@ -356,7 +356,7 @@ function modifyMarkerOnClick(associatedEvent, associatedMarker) {
                 "<span class='badge badge-warning' style='white-space: pre-line'>" + "This event has ended.<br>We hope you got some of the good food!" + "</span>";
         } else {
             remaining_time_message = "<span class='badge badge-warning' style='white-space: pre-line'>" +
-                "This event starts on \n" + startTimeEstString + " EST" + "</span>"
+                "This event starts on \n" + startTimeEstString + " ET" + "</span>"
         }
 
         const tenMinsAfterPresent = ((new Date()).getTime() + 10 * 60 * 1000);
