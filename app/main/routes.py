@@ -540,7 +540,11 @@ def flag_event():
         message = "The event has not been found. It may have been already deleted."
         return jsonify(message=message), 400
 
-    ongoing, marker_color, remaining_minutes = set_color_get_time(flagged_event)
+    _, marker_color, remaining_minutes = set_color_get_time(flagged_event)
+
+    if marker_color == "orange":
+        message = "You cannot flag an event that has a later start date."
+        return jsonify(message=message), 400
 
     if remaining_minutes <= 10:
         message = "The event is already less than 10 minutes."
@@ -874,7 +878,7 @@ def get_infowindow_consumer():
 
     event_id = request.args.get('event_id')
     event = Event.query.filter_by(id=event_id).first()
-    _, _, remaining_minutes = set_color_get_time(
+    _, marker_color, remaining_minutes = set_color_get_time(
         event)
     number_of_people_going, going_percentage, is_host_there = get_attendance(event)
 
@@ -883,7 +887,7 @@ def get_infowindow_consumer():
     html = render_template(
         "infowindow_consumer.html", event=event, event_remaining_minutes=remaining_minutes,
         number_of_people_going=number_of_people_going, going_percentage=going_percentage,
-        is_host_there=is_host_there, event_post_time=event_post_time)
+        is_host_there=is_host_there, event_post_time=event_post_time, marker_color=marker_color)
     response = make_response(html)
     return response
 

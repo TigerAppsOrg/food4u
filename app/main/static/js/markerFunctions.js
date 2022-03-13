@@ -512,7 +512,8 @@ function updateMarkers(events) {
                     //     $('#goingLineOptional_' + foundEvent.id).append(stringToAppend);
                     // }
                     // handles flag button dynamically when infowindow is open
-                    if (foundMarker.icon.url !== "/main/images/green_logo_mini.png") {
+                    if (foundMarker.icon.url !== "/main/images/green_logo_mini.png" ||
+                        foundMarker.icon.url !== "/main/images/original_orange_logo_mini.png") {
                         $('#suffix_button_' + foundEvent.id).empty();
                     } else if ($('#suffix_button_' + foundEvent.id).children().length === 0) {
                         $('#suffix_button_' + foundEvent.id).append('<form action="/handleEventFlag" ' +

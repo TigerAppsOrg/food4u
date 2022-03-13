@@ -306,7 +306,7 @@ def clean_html(raw_html):
 def get_attendance(event):
     number_of_people_going = event.planning_to_go
     try:
-        going_percentage = int(number_of_people_going / (number_of_people_going + event.not_planning_to_go) * 100)
+        going_percentage = round(number_of_people_going / (number_of_people_going + event.not_planning_to_go) * 100)
     except ZeroDivisionError:
         going_percentage = 0
     is_host_there = event.host_staying
