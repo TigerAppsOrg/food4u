@@ -1,5 +1,5 @@
-from app import db
 import datetime
+from app import db
 
 
 class Event(db.Model):
@@ -18,6 +18,7 @@ class Event(db.Model):
     planning_to_go = db.Column(db.Integer, default=0)
     not_planning_to_go = db.Column(db.Integer, default=0)
     host_staying = db.Column(db.Boolean, default=None)
+    sent_emails = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return '<Event ID: {}>'.format(self.id)
@@ -53,6 +54,8 @@ class Attendees(db.Model):
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'), primary_key=False)
     net_id = db.Column(db.String(20), primary_key=False)
     going = db.Column(db.Boolean, default=None)
+    response_time = db.Column(db.DateTime, index=True, default=datetime.datetime.utcnow())
+    wants_anon = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return '<Attendee: {}>'.format(self.net_id)

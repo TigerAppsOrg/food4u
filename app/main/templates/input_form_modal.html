@@ -1,0 +1,162 @@
+<!-- Input Form Modal -->
+<div class="modal fade" id="inputFormModal" tabindex="-1" role="dialog" aria-labelledby="inputFormModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="inputFormModalLabel">Add Free Food
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </h5>
+
+            </div>
+            <form action="{{ url_for('main.handle_data') }}" id="submit-form" method="post"
+                  enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="title" class="col-form-label required-field">Title</label>
+                        <input type="text" id="title" class="form-control" name="title" required maxlength="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="location_building" class="col-form-label required-field">Building</label>
+                        <input type="text" id="location_building" class="form-control" name="location_building"
+                               list="common_buildings" required maxlength="50"
+                               onchange="setCommonBuilding(event, 'input')">
+                        <datalist id="common_buildings">
+                            <option value="Butler College">Butler College</option>
+                            <option value="Campus Club">Campus Club</option>
+                            <option value="Carl A. Fields Center">Carl A. Fields Center</option>
+                            <option value="Center for Jewish Life">Center for Jewish Life</option>
+                            <option value="EQuad">EQuad</option>
+                            <option value="Fine Hall">Fine Hall</option>
+                            <option value="First College">First College</option>
+                            <option value="Friend Center">Friend Center</option>
+                            <option value="Frist Campus Center">Frist Campus Center</option>
+                            <option value="Green Hall">Green Hall</option>
+                            <option value="Lewis Library">Lewis Library</option>
+                            <option value="Mathey College">Mathey College</option>
+                            <option value="Murray-Dodge Hall">Murray-Dodge Hall</option>
+                            <option value="Rocky College">Rocky College</option>
+                            <option value="Whitman College">Whitman College</option>
+                        </datalist>
+                    </div>
+                    <div class="form-group">
+                        <label for="location_room" class="col-form-label required-field">Room</label>
+                        <input type="text" id="location_room" class="form-control" name="location_room" required
+                               maxlength="50">
+                    </div>
+                    <div class="form-group">
+                        <label for="map_canvas" class="col-form-label required-field">Location</label>
+                        <div id="map_canvas">
+                        </div>
+                    </div>
+                    <div class="col text-center">
+                        <input type="button" id="currentLocationButton" class="btn btn-info btn-sm"
+                               onclick="getCurrentLocationInitForm();"
+                               value="Use My Current Location"
+                        >
+                    </div>
+                    <!-- Get User Location in Lat,Lng format; need to integrate with form above's input -->
+                    <input type="text" class="input-hidden" id="lat" name="lat" required readonly>
+                    <input type="text" class="input-hidden" id="lng" name="lng" required readonly>
+
+                    <div class="form-group">
+                        <label for="description" class="col-form-label required-field">Start Time</label>
+                        <br>
+                        <label class="radio-inline"><input class="radio-init" id="now-init" type="radio" name="optradio"
+                                                           value="now" autocomplete="off"
+                                                           required>Now</label>
+                        <label class="radio-inline"><input class="radio-init" id="later-init" type="radio"
+                                                           name="optradio" autocomplete="off" value="later">Within One
+                            Week (in ET Time)</label>
+                    </div>
+
+                    <div class="container datetimepicker-init" style="display: none;">
+                        <div class="row">
+                            <div class='col-sm-6'>
+                                <div class="form-group">
+                                    <div class='input-group date' id='datetimepicker1'>
+                                        <input type='text' class="form-control" id="later-date-init" name="later-date"/>
+                                        <span class="input-group-addon">
+               <span class="glyphicon glyphicon-calendar"></span>
+               </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <script type="text/javascript">
+                                $(function () {
+                                    $('#datetimepicker1').datetimepicker({
+                                            minDate: dateToday,
+                                            maxDate: dateNextWeek
+                                        }
+                                    );
+                                });
+                            </script>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="time-left" class="col-form-label required-field">Time Available (Minutes)</label>
+                        <input type="number" id="time-left" class="form-control" name="time-left" value="60"
+                               min=5 max=180 required>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label">Photos</label>
+                        <div class="submit-container">
+                            <!-- HTML heavily inspired by https://blueimp.github.io/jQuery-File-Upload/ -->
+                            <div id="submit-actions" class="row">
+                                <div id="photo-init-buttons">
+                                    <!-- Take file input-button span is used to style the file input field as button -->
+                                    <span class="btn btn-success fileinput-submit-button dz-clickable flex-container">
+                                          <i class="glyphicon glyphicon-plus"></i>
+                                          <span>Add photos</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="table table-striped files" id="submit-previews">
+                                <div id="submit-template" class="file-row dz-image-preview">
+                                    <!-- This is used as the file preview template -->
+                                    <div>
+                                        <span class="preview"><img data-dz-thumbnail class="submit-thumbnail"></span>
+                                    </div>
+                                    <div>
+                                        <p class="name" data-dz-name></p>
+                                    </div>
+                                    <div>
+                                        <button data-dz-remove class="btn btn-danger delete pull-right">
+                                            <i class="glyphicon glyphicon-trash"></i>
+                                            <span>Delete</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="description" class="col-form-label">Description</label>
+                        <textarea class="form-control" name="description" id="description"
+                                  maxlength="500"></textarea>
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" id="cancelFood" class="btn btn-secondary" data-dismiss="modal">
+                    Cancel
+                </button>
+                <button type="submit" onclick="getInputFormCoordinates()" form="submit-form" id="submitFood"
+                        class="btn btn-primary">
+                    Create Free Food Event
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function getInputFormCoordinates() {
+        let theseInputCoords = {lat: formMarker.getPosition().lat(), lng: formMarker.getPosition().lng()}
+        document.getElementById('lat').value = theseInputCoords.lat;
+        document.getElementById('lng').value = theseInputCoords.lng;
+    }
+</script>

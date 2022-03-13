@@ -1,0 +1,138 @@
+<div id="attendanceCheck" data-event-id="{{ event.id }}">
+    <div id="goingLineOptional_{{ event.id }}">
+
+        {% if event_remaining_minutes > 0 and username != original_poster_net_id and username_attendee.wants_anon %}
+            <span id="going_line_{{ event.id }}">
+            Attending This Event?
+            <span>
+                <button type="submit" class="btn btn-success btn-xs shadow-none"
+                        id="goingButton" form="goingForm" onclick="goingWithoutRefresh(); return false">
+                    Yes
+                </button>
+                <button type="submit" class="btn btn-danger btn-xs"
+                        id="goingButton" form="goingForm" onclick="notGoingWithoutRefresh(); return false">
+                    No
+                </button>
+
+                <span style="padding-left: 3rem">
+                    <input type="checkbox" class="form-check-input" id="wants-anon" data-event-id="{{ event.id }}"
+                           checked>
+    <label class="form-check-label" for="wants-anon">Only be visible to original poster</label>
+                    </span>
+
+
+            </span>
+
+            <div>
+                <form action="/handleGoing" id="goingForm" method="post" enctype="multipart/form-data">
+                    <input type="text" class="input-hidden" id="idForGoing" name="idForGoing"
+                           value="{{ event.id }}">
+                    <input type="checkbox" id="goingSwitch" name="goingSwitch" hidden>
+                </form>
+            </div>
+            </span>
+            <br>
+        {% elif event_remaining_minutes > 0 and username != original_poster_net_id and not username_attendee.wants_anon %}
+            <span id="going_line_{{ event.id }}">
+            Attending This Event?
+            <span>
+                <button type="submit" class="btn btn-success btn-xs shadow-none"
+                        id="goingButton" form="goingForm" onclick="goingWithoutRefresh(); return false">
+                    Yes
+                </button>
+                <button type="submit" class="btn btn-danger btn-xs"
+                        id="goingButton" form="goingForm" onclick="notGoingWithoutRefresh(); return false">
+                    No
+                </button>
+
+                <span style="padding-left: 3rem">
+                    <input type="checkbox" class="form-check-input" id="wants-anon" data-event-id="{{ event.id }}">
+    <label class="form-check-label" for="wants-anon">Only be visible to original poster</label>
+                    </span>
+
+
+            </span>
+
+            <div>
+                <form action="/handleGoing" id="goingForm" method="post" enctype="multipart/form-data">
+                    <input type="text" class="input-hidden" id="idForGoing" name="idForGoing"
+                           value="{{ event.id }}">
+                    <input type="checkbox" id="goingSwitch" name="goingSwitch" hidden>
+                </form>
+            </div>
+            </span>
+            <br>
+        {% endif %}
+
+        {% if username == original_poster_net_id %}
+            <span id="going_line_{{ event.id }}">
+            Staying at Your Event?
+        <span>
+                <button type="submit" class="btn btn-success btn-xs shadow-none"
+                        id="goingButton" form="goingForm" onclick="goingWithoutRefresh(); return false">
+                    Yes
+                </button>
+                <button type="submit" class="btn btn-danger btn-xs"
+                        id="goingButton" form="goingForm" onclick="notGoingWithoutRefresh(); return false">
+                    No
+                </button>
+            </span>
+        <div id="going_button_{{ event.id }}">
+            <form action="/handleGoing" id="goingForm" method="post" enctype="multipart/form-data">
+                <input type="text" class="input-hidden" id="idForGoing" name="idForGoing"
+                       value="{{ event.id }}">
+                <input type="checkbox" id="goingSwitch" name="goingSwitch" hidden>
+            </form>
+        </div>
+                    </span>
+            <br>
+        {% endif %}
+
+    </div>
+    <div class="panel panel-default">
+        <table class="table table-striped table-bordered table-hover table-small">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">NetID</th>
+                <th scope="col">Time Posted Attending</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for attendee in event_attendees %}
+                {% if original_poster_net_id == attendee.net_id %}
+                    <tr>
+                        <th scope="row">{{ loop.index }}</th>
+                        <td>{{ attendee.net_id }} (OP)</td>
+                        <td>{{ get_est_time_string_from_utc_dt(attendee.response_time) }}</td>
+                    </tr>
+                {% elif not attendee.wants_anon and username == attendee.net_id %}
+                    <tr>
+                        <th scope="row">{{ loop.index }}</th>
+                        <td>{{ attendee.net_id }} (you)</td>
+                        <td>{{ get_est_time_string_from_utc_dt(attendee.response_time) }}</td>
+                    </tr>
+                {% elif attendee.wants_anon and username == attendee.net_id %}
+                    <tr>
+                        <th scope="row">{{ loop.index }}</th>
+                        <td>Anonymous (you)</td>
+                        <td>{{ get_est_time_string_from_utc_dt(attendee.response_time) }}</td>
+                    </tr>
+                {% elif attendee.wants_anon %}
+                    <tr>
+                        <th scope="row">{{ loop.index }}</th>
+                        <td>Anonymous</td>
+                        <td>{{ get_est_time_string_from_utc_dt(attendee.response_time) }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <th scope="row">{{ loop.index }}</th>
+                        <td>{{ attendee.net_id }}</td>
+                        <td>{{ get_est_time_string_from_utc_dt(attendee.response_time) }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

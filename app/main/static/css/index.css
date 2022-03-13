@@ -1,0 +1,776 @@
+html,
+body {
+    height: 100% !important;
+    -webkit-overflow-scrolling: touch !important;
+    overflow: auto !important;
+    font-family: "Poppins", sans-serif !important;
+
+}
+
+body {
+    padding-top: 50px;
+}
+
+#map {
+    height: 100%;
+}
+
+#map_canvas {
+    overflow: hidden;
+    height: 400px;
+    width: 100%;
+}
+
+#map_canvas_edit {
+    overflow: hidden;
+    height: 400px;
+    width: 100%;
+}
+
+.gm-style .gm-style-iw-d::-webkit-scrollbar-track,
+.gm-style .gm-style-iw-d::-webkit-scrollbar-track-piece,
+.gm-style .gm-style-iw-c,
+.gm-style .gm-style-iw-t::after {
+    background: #f58025;
+}
+
+#addFoodButton, #recenterMapButton, #openNotificationSettings {
+    border: 1px solid black;
+    font-family: "Poppins", sans-serif;
+    color: black;
+    background: linear-gradient(to bottom, #ffcc00 0%, #f58025 100%);
+}
+
+#feedbackSubmitButton {
+    border: 1px solid black;
+    font-family: Verdana, sans-serif;
+    color: black;
+    background: linear-gradient(to bottom, #ffcc00 0%, #f58025 100%);
+}
+
+#addFoodButton:hover, [id^=directionsButton_]:hover, #editButton:hover, #deleteButton:hover,
+#notificationSubmit:hover, #feedbackSubmitButton:hover, #extendButton:hover, #flagButton:hover,
+#currentLocationButton:hover, #submitFood:hover, #cancelFood:hover, #editDeleteButton:hover, #editFood:hover,
+#openNotificationSettings:hover, #recenterMapButton:hover {
+    cursor: pointer;
+    color: white;
+    background: #f58025;
+    border-color: black;
+}
+
+
+.orangeButton {
+    border: 1px solid black;
+    font-family: "Poppins", sans-serif;
+    color: black;
+    background: linear-gradient(to bottom, #ffcc00 0%, #f58025 100%);
+}
+
+.blackButton {
+    border: 1px solid black;
+    background: black;
+    font-family: "Poppins", sans-serif;
+    color: white;
+}
+
+#cancelFood {
+    border: 1px solid black;
+    background: black;
+    font-family: "Poppins", sans-serif;
+    color: white;
+}
+
+#deleteButton {
+    border: 1px solid black;
+    font-family: "Poppins", sans-serif;
+    color: black;
+    background: linear-gradient(to bottom, #ffcc00 0%, #f58025 100%);
+}
+
+#editDeleteButton {
+    border: 1px solid black;
+    font-family: "Poppins", sans-serif;
+    color: black;
+    background: linear-gradient(to bottom, #ffcc00 0%, #f58025 100%);
+}
+
+#extensionLabel {
+    font-family: "Poppins", sans-serif;
+    color: black;
+}
+
+#extendButton {
+    border: 1px solid #d3d3d3;
+    background: black;
+    font-family: "Poppins", sans-serif;
+    color: white;
+}
+
+#editButton {
+    border: 1px solid black;
+    font-family: "Poppins", sans-serif;
+    color: black;
+    background: linear-gradient(to bottom, #ffcc00 0%, #f58025 100%);
+}
+
+#submitFood, #editFood {
+    border: 1px solid black;
+    font-family: "Poppins", sans-serif;
+    color: black;
+    background: linear-gradient(to bottom, #ffcc00 0%, #f58025 100%);
+}
+
+#currentLocationButton {
+    border: 1px solid black;
+    font-family: "Poppins", sans-serif;
+    color: black;
+    background: linear-gradient(to bottom, #ffcc00 0%, #f58025 100%) !important;
+    font-size: 14px !important;
+}
+
+#flagButton {
+    border: 1px solid black;
+    font-family: "Poppins", sans-serif;
+    color: black;
+    background: linear-gradient(to bottom, #ffcc00 0%, #f58025 100%);
+}
+
+[id^=directionsButton_] {
+    border: 1px solid black;
+    font-family: "Poppins", sans-serif;
+    color: black;
+    background: linear-gradient(to bottom, #ffcc00 0%, #f58025 100%);
+    margin-top: 1%;
+}
+
+#notificationSubmit {
+    border: 1px solid black;
+    font-family: "Poppins", sans-serif;
+    color: black;
+    background: linear-gradient(to bottom, #ffcc00 0%, #f58025 100%);
+}
+
+#marker_content {
+    width: 310px; /* or whatever width you want. */
+    max-width: 310px; /* or whatever width you want. */
+    display: inline-block;
+}
+
+#firstHeading {
+    font-family: "Poppins", sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    color: white;
+}
+
+#bodyContent {
+    font-family: "Poppins", sans-serif;
+    font-size: 14px;
+    color: black;
+}
+
+#durationOfExtension {
+    background: black;
+    font-family: "Poppins", sans-serif;
+    color: lightgrey;
+}
+
+#durationOfExtensionAddOn {
+    background: black;
+    font-family: "Poppins", sans-serif;
+    color: lightgrey;
+}
+
+#title, #location_building, #location_room, #time-left, #description, #feedback {
+    background: black;
+    font-family: "Poppins", sans-serif;
+    color: lightgrey;
+}
+
+#edit_time {
+    background: black;
+    font-family: "Poppins", sans-serif;
+    color: lightgrey;
+}
+
+#edit_title {
+    background: black;
+    font-family: "Poppins", sans-serif;
+    color: lightgrey;
+}
+
+#edit_location_building {
+    background: black;
+    font-family: "Poppins", sans-serif;
+    color: lightgrey;
+}
+
+#edit_location_room {
+    background: black;
+    font-family: "Poppins", sans-serif;
+    color: lightgrey;
+}
+
+#edit_description {
+    background: black;
+    font-family: "Poppins", sans-serif;
+    color: lightgrey;
+}
+
+.inputOrEditTextBox {
+    background: black;
+    font-family: "Poppins", sans-serif;
+    color: lightgrey;
+}
+
+.required-field::after {
+    content: "*";
+    color: red;
+}
+
+.modal-content {
+    background: #f58025;
+    font-family: "Poppins", sans-serif;
+    color: black;
+    width: 70rem;
+}
+
+
+.modal-body {
+    font-family: "Poppins", sans-serif;
+    color: black;
+}
+
+.modal-title {
+    font-family: "Poppins", sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    color: white;
+}
+
+.input-hidden {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+    padding: 0;
+    margin: 0;
+    float: right;
+}
+
+#top-alert {
+    position: fixed;
+    top: 0;
+    z-index: 99999;
+}
+
+.modal-body {
+    margin: auto;
+    max-width: 100%;
+}
+
+.image {
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.profile-pic {
+    border-radius: 5px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.image:hover {
+    opacity: 0.7;
+}
+
+/* The Modal (background) */
+.modal-image {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    padding-bottom: 100px;
+    left: 0;
+    top: 50px;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.9); /* Black w/ opacity */
+}
+
+/* Modal Content (Image) */
+.modal-content-image {
+    margin: auto;
+    display: block;
+    max-width: 80%;
+    width: 10000px;
+}
+
+/* Add Animation - Zoom in the Modal */
+.modal-content-image {
+    animation-name: zoom;
+    animation-duration: 0.6s;
+}
+
+@keyframes zoom {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+/* The Close Button */
+.close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+    color: dimgray;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.close-alert-btn {
+    margin-left: 15px;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    color: black;
+    border: none;
+    background-color: #fcf8e3;
+}
+
+.close-alert-btn:hover {
+    color: white;
+}
+
+/* 100% Image Width on Smaller Screens */
+@media only screen and (max-width: 700px) {
+    .modal-content {
+        width: 100%;
+    }
+}
+
+td {
+    padding: 1px;
+}
+
+.navbar-brand {
+    padding: 2%;
+}
+
+.navbar-brand img {
+    height: 100%;
+}
+
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 45px;
+    height: 22px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: lightgray;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 15px;
+    width: 15px;
+    left: 4px;
+    bottom: 4px;
+    background-color: black;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+}
+
+input:checked + .slider {
+    background-color: #444444;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #f58025;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(22px);
+    -ms-transform: translateX(22px);
+    transform: translateX(22px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 24px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.about_member {
+    text-align: center;
+}
+
+table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+td {
+    width: 25%;
+}
+
+@media all and (min-width: 569px) and (max-width: 768px) {
+    #marker_content {
+        max-width: 205px !important; /* or whatever width you want. */
+        display: inline-block;
+    }
+
+    #extendButton {
+        font-size: xx-small !important;
+    }
+
+    #editButton {
+        font-size: xx-small !important;
+    }
+
+    #deleteButton {
+        font-size: xx-small !important;
+    }
+
+    #durationOfExtension {
+        font-size: xx-small !important;
+        height: 2.7rem !important;
+        margin-top: 0.5px !important;
+        margin-bottom: -0.5px !important;
+    }
+
+    #durationOfExtensionAddOn {
+        font-size: xx-small !important;
+        height: 2.7rem !important;
+        position: relative !important;
+        top: 0.5px !important;
+    }
+}
+
+@media all and (min-width: 481px) and (max-width: 568px) {
+    #marker_content {
+        max-width: 205px !important; /* or whatever width you want. */
+        display: inline-block;
+    }
+
+    #extendButton {
+        font-size: xx-small !important;
+    }
+
+    #editButton {
+        font-size: xx-small !important;
+    }
+
+    #deleteButton {
+        font-size: xx-small !important;
+    }
+
+    #durationOfExtension {
+        font-size: xx-small !important;
+        height: 2.7rem !important;
+        margin-top: 0.5px !important;
+        margin-bottom: -0.5px !important;
+    }
+
+    #durationOfExtensionAddOn {
+        font-size: xx-small !important;
+        height: 2.7rem !important;
+        position: relative !important;
+        top: 0.5px !important;
+    }
+}
+
+@media all and (min-width: 321px) and (max-width: 480px) {
+    #marker_content {
+        max-width: 205px !important; /* or whatever width you want. */
+        display: inline-block;
+    }
+
+    #extendButton {
+        font-size: xx-small !important;
+    }
+
+    #editButton {
+        font-size: xx-small !important;
+    }
+
+    #deleteButton {
+        font-size: xx-small !important;
+    }
+
+    #durationOfExtension {
+        font-size: xx-small !important;
+        height: 2.7rem !important;
+        margin-top: 0.5px !important;
+        margin-bottom: -0.5px !important;
+    }
+
+    #durationOfExtensionAddOn {
+        font-size: xx-small !important;
+        height: 2.7rem !important;
+        position: relative !important;
+        top: 0.5px !important;
+    }
+}
+
+@media all and (min-width: 0px) and (max-width: 320px) {
+    #marker_content {
+        max-width: 205px !important; /* or whatever width you want. */
+        display: inline-block;
+    }
+
+    #extendButton {
+        font-size: xx-small !important;
+    }
+
+    #editButton {
+        font-size: xx-small !important;
+    }
+
+    #deleteButton {
+        font-size: xx-small !important;
+    }
+
+    #durationOfExtension {
+        font-size: xx-small !important;
+        height: 2.7rem !important;
+        margin-top: 0.5px !important;
+        margin-bottom: -0.5px !important;
+    }
+
+    #durationOfExtensionAddOn {
+        font-size: xx-small !important;
+        height: 2.7rem !important;
+        position: relative !important;
+        top: 0.5px !important;
+    }
+}
+
+.introjs-tooltip-header, .introjs-tooltipbuttons, .introjs-tooltiptext, .introjs-bullets {
+    background-color: #eea026;
+    text-align: center;
+}
+
+.introjs-arrow.top, .introjs-arrow.top-middle {
+    border-bottom-color: #eea026 !important;
+}
+
+.introjs-arrow.left, .introjs-arrow.left-bottom {
+    border-right-color: #eea026 !important;
+}
+
+.introjs-arrow.right, .introjs-arrow.right-top {
+    border-left-color: #eea026 !important;
+}
+
+.introjs-tooltip {
+    min-width: 400px !important;
+    max-width: 500px !important;
+}
+
+.submit-container, .edit-container {
+    width: auto;
+}
+
+#submit-actions, #edit-actions {
+    margin: 0 0 0 0;
+}
+
+div.table {
+    display: table;
+    max-width: 100%;
+    margin-bottom: 15px;
+    table-layout: fixed;
+}
+
+div.table .file-row {
+    display: table-row;
+    background: #f9f9f9;
+}
+
+div.table .file-row > div {
+    display: table-cell;
+    vertical-align: top;
+    border-top: 1px solid #ddd;
+    padding: 8px;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+#submit-previews .file-row.dz-success .delete {
+    display: block;
+}
+
+#photo-init-buttons {
+    padding-bottom: 10px;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+
+.edit-thumbnail {
+    object-fit: cover;
+    height: 80px;
+    width: 80px;
+}
+
+.material-icons {
+    color: white !important;
+    line-height: unset !important;
+}
+
+.form-group .notifInput {
+    display: block !important;
+    position: fixed !important;
+    text-align: right !important;
+    margin-left: 10.5rem;
+    float: right;
+}
+
+.modify-margin-bottom {
+    margin-bottom: 3rem;
+}
+
+input {
+    -webkit-user-select: text; /* Chrome, Opera, Safari */
+    -moz-user-select: text; /* Firefox 2+ */
+    -ms-user-select: text; /* IE 10+ */
+    user-select: text; /* Standard syntax */
+}
+
+.elem {
+    background-color: #f58025;
+    margin: 5px;
+    animation-duration: 0.5s;
+    animation-name: slidein;
+}
+
+
+@keyframes slidein {
+    from {
+        max-height: 0px;
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    to {
+        max-height: 1000px;
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+#durationOfExtension {
+    margin-top: 0.5px !important;
+    margin-bottom: -0.5px !important;
+}
+
+#durationOfExtensionAddOn {
+    position: relative !important;
+    top: 0.5px !important;
+}
+
+.slider {
+    background-color: red !important;
+}
+
+input:checked + .slider {
+    background-color: green !important;
+}
+
+.btn:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+#orignalposter {
+    font-family: "Poppins", sans-serif;
+    font-size: 14px;
+    color: black;
+}
+
+.gm-style .gm-style-iw-t::after {
+    width: 0px !important;
+}
+
+input, textarea {
+    font-size: 16px !important;
+}
+
+#activeCount {
+    pointer-events: none;
+    cursor: text
+}
+
+.navbar-brand {
+    pointer-events: none;
+    cursor: auto;
+}
+
+.dropdown-menu {
+    min-width: 0px !important;
+}
+
+/*.btn-info {*/
+/*    background-color: #abb427 !important;*/
+/*}*/
+
+.badge-info {
+    background-color: #ffcc00 !important;
+    text-align: left !important;
+    color: black !important;
+}
+
+.badge-warning {
+    background-color: black !important;
+    text-align: left !important;
+}
+
+.form-control {
+    background-color: black !important;
+    color: white !important;
+}

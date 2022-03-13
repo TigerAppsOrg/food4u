@@ -11,3 +11,10 @@ class Config(object):
     SCHEDULER_TIMEZONE = "America/New_York"
     SCHEDULER_EXECUTORS = {"default": {"type": "threadpool", "max_workers": 20}}
     SCHEDULER_JOB_DEFAULTS = {"coalesce": True, "max_instances": 1}
+    # mail settings
+    MAIL_SERVER = 'smtp.sendgrid.net'
+    MAIL_PORT = 465
+    MAIL_USERNAME = 'apikey'
+    MAIL_PASSWORD = os.environ.get('SENDGRID_PASSWORD')
+    MAIL_USE_TLS = False
+    MAIL_USE_SSL = True
