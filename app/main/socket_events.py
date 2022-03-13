@@ -1,4 +1,4 @@
-from .. import socket_io
+from app import socket_io
 from app.main.helpers import fetch_events
 
 
