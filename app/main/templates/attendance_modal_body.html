@@ -106,6 +106,18 @@
                         <td>{{ attendee.net_id }} (Host)</td>
                         <td>{{ get_est_time_string_from_utc_dt(attendee.response_time) }}</td>
                     </tr>
+                {% elif not attendee.wants_anon and username == attendee.net_id %}
+                    <tr>
+                        <th scope="row">{{ loop.index }}</th>
+                        <td>{{ attendee.net_id }} (you)</td>
+                        <td>{{ get_est_time_string_from_utc_dt(attendee.response_time) }}</td>
+                    </tr>
+                {% elif attendee.wants_anon and username == attendee.net_id %}
+                    <tr>
+                        <th scope="row">{{ loop.index }}</th>
+                        <td>Anonymous (you)</td>
+                        <td>{{ get_est_time_string_from_utc_dt(attendee.response_time) }}</td>
+                    </tr>
                 {% elif attendee.wants_anon %}
                     <tr>
                         <th scope="row">{{ loop.index }}</th>
