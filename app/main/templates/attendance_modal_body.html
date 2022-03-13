@@ -103,7 +103,7 @@
                 {% if original_poster_net_id == attendee.net_id %}
                     <tr>
                         <th scope="row">{{ loop.index }}</th>
-                        <td>{{ attendee.net_id }} (Host)</td>
+                        <td>{{ attendee.net_id }} (OP)</td>
                         <td>{{ get_est_time_string_from_utc_dt(attendee.response_time) }}</td>
                     </tr>
                 {% elif not attendee.wants_anon and username == attendee.net_id %}
