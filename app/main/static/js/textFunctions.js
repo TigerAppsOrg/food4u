@@ -30,7 +30,7 @@ function updateTime() {
 
         if ((endTimeRemaining.minutes === 10 && endTimeRemaining.seconds === 1) ||
             (endTimeRemaining.minutes === 0 && endTimeRemaining.seconds === 1)) {
-            socket.timeout(1000).emit("update");
+            socket.timeout(2000).emit("update");
         }
         let remaining_time_message;
         if (startTimeRemaining.total < 0) {
