@@ -153,5 +153,19 @@ function getAttendance(event_id) {
         .then(response => response.text()).then(data => {
         $("#attendanceBody").empty();
         $("#attendanceBody").append(data);
-    });
+    }).then(() => emitSetAnonAttendance()
+    )
+    ;
+}
+
+function emitSetAnonAttendance() {
+    $("#wants-anon").on('change', function () {
+            let check = $(this).prop('checked');
+            if (check == true) {
+                socket.emit("set_anon", {"wants_anon": true, "event_id": $("#wants-anon").data("event-id")});
+            } else {
+                socket.emit("set_anon", {"wants_anon": false, "event_id": $("#wants-anon").data("event-id")});
+            }
+        }
+    )
 }

@@ -780,7 +780,6 @@ def handle_data():
         message = "Coordinates were not on Princeton campus. Please fix errors and submit again."
         return jsonify(message=message), 400
 
-
     post_time = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
     send_emails_flag = False
     if request.form['optradio'] == 'later':
@@ -900,11 +899,14 @@ def get_attendance_modal_body():
     _, _, remaining_minutes = set_color_get_time(
         event)
     event_attendees = fetch_attendees(event)
+    username_attendee = db.session.query(Attendees).filter(Attendees.net_id == username,
+                                                           Attendees.event_id == int(
+                                                               event_id)).first()
 
     html = render_template(
         "attendance_modal_body.html", event_attendees=event_attendees, event=event,
         event_remaining_minutes=remaining_minutes, original_poster_net_id=event.net_id
-        , username=username)
+        , username=username, username_attendee=username_attendee)
     response = make_response(html)
     return response
 

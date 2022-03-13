@@ -215,6 +215,11 @@
             // if current view needs to be updated
             getAttendance($("#attendanceCheck").data("event-id"));
         })
+
+        socket.on('update_anon', function () {
+            // if current view needs to be updated
+            getAttendance($("#attendanceCheck").data("event-id"));
+        })
         // End Socket_IO
 
         {% if check_first_time %}
