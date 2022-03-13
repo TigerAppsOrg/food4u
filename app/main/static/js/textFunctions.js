@@ -27,7 +27,7 @@ function updateTime() {
         let endTimeRemaining = getTimeRemaining(eventEndTime);
 
         if ((endTimeRemaining.hours === 0 && endTimeRemaining.minutes === 9 && endTimeRemaining.seconds === 59) ||
-            (endTimeRemaining.hours === 0 && endTimeRemaining.minutes === 0 && endTimeRemaining.seconds === -1)) {
+            (endTimeRemaining.hours === -1 && endTimeRemaining.minutes === -1 && endTimeRemaining.seconds === -1)) {
             socket.emit("update");
         }
         let remaining_time_message;
