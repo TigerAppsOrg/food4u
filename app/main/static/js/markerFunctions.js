@@ -267,8 +267,10 @@ function addMarker(event) {
                         "remaining for event") + "</span>" :
                     "<span class='badge badge-warning' style='white-space: pre-line'>" + "This event has ended.<br>We hope you got some of the good food!" + "</span>";
             } else {
+                let event_minutes_remaining = endTimeRemaining.total - startTimeRemaining.total >= 0 ? Math.floor(((endTimeRemaining.total - startTimeRemaining.total) / 1000 / 60))
+                    : 0;
                 remaining_time_message = "<span class='badge badge-warning' style='white-space: pre-line'>" +
-                    "This event starts on \n" + startTimeEstString + " ET" + "</span>"
+                    "This event starts on \n" + startTimeEstString + " ET \n" + "lasting for " + event_minutes_remaining + " minutes" + "</span>"
             }
 
             const threeHoursAfterPresent = ((new Date()).getTime() + 3 * 60 * 60 * 1000);
@@ -355,8 +357,10 @@ function modifyMarkerOnClick(associatedEvent, associatedMarker) {
                     "remaining for event") + "</span>" :
                 "<span class='badge badge-warning' style='white-space: pre-line'>" + "This event has ended.<br>We hope you got some of the good food!" + "</span>";
         } else {
+            let event_minutes_remaining = endTimeRemaining.total - startTimeRemaining.total >= 0 ? Math.floor(((endTimeRemaining.total - startTimeRemaining.total) / 1000 / 60))
+                : 0;
             remaining_time_message = "<span class='badge badge-warning' style='white-space: pre-line'>" +
-                "This event starts on \n" + startTimeEstString + " ET" + "</span>"
+                "This event starts on \n" + startTimeEstString + " ET \n" + "lasting for " + event_minutes_remaining + " minutes" + "</span>"
         }
 
         const tenMinsAfterPresent = ((new Date()).getTime() + 10 * 60 * 1000);
