@@ -780,7 +780,9 @@ def handle_data():
         message = "Coordinates were not on Princeton campus. Please fix errors and submit again."
         return jsonify(message=message), 400
 
+
     post_time = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+    send_emails_flag = False
     if request.form['optradio'] == 'later':
         if request.form['later-date'] == '':
             message = "Start time for within one week was not found to be inputted. Please edit again."
@@ -790,7 +792,6 @@ def handle_data():
             message = "Start time is not within one week. Please edit again."
             return jsonify(message=message), 400
         end_time = start_time + datetime.timedelta(minutes=duration)
-        send_emails_flag = False
     elif request.form['optradio'] == 'now':
         start_time = post_time
         end_time = post_time + datetime.timedelta(minutes=duration)
