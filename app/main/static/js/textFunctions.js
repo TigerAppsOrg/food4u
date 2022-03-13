@@ -1,13 +1,11 @@
 function getTimeRemaining(event_endtime) {
-    // create Date object for current location
-    var d = new Date();
+    let utc = new Date();
 
     // convert to msec
     // subtract local time zone offset
     // get UTC time in msec
-    var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
-    const endtime = new Date(event_endtime.replace(' ', 'T'));
-    const total = Date.parse(endtime) - (new Date(utc));
+    const endtime = new Date(event_endtime + 'Z');
+    const total = endtime - utc;
     const seconds = Math.floor((total / 1000) % 60);
     const minutes = Math.floor((total / 1000 / 60) % 60);
     const hours = Math.floor((total / (1000 * 60 * 60)));
