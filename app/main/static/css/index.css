@@ -824,3 +824,8 @@ input, textarea {
       display:block !important;
   }
 }
+
+.navbar-btn {
+    margin-left: 2px !important;
+    margin-right: 2px !important;
+}

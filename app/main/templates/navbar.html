@@ -20,7 +20,7 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="#">
-                <img alt="food 4 u" class="d-inline-block mr-1" class="img-responsive"
+                <img alt="food 4 u" class="d-inline-block mr-1 img-responsive"
                      src="{{ url_for('main.static', filename='images/orange_logo_mini.png') }}">
             </a>
         </div>
@@ -32,19 +32,26 @@
                         Current # of Markers on Map: <span id="active-event-count">{{ active_events_count }}</span>
                     </a>
                 </li>
-                <button href="#" class="btn btn-primary navbar-btn"
-                        id="recenterMapButton" onclick="centerMap()">Recenter Map
-                </button>
-                <button href="#" data-toggle="modal" data-target="#notificationModal" class="btn btn-primary navbar-btn"
-                        id="openNotificationSettings" onclick="fetchNotificationPreferences()">Notification Settings
-                </button>
-                <button id="addFoodButton" type="button" class="btn btn-primary navbar-btn" data-toggle="modal"
-                        data-target="#inputFormModal">
-                    Add Free Food
-                </button>
-                <li class="pull-right"><a href="#" data-toggle="modal" data-target="#aboutModal">About</a></li>
-                <li class="pull-right"><a href="#" data-toggle="modal" data-target="#newsModal">News</a></li>
-                <li class="pull-right"><a href="#" data-toggle="modal" data-target="#activityModal">Stats</a></li>
+                <li>
+                    <button href="#" class="btn btn-primary navbar-btn"
+                            id="recenterMapButton" onclick="centerMap()">Recenter Map
+                    </button>
+                </li>
+                <li>
+                    <button href="#" data-toggle="modal" data-target="#notificationModal"
+                            class="btn btn-primary navbar-btn"
+                            id="openNotificationSettings" onclick="fetchNotificationPreferences()">Notification Settings
+                    </button>
+                </li>
+                <li>
+                    <button id="addFoodButton" type="button" class="btn btn-primary navbar-btn" data-toggle="modal"
+                            data-target="#inputFormModal">
+                        Add Free Food
+                    </button>
+                </li>
+                <li><a href="#" data-toggle="modal" data-target="#aboutModal">About</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#newsModal">News</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#activityModal">Stats</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
