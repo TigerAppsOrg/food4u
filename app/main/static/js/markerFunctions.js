@@ -195,7 +195,8 @@ function addMarker(event) {
     let marker = new google.maps.Marker({
         position: {lat: event.latitude, lng: event.longitude},
         title: event.title,
-        icon: img
+        icon: img,
+        label: {color: 'black', fontWeight: 'bold', fontSize: '22px', text: event.title, className: 'marker-label'},
     })
 
     marker.set("event_id", event.id);
@@ -267,7 +268,7 @@ function addMarker(event) {
                         "remaining for event") + "</span>" :
                     "<span class='badge badge-warning' style='white-space: pre-line'>" + "This event has ended.<br>We hope you got some of the good food!" + "</span>";
             } else {
-                let event_minutes_remaining = endTimeRemaining.total - startTimeRemaining.total >= 0 ? Math.floor(((endTimeRemaining.total - startTimeRemaining.total) / 1000 / 60))
+                let event_minutes_remaining = endTimeRemaining.total - startTimeRemaining.total >= 0 ? Math.round(((endTimeRemaining.total - startTimeRemaining.total) / 1000 / 60))
                     : 0;
                 remaining_time_message = "<span class='badge badge-warning' style='white-space: pre-line'>" +
                     "This event starts on \n" + startTimeEstString + " ET \n" + "lasting for " + event_minutes_remaining + " minutes" + "</span>"
@@ -357,7 +358,7 @@ function modifyMarkerOnClick(associatedEvent, associatedMarker) {
                     "remaining for event") + "</span>" :
                 "<span class='badge badge-warning' style='white-space: pre-line'>" + "This event has ended.<br>We hope you got some of the good food!" + "</span>";
         } else {
-            let event_minutes_remaining = endTimeRemaining.total - startTimeRemaining.total >= 0 ? Math.floor(((endTimeRemaining.total - startTimeRemaining.total) / 1000 / 60))
+            let event_minutes_remaining = endTimeRemaining.total - startTimeRemaining.total >= 0 ? Math.round(((endTimeRemaining.total - startTimeRemaining.total) / 1000 / 60))
                 : 0;
             remaining_time_message = "<span class='badge badge-warning' style='white-space: pre-line'>" +
                 "This event starts on \n" + startTimeEstString + " ET \n" + "lasting for " + event_minutes_remaining + " minutes" + "</span>"
@@ -450,6 +451,7 @@ function updateMarkers(events) {
                 }
                 if (foundMarker.title !== foundEvent.title) {
                     foundMarker.setTitle(foundEvent.title);
+                    foundMarker.setLabel({color: 'black', fontWeight: 'bold', fontSize: '22px', text: foundEvent.title, className: 'marker-label'});
                     $("#event_title_" + foundEvent.id).text(foundEvent.title);
                     foundMarker.set("event_title", foundEvent.title);
                 }

@@ -774,3 +774,16 @@ input, textarea {
     background-color: black !important;
     color: white !important;
 }
+
+.marker-label {
+    margin-bottom: 9rem !important;
+    -webkit-text-stroke: 1px black !important;
+    -webkit-text-fill-color: #ffcc00 !important;
+    text-shadow: -1px 1px 1px #000,
+    1px 1px 1px #000,
+    1px -1px 0 #000,
+    -1px -1px 0 #000;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 25px;
+}

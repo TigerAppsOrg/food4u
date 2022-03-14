@@ -38,7 +38,7 @@ function updateTime() {
                     "remaining for event") + "</span>" :
                 "<span class='badge badge-warning' style='white-space: pre-line'>" + "This event has ended.<br>We hope you got some of the good food!" + "</span>";
         } else {
-            let event_minutes_remaining = endTimeRemaining.total - startTimeRemaining.total >= 0 ? Math.floor(((endTimeRemaining.total - startTimeRemaining.total) / 1000 / 60))
+            let event_minutes_remaining = endTimeRemaining.total - startTimeRemaining.total >= 0 ? Math.round(((endTimeRemaining.total - startTimeRemaining.total) / 1000 / 60))
                 : 0;
             remaining_time_message = "<span class='badge badge-warning' style='white-space: pre-line'>" +
                 "This event starts on \n" + startTimeEstString + " ET \n" + "lasting for " + event_minutes_remaining + " minutes " + "</span>"
