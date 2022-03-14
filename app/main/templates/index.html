@@ -203,6 +203,7 @@
         });
 
         socket.on('update', function (events) {
+            getAttendance($("#attendanceCheck").data("event-id"));
             populateAdditionalMarkers(events);
             updateMarkers(events);
         })

@@ -149,6 +149,11 @@ body {
     display: inline-block;
 }
 
+
+.gm-style img {
+    max-width: 300px !important;
+}
+
 #firstHeading {
     font-family: "Poppins", sans-serif;
     font-size: 24px;
@@ -772,8 +777,8 @@ input, textarea {
     margin-bottom: 9rem !important;
     -webkit-text-stroke: 1px black !important;
     -webkit-text-fill-color: #ffcc00 !important;
-    text-shadow: -1px 1px 1px #000,
-    1px 1px 1px #000,
+    text-shadow: -1px 1px 2px #000,
+    1px 1px 2px #000,
     1px -1px 0 #000,
     -1px -1px 0 #000;
     padding-left: 5px;
