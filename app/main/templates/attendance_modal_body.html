@@ -4,7 +4,7 @@
         {% if event_remaining_minutes > 0 and username != original_poster_net_id and username_attendee.wants_anon %}
             <span id="going_line_{{ event.id }}">
             Attending This Event?
-            <span>
+            <span style="padding-right: 1rem">
                 <button type="submit" class="btn btn-success btn-xs shadow-none"
                         id="goingButton" form="goingForm" onclick="goingWithoutRefresh(); return false">
                     Yes
@@ -13,8 +13,8 @@
                         id="goingButton" form="goingForm" onclick="notGoingWithoutRefresh(); return false">
                     No
                 </button>
-
-                <span style="padding-left: 1rem">
+            </span>
+                <span>
                      <label class="form-check-label" for="wants-anon">
                     <input type="checkbox" class="form-check-input" id="wants-anon" data-event-id="{{ event.id }}"
                            checked>
@@ -22,7 +22,7 @@
                     </span>
 
 
-            </span>
+
 
             <div>
                 <form action="/handleGoing" id="goingForm" method="post" enctype="multipart/form-data">
@@ -36,7 +36,7 @@
         {% elif event_remaining_minutes > 0 and username != original_poster_net_id and not username_attendee.wants_anon %}
             <span id="going_line_{{ event.id }}">
             Attending This Event?
-            <span>
+            <span style="padding-right: 1rem">
                 <button type="submit" class="btn btn-success btn-xs shadow-none"
                         id="goingButton" form="goingForm" onclick="goingWithoutRefresh(); return false">
                     Yes
@@ -45,15 +45,16 @@
                         id="goingButton" form="goingForm" onclick="notGoingWithoutRefresh(); return false">
                     No
                 </button>
+                          </span>
 
-                <span style="padding-left: 1rem">
+                <span>
                      <label class="form-check-label" for="wants-anon">
                     <input type="checkbox" class="form-check-input" id="wants-anon" data-event-id="{{ event.id }}">
    Only be visible to OP</label>
                     </span>
 
 
-            </span>
+
 
             <div>
                 <form action="/handleGoing" id="goingForm" method="post" enctype="multipart/form-data">
