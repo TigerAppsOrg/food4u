@@ -164,9 +164,9 @@ function emitSetAnonAttendance() {
     $("#wants-anon").on('change', function () {
             let check = $(this).prop('checked');
             if (check == true) {
-                socket.emit("set_anon", {"wants_anon": true, "event_id": $("#wants-anon").data("event-id")});
+                socket.emit("set_anon_attendance", {"wants_anon": true, "event_id": $("#wants-anon").data("event-id")});
             } else {
-                socket.emit("set_anon", {"wants_anon": false, "event_id": $("#wants-anon").data("event-id")});
+                socket.emit("set_anon_attendance", {"wants_anon": false, "event_id": $("#wants-anon").data("event-id")});
             }
         }
     )
