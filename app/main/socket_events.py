@@ -10,7 +10,7 @@ def fetch_events_emit():
     socket_io.emit("update", events, broadcast=True)
 
 
-@socket_io.on("set_anon")
+@socket_io.on("set_anon_attendance")
 def set_user_attendance_anon(wants_anon_and_event_id):
     # username = "ben"
     username = CasClient().authenticate()
@@ -31,4 +31,4 @@ def set_user_attendance_anon(wants_anon_and_event_id):
         db.session.add(attendee)
         db.session.commit()
 
-    socket_io.emit("update_anon", broadcast=False)
+    socket_io.emit("update_anon_attendance", broadcast=False)
