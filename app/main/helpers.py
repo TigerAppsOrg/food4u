@@ -403,3 +403,8 @@ def get_est_time_string_from_utc_dt(utc_dt):
 def is_start_time_more_than_utc_now(start_time_utc_dt):
     datetime_now = datetime.datetime.utcnow()
     return start_time_utc_dt > datetime_now
+
+
+def get_event_remaining_minutes(event):
+    current_time = datetime.datetime.utcnow()
+    return math.ceil((event.end_time - current_time).total_seconds() / 60)

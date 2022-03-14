@@ -5,7 +5,7 @@ import json
 import datetime
 from . import main
 from .casclient import CasClient
-from .helpers import legal_title, set_color_get_time, fetch_attendees
+from .helpers import legal_title, set_color_get_time, fetch_attendees, get_event_remaining_minutes
 from .helpers import legal_location, legal_duration, send_notifications
 from .helpers import legal_description, legal_lat_lng, handle_and_edit_pics
 from .helpers import legal_email, legal_fields, send_feedback_email, send_flag_email, \
@@ -497,9 +497,9 @@ def extend_event():
         message = "Your event has not been found. It may have been already deleted."
         return jsonify(message=message), 400
 
-    ongoing, marker_color, remaining_minutes = set_color_get_time(extended_event)
+    event_remaining_minutes = get_event_remaining_minutes(extended_event)
 
-    if remaining_minutes + extension_duration > 180:
+    if event_remaining_minutes + extension_duration > 180:
         message = "Your event's total time cannot exceed 3 hours."
         return jsonify(message=message), 400
 
