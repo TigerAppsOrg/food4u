@@ -406,5 +406,4 @@ def is_start_time_more_than_utc_now(start_time_utc_dt):
 
 
 def get_event_remaining_minutes(event):
-    current_time = datetime.datetime.utcnow()
-    return math.ceil((event.end_time - current_time).total_seconds() / 60)
+    return math.ceil((event.end_time - event.start_time).total_seconds() / 60)
