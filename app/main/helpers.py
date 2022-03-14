@@ -321,7 +321,8 @@ def get_attendance(event):
 
 def fetch_events():
     events_dict_list = []
-    events = Event.query.all()
+    events = db.session.query(Event).order_by(
+        Event.start_time.desc())
     db.session.commit()
     for event in events:
 

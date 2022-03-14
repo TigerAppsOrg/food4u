@@ -177,7 +177,8 @@ def index(event_id=None):
         db.session.commit()
         socket_io.emit('uniqueVisitor', 1, broadcast=True)
     events_dict_list = []
-    events = Event.query.all()
+    events = db.session.query(Event).order_by(
+        Event.start_time.desc())
     db.session.commit()
     for event in events:
         ongoing, marker_color, remaining_minutes = set_color_get_time(
