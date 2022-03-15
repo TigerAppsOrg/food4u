@@ -949,6 +949,7 @@ def get_infowindow_consumer():
 
     event_id = request.args.get('event_id')
     event = Event.query.filter_by(id=event_id).first()
+    _, marker_color, _ = set_color_get_time(event)
     event_remaining_minutes = get_event_remaining_minutes(event)
     number_of_people_going, going_percentage, is_host_there = get_attendance(event)
     event_post_time = get_est_time_string_from_utc_dt(event.post_time)
@@ -957,7 +958,8 @@ def get_infowindow_consumer():
     html = render_template(
         "infowindow_consumer.html", event=event, event_remaining_minutes=event_remaining_minutes,
         number_of_people_going=number_of_people_going, going_percentage=going_percentage,
-        is_host_there=is_host_there, event_post_time=event_post_time, number_of_comments=number_of_comments)
+        is_host_there=is_host_there, event_post_time=event_post_time, number_of_comments=number_of_comments,
+        marker_color=marker_color)
     response = make_response(html)
     return response
 
