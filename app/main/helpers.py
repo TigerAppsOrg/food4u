@@ -66,11 +66,9 @@ def send_comment_email_to_op(event, comment, commenter):
     email_html_suffix += '</div>'
 
     email_html = '<p style="color:#f58025;"><strong>' \
-                 'Your free food event has been received a comment:</p>' \
-                 '<br>' \
+                 'Your free food event has been received a comment:<\strong></p>' \
                  + comment + \
                  '<br>' + \
-                 '<strong>' +\
                  "<p><strong>Commented by: <strong>" + str(commenter) + "</strong></p>"
     email_html += '<p style="color:#f58025;"><strong> ' \
                   f"<a href='https://food4u.tigerapps.org/index/{event.id}'" \
