@@ -835,3 +835,7 @@ input, textarea {
 th, td {
     word-break: break-word !important;
 }
+
+.delete {
+    cursor: pointer;
+}

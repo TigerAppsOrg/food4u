@@ -409,3 +409,7 @@ function modalsRemoveEventIDs() {
         removeEventIDFromComments();
     })
 }
+
+function deleteComment(commentID) {
+    socket.emit("delete_comment", commentID);
+}

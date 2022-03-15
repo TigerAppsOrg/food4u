@@ -1,6 +1,6 @@
 from app import socket_io, db
 from app.main.helpers import fetch_events
-from app.models import Attendees
+from app.models import Attendees, Comments
 from app.main.casclient import CasClient
 
 
@@ -31,4 +31,29 @@ def set_user_attendance_anon(wants_anon_and_event_id):
         db.session.add(attendee)
         db.session.commit()
 
+    if user_wants_anon:
+        socket_io.emit("notification_success", "Anon was status activated.", broadcast=False)
+    else:
+        socket_io.emit("notification_success", "Anon was status deactivated.", broadcast=False)
+
     socket_io.emit("update_attendees", broadcast=True)
+
+
+@socket_io.on("delete_comment")
+def set_user_attendance_anon(comment_id):
+    # username = "ben"
+    username = CasClient().authenticate()
+    username = username.lower().strip()
+
+    comment = db.session.query(Comments).filter(Comments.net_id == username,
+                                                Comments.id == comment_id).first()
+
+    if comment is not None:
+        db.session.delete(comment)
+        db.session.commit()
+        socket_io.emit("notification_success", "Comment successfully deleted!", broadcast=False)
+    else:
+        socket_io.emit("notification_error", "Comment was not found or could not "
+                                             "delete another user's comment.", broadcast=False)
+
+    socket_io.emit("update_comments", broadcast=True)

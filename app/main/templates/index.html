@@ -44,7 +44,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
 
-     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
 
@@ -221,6 +221,16 @@
         socket.on('update_comments', function () {
             // if current view needs to be updated
             getComments($("#commentsCheck").data("event-id"));
+        })
+
+        socket.on('notification_success', function (message) {
+            // if current view needs to be updated
+            notyf.success(message);
+        })
+
+        socket.on('notification_error', function (message) {
+            // if current view needs to be updated
+            notyf.error(message);
         })
         // End Socket_IO
 
