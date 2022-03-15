@@ -57,3 +57,25 @@ def delete_comment(comment_id):
                                              "delete another user's comment.", broadcast=False)
 
     socket_io.emit("update_comments", broadcast=True)
+    events = fetch_events()
+    socket_io.emit("update_marker_text", events, broadcast=True)
+
+
+# @socket_io.on("comment")
+# def set_user_attendance_anon(comment_id):
+#     # username = "ben"
+#     username = CasClient().authenticate()
+#     username = username.lower().strip()
+#
+#     comment = db.session.query(Comments).filter(Comments.net_id == username,
+#                                                 Comments.id == comment_id).first()
+#
+#     if comment is not None:
+#         db.session.delete(comment)
+#         db.session.commit()
+#         socket_io.emit("notification_success", "Comment successfully deleted!", broadcast=False)
+#     else:
+#         socket_io.emit("notification_error", "Comment was not found or could not "
+#                                              "delete another user's comment.", broadcast=False)
+#
+#     socket_io.emit("update_comments", broadcast=True)

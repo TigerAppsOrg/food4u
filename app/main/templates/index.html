@@ -232,6 +232,10 @@
             // if current view needs to be updated
             notyf.error(message);
         })
+
+        socket.on('update_marker_text', function (events) {
+            updateMarkers(events);
+        })
         // End Socket_IO
 
         {% if check_first_time %}
