@@ -865,9 +865,9 @@ def handle_comment():
     ERROR_CODE = 400
     SUCCESS_CODE = 200
 
-    username = "ben"
-    # username = CasClient().authenticate()
-    # username = username.lower().strip()
+    # username = "ben"
+    username = CasClient().authenticate()
+    username = username.lower().strip()
 
     visibility = request.form['optradio']
 
