@@ -68,7 +68,7 @@ def send_comment_email(event, comment, commenter):
 
     email_html = '<p style="color:#f58025;"><strong>' \
                  'Your free food event has been received a comment:</p>' \
-                 '<br><br>' \
+                 '<br>' \
                  + comment + \
                  '<br>' + \
                  '<strong>'
