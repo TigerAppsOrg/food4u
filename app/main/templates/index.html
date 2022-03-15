@@ -203,6 +203,7 @@
         });
 
         socket.on('update', function (events) {
+            <!-- This should remove the opt-in attendance buttons for an event just ending -->
             getAttendance($("#attendanceCheck").data("event-id"));
             populateAdditionalMarkers(events);
             updateMarkers(events);

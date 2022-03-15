@@ -69,7 +69,7 @@ def send_notifications(event):
     email_html_suffix += "<h1><strong>" + str(event.title) + "<strong></h1>"
     email_html_suffix += "<div id=bodyContent>"
     email_html_suffix += "<p><strong>Posted by: <strong>" + str(event.net_id) + "</strong></p>"
-    email_html_suffix += "<p><strong>Set for " + str(event.duration) + " minutes<strong></p>"
+    email_html_suffix += "<p><strong>Set for " + str(get_event_remaining_minutes(event)) + " minutes<strong></p>"
     email_html_suffix += "<p><strong>at Building: " + str(event.building) + "<strong><p>" + "<p><strong>in Room: " \
                          + str(event.room) \
                          + "<strong></p>"
