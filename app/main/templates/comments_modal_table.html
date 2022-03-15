@@ -5,7 +5,7 @@
                 <thead>
                 <tr>
                     <th class="col-xs-3">NetID</th>
-                    <th class="col-xs-5">Comment</th>
+                    <th class="col-xs-4">Comment</th>
                     <th class="col-xs-4">Comment Time</th>
                 </tr>
                 </thead>
@@ -14,51 +14,51 @@
                     {% if comment.net_id == original_poster_net_id %}
                         <!-- Always shows OP's NetID -->
                         <tr>
-                            <th scope="row">{{ comment.net_id }} (OP)</th>
+                            <th scope="row" style="white-space: normal !important;">{{ comment.net_id }} (OP)</th>
                             <td style="white-space: normal !important;">{{ comment.comment }}</td>
                             <td>{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
                         </tr>
                     {% elif comment.wants_anon_to_all and comment.net_id == username %}
                         <tr>
-                            <th scope="row">Anonymous (you + invisible to all)</th>
+                            <th scope="row" style="white-space: normal !important;">Anonymous (you + invisible to all)</th>
                             <td style="white-space: normal !important;">{{ comment.comment }}</td>
-                            <td>{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
+                            <td style="white-space: normal !important;">{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
                         </tr>
                     {% elif comment.wants_anon_to_all %}
                         <tr>
-                            <th scope="row">Anonymous</th>
+                            <th scope="row" style="white-space: normal !important;">Anonymous</th>
                             <td style="white-space: normal !important;">{{ comment.comment }}</td>
-                            <td>{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
+                            <td style="white-space: normal !important;">{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
                         </tr>
                     {% elif comment.wants_anon_but_op and comment.net_id == username %}
                         <tr>
-                            <th scope="row">Anonymous (you + visible only by OP)</th>
+                            <th scope="row" style="white-space: normal !important;">Anonymous (you + visible only by OP)</th>
                             <td style="white-space: normal !important;">{{ comment.comment }}</td>
-                            <td>{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
+                            <td style="white-space: normal !important;">{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
                         </tr>
                     {% elif comment.wants_anon_but_op and original_poster_net_id == username %}
                         <tr>
-                            <th scope="row">{{ comment.net_id }}</th>
+                            <th scope="row" style="white-space: normal !important;">{{ comment.net_id }}</th>
                             <td style="white-space: normal !important;">{{ comment.comment }}</td>
-                            <td>{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
+                            <td style="white-space: normal !important;">{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
                         </tr>
                     {% elif comment.wants_anon_but_op %}
                         <tr>
-                            <th scope="row">Anonymous</th>
+                            <th scope="row" style="white-space: normal !important;">Anonymous</th>
                             <td style="white-space: normal !important;">{{ comment.comment }}</td>
-                            <td>{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
+                            <td style="white-space: normal !important;">{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
                         </tr>
                     {% elif comment.net_id == username %}
                         <tr>
-                            <th scope="row">{{ comment.net_id }} (you)</th>
+                            <th scope="row" style="white-space: normal !important;">{{ comment.net_id }} (you)</th>
                             <td style="white-space: normal !important;">{{ comment.comment }}</td>
-                            <td>{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
+                            <td style="white-space: normal !important;">{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
                         </tr>
                     {% else %}
                         <tr>
-                            <th scope="row">{{ comment.net_id }}</th>
+                            <th scope="row" style="white-space: normal !important;">{{ comment.net_id }}</th>
                             <td style="white-space: normal !important;">{{ comment.comment }}</td>
-                            <td>{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
+                            <td style="white-space: normal !important;">{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
                         </tr>
                     {% endif %}
                 {% endfor %}
