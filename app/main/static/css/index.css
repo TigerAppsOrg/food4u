@@ -682,7 +682,6 @@ input {
 
 .elem {
     background-color: #f58025;
-    margin: 5px;
     animation-duration: 0.5s;
     animation-name: slidein;
 }
@@ -833,8 +832,8 @@ input, textarea {
     margin-right: 2px !important;
 }
 
-.table-responsive {
-    word-break: break-word !important;
-    white-space: normal !important;
-    overflow-x: auto;
-}
+/*.table-responsive {*/
+/*    word-break: break-word !important;*/
+
+/*    overflow-x: auto;*/
+/*}*/
