@@ -832,4 +832,6 @@ input, textarea {
     margin-right: 2px !important;
 }
 
-
+th, td {
+    word-break: break-word !important;
+}
