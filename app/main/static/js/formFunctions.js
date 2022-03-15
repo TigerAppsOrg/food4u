@@ -373,6 +373,16 @@ function removeEventIDFromComments() {
     $("#commentsCheck").removeData("event-id");
 }
 
+function hideShowCommentSectionModal(event_op_net_id) {
+    if (username === event_op_net_id){
+        $("#hide-if-op").hide();
+    }
+    else {
+        $("#hide-if-op").show();
+    }
+}
+
+
 // show/hide start date
 function showHideCalendar() {
     $(".radio-init").change(function () {

@@ -25,17 +25,21 @@
                         <input type="text" class="input-hidden" id="idForComment" name="idForComment"
                                required>
 
-                        <label for="description" class="col-form-label"> <span
-                                class="required-field">Display Your NetID?</span>
+                        <div id="hide-if-op">
+                            <label for="description" class="col-form-label"> <span
+                                    class="required-field">Display Your NetID?</span>
+                                <br>
+                                <label class="radio-inline"><input type="radio" name="optradio" value="everyone"
+                                                                   checked>Visible
+                                    to Everyone</label>
+                                <label class="radio-inline"><input type="radio" value="one" name="optradio">Visible to
+                                    Only
+                                    OP </label>
+                                <label class="radio-inline"><input type="radio" value="invisible" name="optradio">Invisible
+                                    to Everyone </label>
+                            </label>
                             <br>
-                            <label class="radio-inline"><input type="radio" name="optradio" value="everyone" checked>Visible
-                                to Everyone</label>
-                            <label class="radio-inline"><input type="radio" value="one" name="optradio">Visible to Only
-                                OP </label>
-                            <label class="radio-inline"><input type="radio" value="invisible" name="optradio">Invisible
-                                to Everyone </label>
-                        </label>
-                        <br>
+                        </div>
 
                         <label for="comment" class="col-form-label required-field">Your Comment</label>
                         <!-- Make sure comment has length of 500 characters in the backend -->

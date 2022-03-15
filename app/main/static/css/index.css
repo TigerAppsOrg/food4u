@@ -836,5 +836,5 @@ input, textarea {
 .table-responsive {
     word-break: break-word !important;
     white-space: normal !important;
-    overflow-y: auto;
+    overflow-x: auto;
 }
