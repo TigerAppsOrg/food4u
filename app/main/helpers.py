@@ -67,11 +67,11 @@ def send_comment_email(event, comment, commenter):
     email_html_suffix += '</div>'
 
     email_html = '<p style="color:#f58025;"><strong>' \
-                 'Your free food event has been received a comment:' \
-                 '<br>' \
+                 'Your free food event has been received a comment:</p>' \
+                 '<br><br>' \
                  + comment + \
                  '<br>' + \
-                 '<strong></p>'
+                 '<strong>'
     email_html += '<p style="color:#f58025;"><strong> ' \
                   f"<a href='https://food4u.tigerapps.org/index/{event.id}'" \
                   f"target='_blank' rel='noopener noreferrer'>Click here" \
@@ -238,17 +238,17 @@ def legal_comment(comment):
     if comment == "":
         message = "Your comment submission is empty. Please submit a comment with one " \
                   "or more characters."
-        return comment, message, 400
+        return message, 400
     if len(comment) > 500:
         message = "Length of comment is greater than 500 characters. Please shorten it."
-        return comment, message, 400
+        return message, 400
     if pf.contains_profanity(comment):
         message = "Your comment contains profanity. Please change it before submitting."
-        return comment, message, 400
+        return message, 400
     if clean_html(comment):
         message = "Your comment contains html tags. Please change it before submitting."
-        return comment, message, 400
-    return comment, "You have successfully submitted your comment!", 200
+        return message, 400
+    return "You have successfully submitted your comment!", 200
 
 
 def legal_lat_lng(latitude, longitude):

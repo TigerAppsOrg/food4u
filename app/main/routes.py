@@ -880,11 +880,11 @@ def handle_comment():
         wants_anon_to_all = True
 
     comment_event_id = request.form['idForComment']
-    comment = request.form['comment']
-    comment, message, success_or_error_code = legal_comment(comment)
+    comment_text = request.form['comment']
+    message, success_or_error_code = legal_comment(comment_text)
 
     all_event_comments = Comments.query.filter_by(event_id=comment_event_id).all()
-    comment_event = Event.query.filter_by(id =comment_event_id).first()
+    comment_event = Event.query.filter_by(id=comment_event_id).first()
 
     if len(all_event_comments) == 100:
         message = "There are 100 comments for this event. Cannot submit another one " \
@@ -895,11 +895,11 @@ def handle_comment():
         # if error, return early
         return jsonify(message=message), success_or_error_code
     else:
-        # if success, process comment
+        # if success, process comment_text
         comment = Comments(
             event_id=comment_event_id,
             net_id=username,
-            comment=comment,
+            comment=comment_text,
             response_time=datetime.datetime.utcnow(),
             wants_anon_but_op=wants_anon_but_op,
             wants_anon_to_all=wants_anon_to_all)
@@ -909,9 +909,9 @@ def handle_comment():
         socket_io.emit('update', events_dict, broadcast=True)
         socket_io.emit("update_comments")
         if comment_event.end_time != username and not wants_anon_to_all:
-            send_comment_email(comment_event, comment, username)
+            send_comment_email(comment_event, comment_text, username)
         else:
-            send_comment_email(comment_event, comment, "Anonymous")
+            send_comment_email(comment_event, comment_text, "Anonymous")
         return jsonify(message=message), success_or_error_code
 
 
