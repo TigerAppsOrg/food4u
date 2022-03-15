@@ -34,6 +34,12 @@
                         <td>{{ comment.comment }} (seen only by you/OP)</td>
                         <td>{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
                     </tr>
+                {% elif comment.net_id == username %}
+                    <tr>
+                        <th scope="row">{{ comment.net_id }}</th>
+                        <td>{{ comment.comment }} (you)</td>
+                        <td>{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
+                    </tr>
                 {% else %}
                     <tr>
                         <th scope="row">{{ comment.net_id }}</th>
