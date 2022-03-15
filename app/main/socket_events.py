@@ -40,7 +40,7 @@ def set_user_attendance_anon(wants_anon_and_event_id):
 
 
 @socket_io.on("delete_comment")
-def set_user_attendance_anon(comment_id):
+def delete_comment(comment_id):
     # username = "ben"
     username = CasClient().authenticate()
     username = username.lower().strip()
