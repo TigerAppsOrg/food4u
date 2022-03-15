@@ -44,7 +44,7 @@ body {
 #addFoodButton:hover, [id^=directionsButton_]:hover, #editButton:hover, #deleteButton:hover,
 #notificationSubmit:hover, #feedbackSubmitButton:hover, #extendButton:hover, #flagButton:hover,
 #currentLocationButton:hover, #submitFood:hover, #cancelFood:hover, #editDeleteButton:hover, #editFood:hover,
-#openNotificationSettings:hover, #recenterMapButton:hover {
+#openNotificationSettings:hover, #recenterMapButton:hover, #sendCommentButton:hover {
     cursor: pointer;
     color: white;
     background: #f58025;
@@ -752,10 +752,6 @@ input, textarea {
 .dropdown-menu {
     min-width: 0px !important;
 }
-
-/*.btn-info {*/
-/*    background-color: #abb427 !important;*/
-/*}*/
 
 .badge-info {
     background-color: #ffcc00 !important;

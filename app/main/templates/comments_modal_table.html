@@ -1,0 +1,22 @@
+<div id="commentsCheck" data-event-id="{{ event.id }}">
+    <div class="panel panel-default">
+        <table class="table table-striped table-bordered table-hover table-small">
+            <thead>
+            <tr>
+                <th scope="col" style="width:16%">NetID</th>
+                <th scope="col" style="width:60%">Comment</th>
+                <th scope="col" style="width:24%">Time Commented</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for comment in event_comments %}
+                    <tr>
+                        <th scope="row">{{ comment.net_id }}</th>
+                        <td>{{ comment.comment }}</td>
+                        <td>{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
+                    </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

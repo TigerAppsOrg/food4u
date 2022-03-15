@@ -25,39 +25,25 @@
     </h1>
     <div id=bodyContent>
 
-        <button type="button" class="btn btn-light btn-xs" data-toggle="modal"
-                        data-target="#attendanceModal"
+        <button type="button"
+                class="btn btn-light btn-xs"
+                data-toggle="modal"
+                data-target="#attendanceModal"
                 style="margin-bottom: 2px;
-background-color: #5cb85c !important;" onclick="getAttendance('{{ event.id }}')">
+                background-color: #5cb85c !important;"
+                onclick="getAttendance('{{ event.id }}')">
             View/Add Attendance
         </button>
-
-{#        <div id="goingLineOptional_{{ event.id }}">#}
-{#            {% if event_remaining_minutes > 0 %}#}
-{#                <span id="going_line_{{ event.id }}">#}
-{#            Attending This Event?#}
-{#            <span>#}
-{#                <button type="submit" class="btn btn-success btn-xs shadow-none"#}
-{#                        id="goingButton" form="goingForm" onclick="goingWithoutRefresh(); return false">#}
-{#                    Yes#}
-{#                </button>#}
-{#                <button type="submit" class="btn btn-danger btn-xs"#}
-{#                        id="goingButton" form="goingForm" onclick="notGoingWithoutRefresh(); return false">#}
-{#                    No#}
-{#                </button>#}
-{#            </span>#}
-{#            <div>#}
-{#                <form action="/handleGoing" id="goingForm" method="post" enctype="multipart/form-data">#}
-{#                    <input type="text" class="input-hidden" id="idForGoing" name="idForGoing"#}
-{#                           value="{{ event.id }}">#}
-{#                    <input type="checkbox" id="goingSwitch" name="goingSwitch" hidden>#}
-{#                </form>#}
-{#            </div>#}
-{#            <br>#}
-{#            </span>#}
-{#            {% endif %}#}
-{#        </div>#}
-
+        <br>
+        <button type="button"
+                class="btn btn-light btn-xs"
+                data-toggle="modal"
+                data-target="#commentsModal"
+                style="margin-bottom: 2px; background-color: #39cbe1 !important;"
+                onclick="getComments('{{ event.id }}')">
+            Comments <span class="badge badge-dark"
+                           id="numberOfComments_{{ event.id }}">{{ number_of_comments }}</span>
+        </button>
 
         <div id="attendance_info_{{ event.id }}">
             <button type="button" class="btn btn-light btn-xs" style="pointer-events: none;margin-bottom: 2px;
@@ -75,7 +61,7 @@ background-color: #f3f2f2 !important;">
             <button type="button" class="btn btn-light btn-xs" style="pointer-events: none;
 background-color: #f3f2f2 !important;">
                 OP is Staying? <span class="badge badge-dark"
-                                      id="isHostThere">{{ is_host_there }}</span>
+                                     id="isHostThere">{{ is_host_there }}</span>
             </button>
             <br>
         </div>

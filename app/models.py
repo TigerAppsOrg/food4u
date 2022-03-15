@@ -61,6 +61,19 @@ class Attendees(db.Model):
         return '<Attendee: {}>'.format(self.net_id)
 
 
+class Comments(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), primary_key=False)
+    net_id = db.Column(db.String(20), primary_key=False)
+    comment = db.Column(db.String(500), primary_key=False)
+    response_time = db.Column(db.DateTime, index=True, default=datetime.datetime.utcnow())
+    wants_anon_but_op = db.Column(db.Boolean, default=False)
+    wants_anon_to_all = db.Column(db.Boolean, default=False)
+
+    def __repr__(self):
+        return '<Comments: {}>'.format(self.comment)
+
+
 class NotificationSubscribers(db.Model):
     net_id = db.Column(db.String(20), primary_key=True)
     name = db.Column(db.String(30))

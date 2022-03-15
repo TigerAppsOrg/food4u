@@ -11,7 +11,7 @@ from flask_mail import Message
 from itsdangerous import URLSafeSerializer
 
 from app import mail, db, socket_io
-from app.models import Event, Picture, NotificationSubscribers, Attendees
+from app.models import Event, Picture, NotificationSubscribers, Attendees, Comments
 from . import main
 
 
@@ -144,6 +144,16 @@ def delete_all_going(event):
     db.session.commit()
 
 
+def delete_all_comments(event):
+    event_id = event.id
+    event_comments = Comments.query.filter_by(
+        event_id=event_id).all()
+    if event_comments:
+        for comment in event_comments:
+            db.session.delete(comment)
+    db.session.commit()
+
+
 def legal_title(title):
     if len(title) > 100:
         return "", "", 2
@@ -196,6 +206,23 @@ def legal_description(desc, urlTitle="", urlBuilding="", urlRoom="", title="", b
             or clean_html(desc):
         return desc, 4
     return desc, 0
+
+
+def legal_comment(comment):
+    if comment == "":
+        message = "Your comment submission is empty. Please submit a comment with one " \
+                  "or more characters."
+        return comment, message, 400
+    if len(comment) > 500:
+        message = "Length of comment is greater than 500 characters. Please shorten it."
+        return comment, message, 400
+    if pf.contains_profanity(comment):
+        message = "Your comment contains profanity. Please change it before submitting."
+        return comment, message, 400
+    if clean_html(comment):
+        message = "Your comment contains html tags. Please change it before submitting."
+        return comment, message, 400
+    return comment, "You have successfully submitted your comment!", 200
 
 
 def legal_lat_lng(latitude, longitude):
@@ -319,6 +346,11 @@ def get_attendance(event):
     return number_of_people_going, going_percentage, host_message
 
 
+def get_number_of_comments(event):
+    comments_for_event = db.session.query(Comments).filter(Comments.event_id == event.id).all()
+    return len(comments_for_event)
+
+
 def fetch_events():
     events_dict_list = []
     events = db.session.query(Event).order_by(
@@ -336,6 +368,7 @@ def fetch_events():
         db.session.commit()
         pictureList = [[picture.event_picture, picture.name] for picture in pictures]
         number_of_people_going, going_percentage, host_message = get_attendance(event)
+        number_of_comments = get_number_of_comments(event)
 
         events_dict_list.append(
             {'title': event.title, 'building': event.building,
@@ -355,6 +388,7 @@ def fetch_events():
              'people_going': number_of_people_going,
              'going_percentage': going_percentage,
              'host_message': host_message,
+             'number_of_comments': number_of_comments,
              })
     return events_dict_list
 
@@ -362,6 +396,7 @@ def fetch_events():
 def delete_data(event):
     delete_all_pics(event)
     delete_all_going(event)
+    delete_all_comments(event)
     db.session.delete(event)
     db.session.commit()
     active_event_count = fetch_active_events_count()
@@ -378,6 +413,13 @@ def fetch_attendees(event):
                                                                    Attendees.going).order_by(
         Attendees.response_time.asc())
     return attendees_desc_time_query.all()
+
+
+def fetch_comments(event):
+    comments_desc_time_query = db.session.query(Comments).filter(Comments.event_id == event.id
+                                                                 ).order_by(
+        Comments.response_time.asc())
+    return comments_desc_time_query.all()
 
 
 def is_dst(zonename):

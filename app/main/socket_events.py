@@ -31,4 +31,4 @@ def set_user_attendance_anon(wants_anon_and_event_id):
         db.session.add(attendee)
         db.session.commit()
 
-    socket_io.emit("update_anon_attendance", broadcast=False)
+    socket_io.emit("update_anon_attendance", broadcast=True)

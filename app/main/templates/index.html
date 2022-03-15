@@ -140,6 +140,8 @@
 
 {% include 'attendance_modal.html' %}
 
+{% include 'comments_modal.html' %}
+
 
 <!-- The Image Modal -->
 <div id="modal-image" class="modal-image">
@@ -203,8 +205,6 @@
         });
 
         socket.on('update', function (events) {
-            <!-- This should remove the opt-in attendance buttons for an event just ending -->
-            getAttendance($("#attendanceCheck").data("event-id"));
             populateAdditionalMarkers(events);
             updateMarkers(events);
         })
@@ -213,14 +213,14 @@
             $("#active-event-count").html(count);
         })
 
-        socket.on('update_attendees', function () {
+        socket.on('update_attendance', function () {
             // if current view needs to be updated
             getAttendance($("#attendanceCheck").data("event-id"));
         })
 
-        socket.on('update_anon_attendance', function () {
+        socket.on('update_comments', function () {
             // if current view needs to be updated
-            getAttendance($("#attendanceCheck").data("event-id"));
+            getComments($("#commentsCheck").data("event-id"));
         })
         // End Socket_IO
 

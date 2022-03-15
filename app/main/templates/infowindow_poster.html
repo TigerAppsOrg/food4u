@@ -24,35 +24,45 @@
     <div id=bodyContent>
 
         <button type="button" class="btn btn-light btn-xs" data-toggle="modal"
-                        data-target="#attendanceModal"
+                data-target="#attendanceModal"
                 style="margin-bottom: 2px;
 background-color: #5cb85c !important;" onclick="getAttendance('{{ event.id }}')">
             View/Add Attendance
         </button>
+        <br>
+        <button type="button"
+                class="btn btn-light btn-xs"
+                data-toggle="modal"
+                data-target="#commentsModal"
+                style="margin-bottom: 2px; background-color: #39cbe1 !important;"
+                onclick="getComments('{{ event.id }}')">
+            Comments <span class="badge badge-dark"
+                           id="numberOfComments_{{ event.id }}">{{ number_of_comments }}</span>
+        </button>
 
 
-{#        <span id="going_line_{{ event.id }}">#}
-{#            Staying at Your Event?#}
-{##}
-{#        <span>#}
-{#                <button type="submit" class="btn btn-success btn-xs shadow-none"#}
-{#                        id="goingButton" form="goingForm" onclick="goingWithoutRefresh(); return false">#}
-{#                    Yes#}
-{#                </button>#}
-{#                <button type="submit" class="btn btn-danger btn-xs"#}
-{#                        id="goingButton" form="goingForm" onclick="notGoingWithoutRefresh(); return false">#}
-{#                    No#}
-{#                </button>#}
-{#            </span>#}
-{#        <div id="going_button_{{ event.id }}">#}
-{#            <form action="/handleGoing" id="goingForm" method="post" enctype="multipart/form-data">#}
-{#                <input type="text" class="input-hidden" id="idForGoing" name="idForGoing"#}
-{#                       value="{{ event.id }}">#}
-{#                <input type="checkbox" id="goingSwitch" name="goingSwitch" hidden>#}
-{#            </form>#}
-{#        </div>#}
-{#                    </span>#}
-{#        <br>#}
+        {#        <span id="going_line_{{ event.id }}">#}
+        {#            Staying at Your Event?#}
+        {##}
+        {#        <span>#}
+        {#                <button type="submit" class="btn btn-success btn-xs shadow-none"#}
+        {#                        id="goingButton" form="goingForm" onclick="goingWithoutRefresh(); return false">#}
+        {#                    Yes#}
+        {#                </button>#}
+        {#                <button type="submit" class="btn btn-danger btn-xs"#}
+        {#                        id="goingButton" form="goingForm" onclick="notGoingWithoutRefresh(); return false">#}
+        {#                    No#}
+        {#                </button>#}
+        {#            </span>#}
+        {#        <div id="going_button_{{ event.id }}">#}
+        {#            <form action="/handleGoing" id="goingForm" method="post" enctype="multipart/form-data">#}
+        {#                <input type="text" class="input-hidden" id="idForGoing" name="idForGoing"#}
+        {#                       value="{{ event.id }}">#}
+        {#                <input type="checkbox" id="goingSwitch" name="goingSwitch" hidden>#}
+        {#            </form>#}
+        {#        </div>#}
+        {#                    </span>#}
+        {#        <br>#}
 
 
         <div id="attendance_info_{{ event.id }}">
@@ -71,7 +81,7 @@ background-color: #f3f2f2 !important;">
             <button type="button" class="btn btn-light btn-xs" style="pointer-events: none;
 background-color: #f3f2f2 !important;">
                 OP is Staying? <span class="badge badge-dark"
-                                      id="isHostThere">{{ is_host_there }}</span>
+                                     id="isHostThere">{{ is_host_there }}</span>
             </button>
             <br>
         </div>
@@ -150,7 +160,7 @@ background-color: #f3f2f2 !important;">
                         <button type="button" id="editButton" class="btn btn-primary" data-toggle="modal"
                                 data-target="#editFormModal" style="width:100%;height:100%;"
                                 data-event-id="{{ event.id }}"
-                                >
+                        >
                             Edit Your Event
                         </button>
                     </div>

@@ -155,9 +155,18 @@ function getAttendance(event_id) {
         .then(response => response.text()).then(data => {
         $("#attendanceBody").empty();
         $("#attendanceBody").append(data);
-    }).then(() => emitSetAnonAttendance()
-    )
-    ;
+    }).then(() => emitSetAnonAttendance());
+}
+
+function getComments(event_id) {
+    $("#idForComment").val(event_id);
+    fetch('/get_comments?' +
+        '&event_id=' + event_id)
+        .then(response => response.text())
+        .then(data => {
+            $("#commentsTable").empty();
+            $("#commentsTable").append(data);
+        })
 }
 
 function emitSetAnonAttendance() {

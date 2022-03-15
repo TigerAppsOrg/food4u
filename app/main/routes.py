@@ -5,15 +5,16 @@ import json
 import datetime
 from . import main
 from .casclient import CasClient
-from .helpers import legal_title, set_color_get_time, fetch_attendees, get_event_remaining_minutes
+from .helpers import legal_title, set_color_get_time, fetch_attendees, get_event_remaining_minutes, fetch_comments, \
+    get_number_of_comments, legal_comment
 from .helpers import legal_location, legal_duration, send_notifications
 from .helpers import legal_description, legal_lat_lng, handle_and_edit_pics
 from .helpers import legal_email, legal_fields, send_feedback_email, send_flag_email, \
     get_attendance, fetch_events, fetch_active_events_count, get_utc_start_time_from_est_time_string, \
-    get_est_time_string_from_utc_dt, is_start_time_more_than_utc_now
+    get_est_time_string_from_utc_dt
 from flask import redirect, flash, url_for
 from app import socket_io, db
-from app.models import Event, Picture, Users, NotificationSubscribers, Attendees
+from app.models import Event, Picture, Users, NotificationSubscribers, Attendees, Comments
 from .helpers import delete_data
 from itsdangerous import URLSafeSerializer, BadData
 from sqlalchemy.sql import functions
@@ -39,6 +40,10 @@ def send_feedback():
     if is_illegal == 3:
         flash(
             "Feedback has word longer than 20 characters. Please fix errors and submit again.", "error")
+        return redirect(url_for('main.index'))
+    if is_illegal == 4:
+        flash(
+            "Feedback has html tags. Please fix errors and submit again.", "error")
         return redirect(url_for('main.index'))
 
     send_feedback_email(username, feedback)
@@ -189,6 +194,7 @@ def index(event_id=None):
         db.session.commit()
         pictureList = [[picture.event_picture, picture.name] for picture in pictures]
         number_of_people_going, going_percentage, host_message = get_attendance(event)
+        number_of_comments = get_number_of_comments(event)
         events_dict_list.append(
             {'title': event.title, 'building': event.building,
              'room': event.room,
@@ -207,6 +213,7 @@ def index(event_id=None):
              'people_going': number_of_people_going,
              'going_percentage': going_percentage,
              'host_message': host_message,
+             'number_of_comments': number_of_comments
              })
     subscribers_count = NotificationSubscribers.query.filter_by(
         wants_email=True).count()
@@ -679,6 +686,15 @@ def handle_data_edit():
         start_time = post_time
         end_time = post_time + datetime.timedelta(minutes=duration)
 
+    if title == "" or building == "" or room == "" or duration == "" or request.form['optradio'] == "":
+        message = "One of the required fields is empty. Please edit again."
+        return jsonify(message=message), 400
+
+    if latitude == "" or longitude == "":
+        message = "One of the coordinates is not submitted. Please refresh the site and " \
+                  "edit again."
+        return jsonify(message=message), 400
+
     edited_event.update(
         {"title": title,
          "building": building,
@@ -801,6 +817,15 @@ def handle_data():
         end_time = post_time + datetime.timedelta(minutes=duration)
         send_emails_flag = True
 
+    if title == "" or building == "" or room == "" or duration == "" or request.form['optradio'] == "":
+        message = "One of the required fields is empty. Please edit again."
+        return jsonify(message=message), 400
+
+    if latitude == "" or longitude == "":
+        message = "One of the coordinates is not submitted. Please refresh the site and " \
+                  "edit again."
+        return jsonify(message=message), 400
+
     e = Event(
         net_id=username.lower().strip(),
         post_time=post_time,
@@ -835,6 +860,49 @@ def handle_data():
     return jsonify(success=True)
 
 
+@main.route('/handleComment', methods=['POST'])
+def handle_comment():
+    ERROR_CODE = 400
+    SUCCESS_CODE = 200
+
+    username = "ben"
+    # username = CasClient().authenticate()
+    # username = username.lower().strip()
+
+    visibility = request.form['optradio']
+
+    wants_anon_but_op = False
+    wants_anon_to_all = False
+
+    if visibility == "one":
+        wants_anon_but_op = True
+    elif visibility == "invisible":
+        wants_anon_to_all = True
+
+    comment_event_id = request.form['idForComment']
+    comment = request.form['comment']
+    comment, message, success_or_error_code = legal_comment(comment)
+
+    if success_or_error_code == ERROR_CODE:
+        # if error, return early
+        return jsonify(message=message), success_or_error_code
+    else:
+        # if success, process comment
+        comment = Comments(
+            event_id=comment_event_id,
+            net_id=username.lower().strip(),
+            comment=comment,
+            response_time=datetime.datetime.utcnow(),
+            wants_anon_but_op=wants_anon_but_op,
+            wants_anon_to_all=wants_anon_to_all)
+        db.session.add(comment)
+        db.session.commit()
+        events_dict = fetch_events()
+        socket_io.emit('update', events_dict, broadcast=True)
+        socket_io.emit("update_comments")
+        return jsonify(message=message), success_or_error_code
+
+
 @main.route('/show_data', methods=['GET'])
 def show_data():
     username = CasClient().authenticate()
@@ -863,11 +931,13 @@ def get_infowindow_poster():
     number_of_people_going, going_percentage, is_host_there = get_attendance(event)
 
     event_post_time = get_est_time_string_from_utc_dt(event.post_time)
+    number_of_comments = get_number_of_comments(event)
 
     html = render_template(
         "infowindow_poster.html", event=event, event_remaining_minutes=remaining_minutes,
         number_of_people_going=number_of_people_going, going_percentage=going_percentage,
         is_host_there=is_host_there, event_post_time=event_post_time,
+        number_of_comments=number_of_comments
     )
     response = make_response(html)
     return response
@@ -879,16 +949,15 @@ def get_infowindow_consumer():
 
     event_id = request.args.get('event_id')
     event = Event.query.filter_by(id=event_id).first()
-    _, marker_color, remaining_minutes = set_color_get_time(
-        event)
+    event_remaining_minutes = get_event_remaining_minutes(event)
     number_of_people_going, going_percentage, is_host_there = get_attendance(event)
-
     event_post_time = get_est_time_string_from_utc_dt(event.post_time)
+    number_of_comments = get_number_of_comments(event)
 
     html = render_template(
-        "infowindow_consumer.html", event=event, event_remaining_minutes=remaining_minutes,
+        "infowindow_consumer.html", event=event, event_remaining_minutes=event_remaining_minutes,
         number_of_people_going=number_of_people_going, going_percentage=going_percentage,
-        is_host_there=is_host_there, event_post_time=event_post_time, marker_color=marker_color)
+        is_host_there=is_host_there, event_post_time=event_post_time, number_of_comments=number_of_comments)
     response = make_response(html)
     return response
 
@@ -901,8 +970,7 @@ def get_attendance_modal_body():
 
     event_id = request.args.get('event_id')
     event = Event.query.filter_by(id=event_id).first()
-    _, _, remaining_minutes = set_color_get_time(
-        event)
+    event_remaining_minutes = get_event_remaining_minutes(event)
     event_attendees = fetch_attendees(event)
     username_attendee = db.session.query(Attendees).filter(Attendees.net_id == username,
                                                            Attendees.event_id == int(
@@ -910,8 +978,30 @@ def get_attendance_modal_body():
 
     html = render_template(
         "attendance_modal_body.html", event_attendees=event_attendees, event=event,
-        event_remaining_minutes=remaining_minutes, original_poster_net_id=event.net_id
+        event_remaining_minutes=event_remaining_minutes, original_poster_net_id=event.net_id
         , username=username, username_attendee=username_attendee)
+    response = make_response(html)
+    return response
+
+
+@main.route('/get_comments', methods=['GET'])
+def get_attendance_modal_table():
+    # username = "ben"
+    username = CasClient().authenticate()
+    username = username.lower().strip()
+
+    event_id = request.args.get('event_id')
+    event = Event.query.filter_by(id=event_id).first()
+    event_remaining_minutes = get_event_remaining_minutes(event)
+    event_comments = fetch_comments(event)
+    username_commenter = db.session.query(Comments).filter(Comments.net_id == username,
+                                                           Comments.event_id == int(
+                                                               event_id)).first()
+
+    html = render_template(
+        "comments_modal_table.html", event_comments=event_comments, event=event,
+        event_remaining_minutes=event_remaining_minutes, original_poster_net_id=event.net_id
+        , username=username, username_commenter=username_commenter)
     response = make_response(html)
     return response
 

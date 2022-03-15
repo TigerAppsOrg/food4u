@@ -299,6 +299,30 @@ function deleteWithoutRefresh() {
     })
 }
 
+function commentWithoutRefresh() {
+    let commentForm = $("form#commentForm")[0];
+    let formData = new FormData(commentForm);
+    if (commentForm.checkValidity()) {
+        $.ajax({
+            type: 'POST',
+            url: '/handleComment',
+            contentType: false,
+            dataType: "json",
+            cache: false,
+            processData: false,
+            data: formData,
+            success: function (data, textStatus, jqXHR) {
+                notyf.success(jqXHR.responseJSON.message);
+            },
+            error: function (jqXHR) {
+                notyf.error(jqXHR.responseJSON.message);
+            }
+        })
+    } else {
+        commentForm.reportValidity();
+    }
+}
+
 function goingWithoutRefresh() {
     $("#goingSwitch").prop('checked', true);
     let goingForm = $("form#goingForm")[0];
@@ -339,6 +363,14 @@ function notGoingWithoutRefresh() {
             notyf.error(jqXHR.responseJSON.message);
         }
     })
+}
+
+function removeEventIDFromAttendance() {
+    $("#attendanceCheck").removeData("event-id");
+}
+
+function removeEventIDFromComments() {
+    $("#commentsCheck").removeData("event-id");
 }
 
 // show/hide start date
