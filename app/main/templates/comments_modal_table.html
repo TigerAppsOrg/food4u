@@ -22,15 +22,15 @@
                         <td>{{ comment.comment }}</td>
                         <td>{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
                     </tr>
-                {% elif comment.wants_anon_but_op and comment.net_id == username %}
-                    <tr>
-                        <th scope="row">Anonymous (you)</th>
-                        <td>{{ comment.comment }} (seen only by OP)</td>
-                        <td>{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
-                    </tr>
                 {% elif comment.wants_anon_but_op and original_poster_net_id == username %}
                     <tr>
                         <th scope="row">{{ comment.net_id }}</th>
+                        <td>{{ comment.comment }} (seen only by OP)</td>
+                        <td>{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
+                    </tr>
+                {% elif comment.wants_anon_but_op and comment.net_id == username %}
+                    <tr>
+                        <th scope="row">Anonymous (you)</th>
                         <td>{{ comment.comment }} (seen only by OP)</td>
                         <td>{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
                     </tr>
