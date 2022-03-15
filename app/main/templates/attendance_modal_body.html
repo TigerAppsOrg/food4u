@@ -124,7 +124,7 @@
                 {% elif attendee.wants_anon and original_poster_net_id == username %}
                     <tr>
                         <th scope="row">{{ loop.index }}</th>
-                        <td>{{ attendee.net_id }} (seen only by you/OP)</td>
+                        <td>{{ attendee.net_id }} (seen only by OP)</td>
                         <td>{{ get_est_time_string_from_utc_dt(attendee.response_time) }}</td>
                     </tr>
                 {% elif attendee.wants_anon %}
