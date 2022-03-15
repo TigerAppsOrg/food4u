@@ -970,6 +970,10 @@ def get_attendance_modal_body():
 
     event_id = request.args.get('event_id')
     event = Event.query.filter_by(id=event_id).first()
+    if event is None:
+        html = render_template("no_event_found.html")
+        response = make_response(html)
+        return response
     event_remaining_minutes = get_event_remaining_minutes(event)
     event_attendees = fetch_attendees(event)
     username_attendee = db.session.query(Attendees).filter(Attendees.net_id == username,
@@ -992,6 +996,10 @@ def get_attendance_modal_table():
 
     event_id = request.args.get('event_id')
     event = Event.query.filter_by(id=event_id).first()
+    if event is None:
+        html = render_template("no_event_found.html")
+        response = make_response(html)
+        return response
     event_remaining_minutes = get_event_remaining_minutes(event)
     event_comments = fetch_comments(event)
     username_commenter = db.session.query(Comments).filter(Comments.net_id == username,

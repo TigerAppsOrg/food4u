@@ -1,60 +1,62 @@
 <div id="commentsCheck" data-event-id="{{ event.id }}">
     <div class="panel panel-default">
-        <table class="table table-striped table-bordered table-hover table-small">
-            <thead>
-            <tr>
-                <th scope="col">NetID</th>
-                <th scope="col">Comment</th>
-                <th scope="col">Time Commented</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for comment in event_comments %}
-                {% if comment.wants_anon_to_all and comment.net_id == username %}
-                    <tr>
-                        <th scope="row">Anonymous (you)</th>
-                        <td>{{ comment.comment }}</td>
-                        <td>{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
-                    </tr>
-                {% elif comment.wants_anon_to_all %}
-                    <tr>
-                        <th scope="row">Anonymous</th>
-                        <td>{{ comment.comment }}</td>
-                        <td>{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
-                    </tr>
-                {% elif comment.wants_anon_but_op and comment.net_id == username %}
-                    <tr>
-                        <th scope="row">Anonymous (you + seen only by OP)</th>
-                        <td>{{ comment.comment }}</td>
-                        <td>{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
-                    </tr>
-                {% elif comment.wants_anon_but_op and original_poster_net_id == username %}
-                    <tr>
-                        <th scope="row">{{ comment.net_id }} (seen only by OP)</th>
-                        <td>{{ comment.comment }}</td>
-                        <td>{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
-                    </tr>
-                {% elif comment.wants_anon_but_op %}
-                    <tr>
-                        <th scope="row">Anonymous (seen only by OP)</th>
-                        <td>{{ comment.comment }}</td>
-                        <td>{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
-                    </tr>
-                {% elif comment.net_id == username %}
-                    <tr>
-                        <th scope="row">{{ comment.net_id }} (you)</th>
-                        <td>{{ comment.comment }}</td>
-                        <td>{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <th scope="row">{{ comment.net_id }}</th>
-                        <td>{{ comment.comment }}</td>
-                        <td>{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
-                    </tr>
-                {% endif %}
-            {% endfor %}
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th class="col-xs-3">NetID</th>
+                    <th class="col-xs-6">Comment</th>
+                    <th class="col-xs-3">Time Commented</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for comment in event_comments %}
+                    {% if comment.wants_anon_to_all and comment.net_id == username %}
+                        <tr>
+                            <th scope="row">Anonymous (you)</th>
+                            <td>{{ comment.comment }}</td>
+                            <td>{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
+                        </tr>
+                    {% elif comment.wants_anon_to_all %}
+                        <tr>
+                            <th scope="row">Anonymous</th>
+                            <td>{{ comment.comment }}</td>
+                            <td>{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
+                        </tr>
+                    {% elif comment.wants_anon_but_op and comment.net_id == username %}
+                        <tr>
+                            <th scope="row">Anonymous (you + seen only by OP)</th>
+                            <td>{{ comment.comment }}</td>
+                            <td>{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
+                        </tr>
+                    {% elif comment.wants_anon_but_op and original_poster_net_id == username %}
+                        <tr>
+                            <th scope="row">{{ comment.net_id }} (seen only by OP)</th>
+                            <td>{{ comment.comment }}</td>
+                            <td>{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
+                        </tr>
+                    {% elif comment.wants_anon_but_op %}
+                        <tr>
+                            <th scope="row">Anonymous (seen only by OP)</th>
+                            <td>{{ comment.comment }}</td>
+                            <td>{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
+                        </tr>
+                    {% elif comment.net_id == username %}
+                        <tr>
+                            <th scope="row">{{ comment.net_id }} (you)</th>
+                            <td>{{ comment.comment }}</td>
+                            <td>{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <th scope="row">{{ comment.net_id }}</th>
+                            <td>{{ comment.comment }}</td>
+                            <td>{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
