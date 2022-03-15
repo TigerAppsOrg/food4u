@@ -834,6 +834,6 @@ input, textarea {
 }
 
 .table-responsive {
-    word-break: break-word !important;
+    word-break: break-all !important;
     white-space: normal !important;
 }
