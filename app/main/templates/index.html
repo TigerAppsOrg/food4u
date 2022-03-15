@@ -213,7 +213,7 @@
             $("#active-event-count").html(count);
         })
 
-        socket.on('update_attendance', function () {
+        socket.on('update_attendees', function () {
             // if current view needs to be updated
             getAttendance($("#attendanceCheck").data("event-id"));
         })
