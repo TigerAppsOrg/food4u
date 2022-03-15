@@ -374,10 +374,9 @@ function removeEventIDFromComments() {
 }
 
 function hideShowCommentSectionModal(event_op_net_id) {
-    if (username === event_op_net_id){
+    if (username === event_op_net_id) {
         $("#hide-if-op").hide();
-    }
-    else {
+    } else {
         $("#hide-if-op").show();
     }
 }
@@ -399,4 +398,13 @@ function showHideCalendar() {
             $(".datetimepicker-final").show();
         }
     });
+}
+
+function modalsRemoveEventIDs() {
+    $('#attendanceModal').on('hidden.bs.modal', function () {
+        removeEventIDFromAttendance();
+    })
+    $('#commentsModal').on('hidden.bs.modal', function () {
+        removeEventIDFromComments();
+    })
 }
