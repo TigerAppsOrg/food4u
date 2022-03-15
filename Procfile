@@ -1,1 +1,1 @@
-web: gunicorn --worker-class eventlet -w 1 food4uprinceton:app --preload
+web: bin/start-pgbouncer-stunnel gunicorn --worker-class eventlet -w 1 food4uprinceton:app --preload
