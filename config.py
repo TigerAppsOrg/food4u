@@ -6,6 +6,8 @@ import psycopg2
 class Config(object):
     SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    # Closes connections after 5 minutes of inactivity
+    SQLALCHEMY_POOL_RECYCLE = 299
     SECRET_KEY = os.environ.get('SECRET_KEY')
     SEND_FILE_MAX_AGE_DEFAULT = 0
     SCHEDULER_TIMEZONE = "America/New_York"
