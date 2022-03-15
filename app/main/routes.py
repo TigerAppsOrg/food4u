@@ -6,7 +6,7 @@ import datetime
 from . import main
 from .casclient import CasClient
 from .helpers import legal_title, set_color_get_time, fetch_attendees, get_event_remaining_minutes, fetch_comments, \
-    get_number_of_comments, legal_comment
+    get_number_of_comments, legal_comment, send_comment_email
 from .helpers import legal_location, legal_duration, send_notifications
 from .helpers import legal_description, legal_lat_lng, handle_and_edit_pics
 from .helpers import legal_email, legal_fields, send_feedback_email, send_flag_email, \
@@ -827,7 +827,7 @@ def handle_data():
         return jsonify(message=message), 400
 
     e = Event(
-        net_id=username.lower().strip(),
+        net_id=username,
         post_time=post_time,
         start_time=start_time, title=title, building=building,
         room=room,
@@ -884,6 +884,7 @@ def handle_comment():
     comment, message, success_or_error_code = legal_comment(comment)
 
     all_event_comments = Comments.query.filter_by(event_id=comment_event_id).all()
+    comment_event = Event.query.filter_by(id =comment_event_id).first()
 
     if len(all_event_comments) == 100:
         message = "There are 100 comments for this event. Cannot submit another one " \
@@ -897,7 +898,7 @@ def handle_comment():
         # if success, process comment
         comment = Comments(
             event_id=comment_event_id,
-            net_id=username.lower().strip(),
+            net_id=username,
             comment=comment,
             response_time=datetime.datetime.utcnow(),
             wants_anon_but_op=wants_anon_but_op,
@@ -907,6 +908,7 @@ def handle_comment():
         events_dict = fetch_events()
         socket_io.emit('update', events_dict, broadcast=True)
         socket_io.emit("update_comments")
+        send_comment_email(comment_event, comment, username)
         return jsonify(message=message), success_or_error_code
 
 
