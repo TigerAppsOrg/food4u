@@ -883,6 +883,13 @@ def handle_comment():
     comment = request.form['comment']
     comment, message, success_or_error_code = legal_comment(comment)
 
+    all_event_comments = Comments.query.filter_by(event_id=comment_event_id).all()
+
+    if len(all_event_comments) == 100:
+        message = "There are 100 comments for this event. Cannot submit another one " \
+                  "due to limited database size."
+        return jsonify(message=message), ERROR_CODE
+
     if success_or_error_code == ERROR_CODE:
         # if error, return early
         return jsonify(message=message), success_or_error_code
