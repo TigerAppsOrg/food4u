@@ -312,6 +312,7 @@ function commentWithoutRefresh() {
             processData: false,
             data: formData,
             success: function (data, textStatus, jqXHR) {
+                $("#comment").val();
                 notyf.success(jqXHR.responseJSON.message);
             },
             error: function (jqXHR) {
