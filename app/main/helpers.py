@@ -61,9 +61,8 @@ def send_flag_email(flagger_netid, op_netid, event):
     mail.send(msg)
 
 
-def send_comment_email(event, comment, commenter):
+def send_comment_email_to_op(event, comment, commenter):
     email_html_suffix = "<div id=bodyContent>"
-    email_html_suffix += "<p><strong>Commented by: <strong>" + str(commenter) + "</strong></p>"
     email_html_suffix += '</div>'
 
     email_html = '<p style="color:#f58025;"><strong>' \
@@ -71,7 +70,8 @@ def send_comment_email(event, comment, commenter):
                  '<br>' \
                  + comment + \
                  '<br>' + \
-                 '<strong>'
+                 '<strong>' +\
+                 "<p><strong>Commented by: <strong>" + str(commenter) + "</strong></p>"
     email_html += '<p style="color:#f58025;"><strong> ' \
                   f"<a href='https://food4u.tigerapps.org/index/{event.id}'" \
                   f"target='_blank' rel='noopener noreferrer'>Click here" \
