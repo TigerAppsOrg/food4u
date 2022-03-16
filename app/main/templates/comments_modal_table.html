@@ -15,7 +15,7 @@
                     {% if comment.net_id == original_poster_net_id and username == original_poster_net_id %}
                         <!-- Always shows OP's NetID -->
                         <tr>
-                            <th scope="row" style="white-space: normal !important;">{{ comment.net_id }} (you + OP)</th>
+                            <th scope="row" style="white-space: normal !important;">{{ comment.net_id }} (you/OP)</th>
                             <td style="white-space: normal !important;">{{ comment.comment }}</td>
                             <td style="white-space: normal !important;">{{ get_est_time_string_from_utc_dt(comment.response_time) }}</td>
                             <td>
