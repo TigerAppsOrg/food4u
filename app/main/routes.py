@@ -1033,14 +1033,19 @@ def get_attendance_modal_table():
     event_remaining_minutes = get_event_remaining_minutes(event)
     event_comments = fetch_comments(event)
 
-    # is_subscribed = db.session.query(CommentNotificationSubscribers).filter(
-    #     CommentNotificationSubscribers.net_id == username,
-    #     CommentNotificationSubscribers.event_id == event.id).first().wants_email == True
+    is_subscribed = db.session.query(CommentNotificationSubscribers).filter(
+        CommentNotificationSubscribers.net_id == username,
+        CommentNotificationSubscribers.event_id == event.id).first()
+
+    if is_subscribed is not None:
+        is_subscribed = is_subscribed.wants_email == True
+    else:
+        is_subscribed = False
 
     html = render_template(
         "comments_modal_table.html", event_comments=event_comments, event=event,
         event_remaining_minutes=event_remaining_minutes, original_poster_net_id=event.net_id
-        , username=username, is_subscribed=None)
+        , username=username, is_subscribed=is_subscribed)
 
     response = make_response(html)
     return response
