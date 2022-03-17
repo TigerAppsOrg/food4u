@@ -1040,7 +1040,8 @@ def get_attendance_modal_table():
     html = render_template(
         "comments_modal_table.html", event_comments=event_comments, event=event,
         event_remaining_minutes=event_remaining_minutes, original_poster_net_id=event.net_id
-        , username=username, is_subscribed=is_subscribed)
+        , username=username, is_subscribed=None)
+
     response = make_response(html)
     return response
 
