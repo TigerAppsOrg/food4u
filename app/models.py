@@ -29,7 +29,7 @@ class Picture(db.Model):
     name = db.Column(db.String(1000))
     event_picture = db.Column(db.String(1000))
     public_id = db.Column(db.String(1000), primary_key=True)
-    event = db.relationship('Event', backref=db.backref('pictures', cascade="all,delete", lazy='dynamic'))
+    event = db.relationship('Event', backref=db.backref('pictures', cascade="all, delete-orphan", lazy='dynamic'))
 
     def __repr__(self):
         return '<Event ID: {}; Picture URL: {}>'.format(self.event_id, self.event_picture)
@@ -56,6 +56,8 @@ class Attendees(db.Model):
     going = db.Column(db.Boolean, default=None)
     response_time = db.Column(db.DateTime, index=True, default=datetime.datetime.utcnow())
     wants_anon = db.Column(db.Boolean, default=False)
+    event = db.relationship("Event", backref=db.backref("attendees", cascade="all, delete-orphan",
+                                                        lazy='dynamic'))
 
     def __repr__(self):
         return '<Attendee: {}>'.format(self.net_id)
@@ -72,6 +74,18 @@ class Comments(db.Model):
 
     def __repr__(self):
         return '<Comments: {}>'.format(self.comment)
+
+
+class CommentNotificationSubscribers(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), primary_key=False)
+    net_id = db.Column(db.String(20), primary_key=False)
+    wants_email = db.Column(db.Boolean, default=False)
+    event = db.relationship("Event", backref=db.backref("comment_subscribers", cascade="all, delete-orphan",
+                                                        lazy='dynamic'))
+
+    def __repr__(self):
+        return '<Comment Notification Subscriber: {}>'.format(self.net_id)
 
 
 class NotificationSubscribers(db.Model):
