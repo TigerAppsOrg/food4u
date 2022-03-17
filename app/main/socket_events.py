@@ -2,6 +2,7 @@ from app import socket_io, db
 from app.main.helpers import fetch_events
 from app.models import Attendees, Comments, CommentNotificationSubscribers, Event
 from app.main.casclient import CasClient
+from flask import request
 
 
 @socket_io.on("update")
@@ -35,9 +36,9 @@ def set_user_attendance_anon(wants_anon_and_event_id):
         db.session.commit()
 
     if user_wants_anon:
-        socket_io.emit("notification_success", "Anon status activated.", broadcast=False)
+        socket_io.emit("notification_success", "Anon status activated.", room=request.sid)
     else:
-        socket_io.emit("notification_success", "Anon status deactivated.", broadcast=False)
+        socket_io.emit("notification_success", "Anon status deactivated.", room=request.sid)
 
     socket_io.emit("update_attendees", broadcast=True)
 
@@ -54,10 +55,10 @@ def delete_comment(comment_id):
     if comment is not None:
         db.session.delete(comment)
         db.session.commit()
-        socket_io.emit("notification_success", "Comment successfully deleted!", broadcast=False)
+        socket_io.emit("notification_success", "Comment successfully deleted!", room=request.sid)
     else:
         socket_io.emit("notification_error", "Comment was not found or could not "
-                                             "delete another user's comment.", broadcast=False)
+                                             "delete another user's comment.", room=request.sid)
 
     socket_io.emit("update_comments", broadcast=True)
     events = fetch_events()
@@ -90,10 +91,8 @@ def set_comment_notification(wants_notifications_and_event_id):
         db.session.commit()
 
     if user_wants_comment_notifications:
-        socket_io.emit("notification_success", "Comment notifications are turned"
-                                               " on for you.", broadcast=False)
+        socket_io.emit("notification_success", "Comment notifications are turned on for you.", room=request.sid)
     else:
-        socket_io.emit("notification_success", "Comment notifications are turned"
-                                               " off for you.", broadcast=False)
+        socket_io.emit("notification_success", "Comment notifications are turned off for you.", room=request.sid)
 
     socket_io.emit("update_comments", broadcast=True)
