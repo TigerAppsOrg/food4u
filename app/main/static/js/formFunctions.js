@@ -218,26 +218,32 @@ function flagWithoutRefresh() {
         title: 'Are you sure you want to flag this event?',
         content: 'This event will be shown to have 10 minutes left for everyone. You won\'t be able to revert this!',
         buttons: {
-            confirm: function () {
-                let flagForm = $("form#flagForm")[0];
-                let formData = new FormData(flagForm);
-                $.ajax({
-                    type: 'POST',
-                    url: '/handleEventFlag',
-                    contentType: false,
-                    dataType: "json",
-                    cache: false,
-                    processData: false,
-                    data: formData,
-                    success: function (data, textStatus, jqXHR) {
-                        notyf.success(jqXHR.responseJSON.message);
-                    },
-                    error: function (jqXHR) {
-                        notyf.error(jqXHR.responseJSON.message);
-                    }
-                })
+            btnClass: 'btn-blue',
+            confirm: {
+                action: function () {
+                    let flagForm = $("form#flagForm")[0];
+                    let formData = new FormData(flagForm);
+                    $.ajax({
+                        type: 'POST',
+                        url: '/handleEventFlag',
+                        contentType: false,
+                        dataType: "json",
+                        cache: false,
+                        processData: false,
+                        data: formData,
+                        success: function (data, textStatus, jqXHR) {
+                            notyf.success(jqXHR.responseJSON.message);
+                        },
+                        error: function (jqXHR) {
+                            notyf.error(jqXHR.responseJSON.message);
+                        }
+                    })
+                },
             },
-            cancel: function () {
+            cancel: {
+                action: function () {
+                },
+                btnClass: 'btn-red',
             },
         }
     });
@@ -268,28 +274,34 @@ function deleteWithoutRefresh() {
         title: 'Are you sure you want to delete your event?',
         content: "You won't be able to revert this!",
         buttons: {
-            confirm: function () {
-                let deleteForm = $("form#deleteForm")[0];
-                let formData = new FormData(deleteForm);
-                $.ajax({
-                    type: 'POST',
-                    url: '/handleEventDelete',
-                    contentType: false,
-                    dataType: "json",
-                    cache: false,
-                    processData: false,
-                    data: formData,
-                    success: function (data, textStatus, jqXHR) {
-                        notyf.success(jqXHR.responseJSON.message);
-                        infoWindow.close();
-                        $("#editFormModal").modal('hide');
-                    },
-                    error: function (jqXHR) {
-                        notyf.error(jqXHR.responseJSON.message);
-                    }
-                })
+            confirm: {
+                action: function () {
+                    let deleteForm = $("form#deleteForm")[0];
+                    let formData = new FormData(deleteForm);
+                    $.ajax({
+                        type: 'POST',
+                        url: '/handleEventDelete',
+                        contentType: false,
+                        dataType: "json",
+                        cache: false,
+                        processData: false,
+                        data: formData,
+                        success: function (data, textStatus, jqXHR) {
+                            notyf.success(jqXHR.responseJSON.message);
+                            infoWindow.close();
+                            $("#editFormModal").modal('hide');
+                        },
+                        error: function (jqXHR) {
+                            notyf.error(jqXHR.responseJSON.message);
+                        }
+                    });
+                },
+                btnClass: 'btn-blue',
             },
-            cancel: function () {
+            cancel: {
+                action: function () {
+                },
+                btnClass: 'btn-red',
             },
         }
     });
@@ -411,10 +423,16 @@ function deleteComment(commentID) {
         title: 'Do you want to delete your comment?',
         content: 'This cannot be undone.',
         buttons: {
-            confirm: function () {
-                socket.emit("delete_comment", commentID);
+            confirm: {
+                action: function () {
+                    socket.emit("delete_comment", commentID);
+                },
+                btnClass: 'btn-blue'
             },
-            cancel: function () {
+            cancel: {
+                action: function () {
+                },
+                btnClass: 'btn-red',
             },
         }
     });
