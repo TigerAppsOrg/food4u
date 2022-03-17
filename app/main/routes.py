@@ -6,7 +6,7 @@ import datetime
 from . import main
 from .casclient import CasClient
 from .helpers import legal_title, set_color_get_time, fetch_attendees, get_event_remaining_minutes, fetch_comments, \
-    get_number_of_comments, legal_comment, send_comment_email_to_op, send_comment_email_to_others
+    get_number_of_comments, legal_comment
 from .helpers import legal_location, legal_duration, send_notifications
 from .helpers import legal_description, legal_lat_lng, handle_and_edit_pics
 from .helpers import legal_email, legal_fields, send_feedback_email, send_flag_email, \
@@ -924,8 +924,10 @@ def handle_comment():
         socket_io.emit("update_comments")
         # if comment_event.end_time != username and not wants_anon_to_all:
         #     send_comment_email_to_op(comment_event, comment_text, username)
+        #     send_comment_email_to_others(comment_event, comment_text, username)
         # else:
         #     send_comment_email_to_op(comment_event, comment_text, "Anonymous")
+        #     send_comment_email_to_others(comment_event, comment_text, "Anonymous")
         return jsonify(message=message), success_or_error_code
 
 
