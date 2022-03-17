@@ -6,7 +6,7 @@ import datetime
 from . import main
 from .casclient import CasClient
 from .helpers import legal_title, set_color_get_time, fetch_attendees, get_event_remaining_minutes, fetch_comments, \
-    get_number_of_comments, legal_comment, send_comment_email_to_op
+    get_number_of_comments, legal_comment, send_comment_email_to_op, send_comment_email_to_others
 from .helpers import legal_location, legal_duration, send_notifications
 from .helpers import legal_description, legal_lat_lng, handle_and_edit_pics
 from .helpers import legal_email, legal_fields, send_feedback_email, send_flag_email, \
@@ -1031,9 +1031,9 @@ def get_attendance_modal_table():
     event_remaining_minutes = get_event_remaining_minutes(event)
     event_comments = fetch_comments(event)
 
-    is_subscribed = db.session.query(CommentNotificationSubscribers).filter(
-        CommentNotificationSubscribers.net_id == username,
-        CommentNotificationSubscribers.event_id == event.id).first().wants_email == True
+    # is_subscribed = db.session.query(CommentNotificationSubscribers).filter(
+    #     CommentNotificationSubscribers.net_id == username,
+    #     CommentNotificationSubscribers.event_id == event.id).first().wants_email == True
 
     html = render_template(
         "comments_modal_table.html", event_comments=event_comments, event=event,
