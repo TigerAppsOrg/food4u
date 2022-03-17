@@ -42,7 +42,6 @@ def register_scheduler(app):
     from app.models import Event
 
     def update():
-        pass
         with app.app_context():
             from .main.helpers import delete_data, send_notifications
             current_time = datetime.datetime.utcnow()
@@ -59,6 +58,6 @@ def register_scheduler(app):
                     event.sent_emails = True
                     db.session.commit()
 
-    # scheduler.add_job("job_update", update, trigger="interval", seconds=20)
+    scheduler.add_job("job_update", update, trigger="interval", seconds=20)
     scheduler.init_app(app)
     scheduler.start()
