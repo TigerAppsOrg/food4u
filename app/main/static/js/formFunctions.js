@@ -218,7 +218,6 @@ function flagWithoutRefresh() {
         title: 'Are you sure you want to flag this event?',
         content: 'This event will be shown to have 10 minutes left for everyone. You won\'t be able to revert this!',
         buttons: {
-            btnClass: 'btn-blue',
             confirm: {
                 action: function () {
                     let flagForm = $("form#flagForm")[0];
@@ -237,8 +236,9 @@ function flagWithoutRefresh() {
                         error: function (jqXHR) {
                             notyf.error(jqXHR.responseJSON.message);
                         }
-                    })
+                    });
                 },
+                btnClass: 'btn-blue',
             },
             cancel: {
                 action: function () {
