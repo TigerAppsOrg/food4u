@@ -301,6 +301,7 @@ def going_to_event():
             if switch_on:
                 response_time = datetime.datetime.utcnow()
                 attendee = Attendees(event_id=going_event_id, net_id=username, going=True, response_time=response_time)
+                attendee.event = is_event
                 db.session.add(attendee)
                 user_search.update(
                     {"events_going": Users.events_going + 1,
@@ -317,6 +318,7 @@ def going_to_event():
                 # is not
                 response_time = datetime.datetime.utcnow()
                 attendee = Attendees(event_id=going_event_id, net_id=username, going=False, response_time=response_time)
+                attendee.event = is_event
                 db.session.add(attendee)
                 user_search.update(
                     {"events_responded": Users.events_responded + 1},
@@ -380,6 +382,7 @@ def going_to_event():
             if switch_on:
                 response_time = datetime.datetime.utcnow()
                 attendee = Attendees(event_id=going_event_id, net_id=username, going=True, response_time=response_time)
+                attendee.event = is_event
                 db.session.add(attendee)
                 going_event_search.update({"host_staying": True},
                                           synchronize_session=False)
@@ -398,6 +401,7 @@ def going_to_event():
                 # is not
                 response_time = datetime.datetime.utcnow()
                 attendee = Attendees(event_id=going_event_id, net_id=username, going=False, response_time=response_time)
+                attendee.event = is_event
                 db.session.add(attendee)
                 going_event_search.update({"host_staying": False,
                                            "not_planning_to_go": Event.not_planning_to_go + 1},
@@ -836,6 +840,7 @@ def handle_data():
         description=desc,
         end_time=end_time, duration=duration, sent_emails=send_emails_flag)
     db.session.add(e)
+    db.session.flush()
     pics = request.files.to_dict().values()
     create = True
     is_illegal = handle_and_edit_pics(pics, e, create)
@@ -851,6 +856,13 @@ def handle_data():
         {"posts_made": Users.posts_made + 1},
         synchronize_session=False)
     socket_io.emit('postIncrement', 1, broadcast=True)
+    # subscribe op to comment notifications by default
+    comment_notification_subscriber = CommentNotificationSubscribers(
+        event_id=e.id,
+        net_id=username,
+        wants_email=True)
+    comment_notification_subscriber.event = e
+    db.session.add(comment_notification_subscriber)
     db.session.commit()
     if send_emails_flag:
         send_notifications(e)
@@ -904,15 +916,16 @@ def handle_comment():
             response_time=datetime.datetime.utcnow(),
             wants_anon_but_op=wants_anon_but_op,
             wants_anon_to_all=wants_anon_to_all)
+        comment.event = comment_event
         db.session.add(comment)
         db.session.commit()
         events_dict = fetch_events()
         socket_io.emit('update', events_dict, broadcast=True)
         socket_io.emit("update_comments")
-        if comment_event.end_time != username and not wants_anon_to_all:
-            send_comment_email_to_op(comment_event, comment_text, username)
-        else:
-            send_comment_email_to_op(comment_event, comment_text, "Anonymous")
+        # if comment_event.end_time != username and not wants_anon_to_all:
+        #     send_comment_email_to_op(comment_event, comment_text, username)
+        # else:
+        #     send_comment_email_to_op(comment_event, comment_text, "Anonymous")
         return jsonify(message=message), success_or_error_code
 
 
@@ -1017,14 +1030,15 @@ def get_attendance_modal_table():
         return response
     event_remaining_minutes = get_event_remaining_minutes(event)
     event_comments = fetch_comments(event)
-    username_commenter = db.session.query(Comments).filter(Comments.net_id == username,
-                                                           Comments.event_id == int(
-                                                               event_id)).first()
+
+    is_subscribed = db.session.query(CommentNotificationSubscribers).filter(
+        CommentNotificationSubscribers.net_id == username,
+        CommentNotificationSubscribers.event_id == event.id).first().wants_email == True
 
     html = render_template(
         "comments_modal_table.html", event_comments=event_comments, event=event,
         event_remaining_minutes=event_remaining_minutes, original_poster_net_id=event.net_id
-        , username=username, username_commenter=username_commenter)
+        , username=username, is_subscribed=is_subscribed)
     response = make_response(html)
     return response
 

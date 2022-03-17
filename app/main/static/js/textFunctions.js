@@ -166,7 +166,7 @@ function getComments(event_id) {
         .then(data => {
             $("#commentsTable").empty();
             $("#commentsTable").append(data);
-        })
+        }).then(() => emitSetCommentNotificationSubscribe());
 }
 
 function emitSetAnonAttendance() {
@@ -176,6 +176,25 @@ function emitSetAnonAttendance() {
                 socket.emit("set_anon_attendance", {"wants_anon": true, "event_id": $("#wants-anon").data("event-id")});
             } else {
                 socket.emit("set_anon_attendance", {"wants_anon": false, "event_id": $("#wants-anon").data("event-id")});
+            }
+        }
+    )
+}
+
+
+function emitSetCommentNotificationSubscribe() {
+    $("#wants-comment-notifications").on('change', function () {
+            let check = $(this).prop('checked');
+            if (check == true) {
+                socket.emit("set_comment_notifications_subscribe", {
+                    "wants_comment_notifications": true,
+                    "event_id": $("#wants-comment-notifications").data("event-id")
+                });
+            } else {
+                socket.emit("set_comment_notifications_subscribe", {
+                    "wants_comment_notifications": false,
+                    "event_id": $("#wants-comment-notifications").data("event-id")
+                });
             }
         }
     )

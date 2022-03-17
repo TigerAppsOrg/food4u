@@ -145,8 +145,7 @@ def delete_all_pics(event):
     event_expired_pictures = event.pictures.all()
     if event_expired_pictures:
         for pic_to_be_deleted in event_expired_pictures:
-            db.session.delete(pic_to_be_deleted)
-            db.session.commit()
+            # don't need to delete each individual pic as cascade does it for us
             cloudinary.config(
                 cloud_name=os.getenv('CLOUD_NAME'),
                 api_key=os.getenv('API_KEY'),
@@ -155,23 +154,27 @@ def delete_all_pics(event):
 
 
 def delete_all_going(event):
-    event_id = event.id
-    people_going = Attendees.query.filter_by(
-        event_id=event_id).all()
-    if people_going:
-        for people in people_going:
-            db.session.delete(people)
-    db.session.commit()
+    # don't need to delete each individual attendee as cascade does it for us
+    pass
+    # event_id = event.id
+    # people_going = Attendees.query.filter_by(
+    #     event_id=event_id).all()
+    # if people_going:
+    #     for people in people_going:
+    #         db.session.delete(people)
+    # db.session.commit()
 
 
 def delete_all_comments(event):
-    event_id = event.id
-    event_comments = Comments.query.filter_by(
-        event_id=event_id).all()
-    if event_comments:
-        for comment in event_comments:
-            db.session.delete(comment)
-    db.session.commit()
+    # don't need to delete each individual comment as cascade does it for us
+    pass
+    # event_id = event.id
+    # event_comments = Comments.query.filter_by(
+    #     event_id=event_id).all()
+    # if event_comments:
+    #     for comment in event_comments:
+    #         db.session.delete(comment)
+    # db.session.commit()
 
 
 def legal_title(title):
@@ -415,8 +418,8 @@ def fetch_events():
 
 def delete_data(event):
     delete_all_pics(event)
-    delete_all_going(event)
-    delete_all_comments(event)
+    # delete_all_going(event)
+    # delete_all_comments(event)
     db.session.delete(event)
     db.session.commit()
     active_event_count = fetch_active_events_count()
