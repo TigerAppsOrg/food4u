@@ -71,6 +71,8 @@ class Comments(db.Model):
     response_time = db.Column(db.DateTime, index=True, default=datetime.datetime.utcnow())
     wants_anon_but_op = db.Column(db.Boolean, default=False)
     wants_anon_to_all = db.Column(db.Boolean, default=False)
+    event = db.relationship("Event", backref=db.backref("comments", cascade="all, delete-orphan",
+                                                        lazy='dynamic'))
 
     def __repr__(self):
         return '<Comments: {}>'.format(self.comment)
