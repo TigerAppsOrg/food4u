@@ -1,5 +1,11 @@
 <div id="commentsCheck" data-event-id="{{ event.id }}">
-    {% if is_subscribed %}
+    {% if op_is_subscribed %}
+        <p> The OP <span style="color: limegreen">will receive</span> comment notifications to their email</p>
+    {% else %}
+        <p> The OP <span style="color: red">will not receive</span> comment notifications to their email</p>
+    {% endif %}
+    <p>Check/uncheck the checkbox below to instantly change your email settings for comment notifications for this event:</p>
+    {% if user_is_subscribed %}
         <span>
                     <label class="form-check-label" for="wants-comment-notifications">
                     <input type="checkbox" class="form-check-input" id="wants-comment-notifications"

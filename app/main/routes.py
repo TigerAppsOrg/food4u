@@ -11,7 +11,7 @@ from .helpers import legal_location, legal_duration, send_notifications
 from .helpers import legal_description, legal_lat_lng, handle_and_edit_pics
 from .helpers import legal_email, legal_fields, send_feedback_email, send_flag_email, \
     get_attendance, fetch_events, fetch_active_events_count, get_utc_start_time_from_est_time_string, \
-    get_est_time_string_from_utc_dt
+    get_est_time_string_from_utc_dt, send_comment_email_to_op, send_comment_email_to_others
 from flask import redirect, flash, url_for
 from app import socket_io, db
 from app.models import Event, Picture, Users, NotificationSubscribers, Attendees, Comments, \
@@ -1033,19 +1033,23 @@ def get_attendance_modal_table():
     event_remaining_minutes = get_event_remaining_minutes(event)
     event_comments = fetch_comments(event)
 
-    is_subscribed = db.session.query(CommentNotificationSubscribers).filter(
+    user_is_subscribed = db.session.query(CommentNotificationSubscribers).filter(
         CommentNotificationSubscribers.net_id == username,
         CommentNotificationSubscribers.event_id == event.id).first()
 
-    if is_subscribed is not None:
-        is_subscribed = is_subscribed.wants_email == True
+    op_is_subscribed = db.session.query(CommentNotificationSubscribers).filter(
+        CommentNotificationSubscribers.net_id == event.net_id,
+        CommentNotificationSubscribers.event_id == event.id).first().wants_email
+
+    if user_is_subscribed is not None:
+        user_is_subscribed = user_is_subscribed.wants_email
     else:
-        is_subscribed = False
+        user_is_subscribed = False
 
     html = render_template(
         "comments_modal_table.html", event_comments=event_comments, event=event,
         event_remaining_minutes=event_remaining_minutes, original_poster_net_id=event.net_id
-        , username=username, is_subscribed=is_subscribed)
+        , username=username, user_is_subscribed=user_is_subscribed, op_is_subscribed=op_is_subscribed)
 
     response = make_response(html)
     return response

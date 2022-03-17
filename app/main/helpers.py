@@ -81,6 +81,32 @@ def send_comment_email_to_op(event, comment, commenter):
     mail.send(msg)
 
 
+def send_comment_email_to_others(event, comment, commenter):
+    email_html_suffix = "<div id=bodyContent>"
+    email_html_suffix += '</div>'
+
+    email_html = '<p style="color:#f58025;"><strong>' \
+                 'Your free food event has been received a comment:</p>' \
+                 '<br>' \
+                 + comment + \
+                 '<br>' + \
+                 '<strong>' + \
+                 "<p><strong>Commented by: <strong>" + str(commenter) + "</strong></p>"
+    email_html += '<p style="color:#f58025;"><strong> ' \
+                  f"<a href='https://food4u.tigerapps.org/index/{event.id}'" \
+                  f"target='_blank' rel='noopener noreferrer'>Click here" \
+                  '</a> to see this your live event\'s comments.' \
+                  '<strong></p>'
+    email_html += email_html_suffix
+    msg = Message(
+        html=email_html,
+        subject=("food 4 u: Your Opted-In Event Has Received a Comment"),
+        sender="food4uprinceton@gmail.com",
+        recipients=[event.net_id + "@princeton.edu"]
+    )
+    mail.send(msg)
+
+
 def send_notifications(event):
     email_html_suffix = '<p style="color:#f58025;"><strong>We have food 4 u! ' \
                         f"<a href='https://food4u.tigerapps.org/index/{event.id}'" \
