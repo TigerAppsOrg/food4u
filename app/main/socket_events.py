@@ -94,6 +94,6 @@ def set_comment_notification(wants_notifications_and_event_id):
                                                " on for you.", broadcast=False)
     else:
         socket_io.emit("notification_success", "Comment notifications are turned"
-                                               " for for you.", broadcast=False)
+                                               " off for you.", broadcast=False)
 
     socket_io.emit("update_comments", broadcast=True)
