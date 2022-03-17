@@ -62,8 +62,6 @@ def send_flag_email(flagger_netid, op_netid, event):
 
 
 def send_comment_email_to_op(event, comment, commenter):
-    email_html_suffix = "<div id=bodyContent>"
-    email_html_suffix += '</div>'
 
     email_html = '<p style="color:#f58025;"><strong>' \
                  'Your free food event has been received a comment:</strong></p>' + \
@@ -74,7 +72,6 @@ def send_comment_email_to_op(event, comment, commenter):
                   f"target='_blank' rel='noopener noreferrer'>Click here" \
                   '</a> to see this your live event\'s comments.' \
                   '<strong></p>'
-    email_html += email_html_suffix
     msg = Message(
         html=email_html,
         subject=("food 4 u: Your Event Has Received a Comment"),

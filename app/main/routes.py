@@ -14,7 +14,8 @@ from .helpers import legal_email, legal_fields, send_feedback_email, send_flag_e
     get_est_time_string_from_utc_dt
 from flask import redirect, flash, url_for
 from app import socket_io, db
-from app.models import Event, Picture, Users, NotificationSubscribers, Attendees, Comments
+from app.models import Event, Picture, Users, NotificationSubscribers, Attendees, Comments, \
+    CommentNotificationSubscribers
 from .helpers import delete_data
 from itsdangerous import URLSafeSerializer, BadData
 from sqlalchemy.sql import functions
