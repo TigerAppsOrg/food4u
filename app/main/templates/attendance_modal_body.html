@@ -12,7 +12,7 @@
         or find whether their friends/acquaintances are coming to the event.</p>
     <div id="goingLineOptional_{{ event.id }}">
 
-        {% if event_remaining_minutes > 0 and username != original_poster_net_id and username_attendee.wants_anon %}
+        {% if username != original_poster_net_id and username_attendee.wants_anon %}
             <span id="going_line_{{ event.id }}">
             Attending This Event?
             <span style="padding-right: 1rem">
@@ -45,7 +45,7 @@
             </div>
             </span>
             <br>
-        {% elif event_remaining_minutes > 0 and username != original_poster_net_id and not username_attendee.wants_anon %}
+        {% elif username != original_poster_net_id and not username_attendee.wants_anon %}
             <span id="going_line_{{ event.id }}">
             Attending This Event?
             <span style="padding-right: 1rem">

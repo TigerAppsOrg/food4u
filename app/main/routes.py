@@ -1009,7 +1009,6 @@ def get_attendance_modal_body():
         html = render_template("no_event_found.html")
         response = make_response(html)
         return response
-    event_remaining_minutes = get_event_remaining_minutes(event)
     event_attendees = fetch_attendees(event)
     username_attendee = db.session.query(Attendees).filter(Attendees.net_id == username,
                                                            Attendees.event_id == int(
@@ -1017,7 +1016,7 @@ def get_attendance_modal_body():
 
     html = render_template(
         "attendance_modal_body.html", event_attendees=event_attendees, event=event,
-        event_remaining_minutes=event_remaining_minutes, original_poster_net_id=event.net_id
+        original_poster_net_id=event.net_id
         , username=username, username_attendee=username_attendee)
     response = make_response(html)
     return response
@@ -1035,7 +1034,6 @@ def get_attendance_modal_table():
         html = render_template("no_event_found.html")
         response = make_response(html)
         return response
-    event_remaining_minutes = get_event_remaining_minutes(event)
     event_comments = fetch_comments(event)
 
     user_is_subscribed = db.session.query(CommentNotificationSubscribers).filter(
@@ -1053,7 +1051,7 @@ def get_attendance_modal_table():
 
     html = render_template(
         "comments_modal_table.html", event_comments=event_comments, event=event,
-        event_remaining_minutes=event_remaining_minutes, original_poster_net_id=event.net_id
+        original_poster_net_id=event.net_id
         , username=username, user_is_subscribed=user_is_subscribed, op_is_subscribed=op_is_subscribed)
 
     response = make_response(html)
