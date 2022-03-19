@@ -848,3 +848,7 @@ th, td {
     margin-bottom: 4px !important;
     margin-right: .25rem;
 }
+
+.close {
+    color: black;
+}
