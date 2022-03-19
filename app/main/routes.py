@@ -922,12 +922,17 @@ def handle_comment():
         events_dict = fetch_events()
         socket_io.emit('update', events_dict, broadcast=True)
         socket_io.emit("update_comments")
-        # if comment_event.end_time != username and not wants_anon_to_all:
-        #     send_comment_email_to_op(comment_event, comment_text, username)
-        #     send_comment_email_to_others(comment_event, comment_text, username)
-        # else:
-        #     send_comment_email_to_op(comment_event, comment_text, "Anonymous")
-        #     send_comment_email_to_others(comment_event, comment_text, "Anonymous")
+        # in both cases, the commenter does not get the comment email notification
+        # if they comment themself
+        if not wants_anon_to_all and not wants_anon_but_op:
+            send_comment_email_to_op(comment_event, comment_text, username, username)
+            send_comment_email_to_others(comment_event, comment_text, username, username)
+        elif wants_anon_but_op:
+            send_comment_email_to_op(comment_event, comment_text, username, username)
+            send_comment_email_to_others(comment_event, comment_text, "Anonymous", username)
+        elif wants_anon_to_all:
+            send_comment_email_to_op(comment_event, comment_text, "Anonymous", username)
+            send_comment_email_to_others(comment_event, comment_text, "Anonymous", username)
         return jsonify(message=message), success_or_error_code
 
 

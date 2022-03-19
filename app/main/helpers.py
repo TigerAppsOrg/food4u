@@ -11,7 +11,7 @@ from flask_mail import Message
 from itsdangerous import URLSafeSerializer
 
 from app import mail, db, socket_io
-from app.models import Event, Picture, NotificationSubscribers, Attendees, Comments
+from app.models import Event, Picture, NotificationSubscribers, Attendees, Comments, CommentNotificationSubscribers
 from . import main
 
 
@@ -61,27 +61,41 @@ def send_flag_email(flagger_netid, op_netid, event):
     mail.send(msg)
 
 
-def send_comment_email_to_op(event, comment, commenter):
+def send_comment_email_to_op(event, comment, commenter_public, commenter):
+    op_is_subscribed = db.session.query(CommentNotificationSubscribers).filter(
+        CommentNotificationSubscribers.event_id == event.id,
+        CommentNotificationSubscribers.net_id == event.net_id,
+        CommentNotificationSubscribers.net_id != commenter,
+        CommentNotificationSubscribers.wants_email).first() is not None
 
-    email_html = '<p style="color:#f58025;"><strong>' \
-                 'Your free food event has been received a comment:</strong></p>' + \
-                 comment + \
-                 '<br> <p><strong>Commented by: <strong>' + str(commenter) + "<strong></p>"
-    email_html += '<p style="color:#f58025;"><strong> ' \
-                  f"<a href='https://food4u.tigerapps.org/index/{event.id}'" \
-                  f"target='_blank' rel='noopener noreferrer'>Click here" \
-                  '</a> to see this your live event\'s comments.' \
-                  '<strong></p>'
-    msg = Message(
-        html=email_html,
-        subject=("food 4 u: Your Event Has Received a Comment"),
-        sender="food4uprinceton@gmail.com",
-        recipients=[event.net_id + "@princeton.edu"]
-    )
-    mail.send(msg)
+    if op_is_subscribed:
+        email_html = '<p style="color:#f58025;"><strong>' \
+                     'Your free food event has been received a comment:</strong></p>' + \
+                     comment + \
+                     '<br> <p><strong>Commented by: <strong>' + commenter_public + "<strong></p>"
+        email_html += '<p style="color:#f58025;"><strong> ' \
+                      f"<a href='https://food4u.tigerapps.org/index/{event.id}'" \
+                      f"target='_blank' rel='noopener noreferrer'>Click here" \
+                      '</a> to see this your own event\'s comments.' \
+                      '<strong></p>'
+        msg = Message(
+            html=email_html,
+            subject=("food 4 u: Your Event Has Received a Comment"),
+            sender="food4uprinceton@gmail.com",
+            recipients=[event.net_id + "@princeton.edu"]
+        )
+        mail.send(msg)
+    else:
+        return
 
 
-def send_comment_email_to_others(event, comment, commenter):
+def send_comment_email_to_others(event, comment, commenter_public, commenter):
+    all_subscribers_except_op = db.session.query(CommentNotificationSubscribers).filter(
+        CommentNotificationSubscribers.event_id == event.id,
+        CommentNotificationSubscribers.net_id != event.net_id,
+        CommentNotificationSubscribers.net_id != commenter,
+        CommentNotificationSubscribers.wants_email).all()
+
     email_html_suffix = "<div id=bodyContent>"
     email_html_suffix += '</div>'
 
@@ -91,20 +105,22 @@ def send_comment_email_to_others(event, comment, commenter):
                  + comment + \
                  '<br>' + \
                  '<strong>' + \
-                 "<p><strong>Commented by: <strong>" + str(commenter) + "</strong></p>"
+                 "<p><strong>Commented by: <strong>" + commenter_public + "</strong></p>"
     email_html += '<p style="color:#f58025;"><strong> ' \
                   f"<a href='https://food4u.tigerapps.org/index/{event.id}'" \
                   f"target='_blank' rel='noopener noreferrer'>Click here" \
-                  '</a> to see this your live event\'s comments.' \
+                  '</a> to see your subscribed event\'s comments.' \
                   '<strong></p>'
     email_html += email_html_suffix
-    msg = Message(
-        html=email_html,
-        subject=("food 4 u: Your Opted-In Event Has Received a Comment"),
-        sender="food4uprinceton@gmail.com",
-        recipients=[event.net_id + "@princeton.edu"]
-    )
-    mail.send(msg)
+
+    for subscriber in all_subscribers_except_op:
+        msg = Message(
+            html=email_html,
+            subject=("food 4 u: Your Opted-In Event Has Received a Comment"),
+            sender="food4uprinceton@gmail.com",
+            recipients=[subscriber.net_id + "@princeton.edu"]
+        )
+        mail.send(msg)
 
 
 def send_notifications(event):
