@@ -1,10 +1,15 @@
 <div id="attendanceCheck" data-event-id="{{ event.id }}">
     <p>You can add whether or not you're attending this event. This affects the
         attending percentage, which is the number of "Yes" responses divided by
-    the total number of response. The host(s) of the free food event may use this attendance
-    list to delegate food, to determine the need to extend the event, etc. Users can
-        estimate whether or not there will be food left over based on the # of people attending
-        or find whether their friends/acquaintances are coming to the event too.</p>
+        the total number of response. </p>
+
+        <p>The host(s) of the free food event may use this attendance
+    list to delegate food, to determine the need to extend the event, etc. </p>
+
+<p>
+    Users can
+        estimate whether or not there will be food left over based on the "# of People Attending"
+        or find whether their friends/acquaintances are coming to the event.</p>
     <div id="goingLineOptional_{{ event.id }}">
 
         {% if event_remaining_minutes > 0 and username != original_poster_net_id and username_attendee.wants_anon %}
