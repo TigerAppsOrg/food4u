@@ -1,0 +1,66 @@
+<!-- Comments Modal -->
+<div class="modal fade" id="commentsModal" tabindex="-1" role="dialog" aria-labelledby="commentsModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="commentsModalLabel">Comments
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </h5>
+            </div>
+            <div class="modal-body" id="commentsBody">
+                <!-- Modal Body -->
+                <p>By default, the OP will receive an email notification sent to their
+                    "@princeton.edu" email address for
+                    each comment submitted that is not their own, unless they choose not to.
+                    Their notification status is below. There is a maximum limit of 100 comments per event. </p>
+                <div id="commentsTable">
+                    <!-- Dynamic Table of comments goes here -->
+                </div>
+                <form action="{{ url_for('main.handle_comment') }}" id="commentForm" method="post"
+                      enctype="multipart/form-data">
+                    <div class="form-group">
+                        <input type="text" class="input-hidden" id="idForComment" name="idForComment"
+                               required>
+
+
+                        <div id="hide-if-op">
+                            <p>
+                                Note: the OP cannot see your anonymity when "Visible to Only OP" or "Invisible to
+                                Everyone" is selected with the submission
+                                of your comment</p>
+                            <label for="description" class="col-form-label"> <span
+                                    class="required-field">Display Your NetID with Your Comment?</span>
+                                <br>
+                                <label class="radio-inline"><input type="radio" name="optradio" value="everyone"
+                                                                   checked>Visible
+                                    to Everyone</label>
+                                <label class="radio-inline"><input type="radio" value="one" name="optradio">Visible to
+                                    Only
+                                    OP </label>
+                                <label class="radio-inline"><input type="radio" value="invisible" name="optradio">Invisible
+                                    to Everyone </label>
+                            </label>
+                            <br>
+                        </div>
+
+                        <label for="comment" class="col-form-label required-field">Your Comment</label>
+                        <!-- Make sure comment has length of 500 characters in the backend -->
+                        <textarea required="required" class="form-control" id="comment" name="comment"
+                                  maxlength="500"></textarea>
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <button type="submit" id="sendCommentButton" form="commentForm"
+                            class="btn btn-primary"
+                            onclick="commentWithoutRefresh(); return false;">
+                        Send Comment
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

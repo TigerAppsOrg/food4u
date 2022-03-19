@@ -214,35 +214,39 @@ function notificationWithoutRefresh() {
 }
 
 function flagWithoutRefresh() {
-    Swal.fire({
+    $.confirm({
         title: 'Are you sure you want to flag this event?',
-        text: "This event will be shown to have 10 minutes left for everyone. You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, flag it!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            let flagForm = $("form#flagForm")[0];
-            let formData = new FormData(flagForm);
-            $.ajax({
-                type: 'POST',
-                url: '/handleEventFlag',
-                contentType: false,
-                dataType: "json",
-                cache: false,
-                processData: false,
-                data: formData,
-                success: function (data, textStatus, jqXHR) {
-                    notyf.success(jqXHR.responseJSON.message);
+        content: 'This event will be shown to have 10 minutes left for everyone. You won\'t be able to revert this!',
+        buttons: {
+            confirm: {
+                action: function () {
+                    let flagForm = $("form#flagForm")[0];
+                    let formData = new FormData(flagForm);
+                    $.ajax({
+                        type: 'POST',
+                        url: '/handleEventFlag',
+                        contentType: false,
+                        dataType: "json",
+                        cache: false,
+                        processData: false,
+                        data: formData,
+                        success: function (data, textStatus, jqXHR) {
+                            notyf.success(jqXHR.responseJSON.message);
+                        },
+                        error: function (jqXHR) {
+                            notyf.error(jqXHR.responseJSON.message);
+                        }
+                    });
                 },
-                error: function (jqXHR) {
-                    notyf.error(jqXHR.responseJSON.message);
-                }
-            })
+                btnClass: 'btn-blue',
+            },
+            cancel: {
+                action: function () {
+                },
+                btnClass: 'btn-red',
+            },
         }
-    })
+    });
 }
 
 function extendWithoutRefresh() {
@@ -266,106 +270,126 @@ function extendWithoutRefresh() {
 }
 
 function deleteWithoutRefresh() {
-    Swal.fire({
+    $.confirm({
         title: 'Are you sure you want to delete your event?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            let deleteForm = $("form#deleteForm")[0];
-            let formData = new FormData(deleteForm);
-            $.ajax({
-                type: 'POST',
-                url: '/handleEventDelete',
-                contentType: false,
-                dataType: "json",
-                cache: false,
-                processData: false,
-                data: formData,
-                success: function (data, textStatus, jqXHR) {
-                    notyf.success(jqXHR.responseJSON.message);
-                    infoWindow.close();
-                    $("#editFormModal").modal('hide');
+        content: "You won't be able to revert this!",
+        buttons: {
+            confirm: {
+                action: function () {
+                    let deleteForm = $("form#deleteForm")[0];
+                    let formData = new FormData(deleteForm);
+                    $.ajax({
+                        type: 'POST',
+                        url: '/handleEventDelete',
+                        contentType: false,
+                        dataType: "json",
+                        cache: false,
+                        processData: false,
+                        data: formData,
+                        success: function (data, textStatus, jqXHR) {
+                            notyf.success(jqXHR.responseJSON.message);
+                            infoWindow.close();
+                            $("#editFormModal").modal('hide');
+                        },
+                        error: function (jqXHR) {
+                            notyf.error(jqXHR.responseJSON.message);
+                        }
+                    });
                 },
-                error: function (jqXHR) {
-                    notyf.error(jqXHR.responseJSON.message);
-                }
-            })
+                btnClass: 'btn-blue',
+            },
+            cancel: {
+                action: function () {
+                },
+                btnClass: 'btn-red',
+            },
         }
-    })
+    });
+}
+
+function commentWithoutRefresh() {
+    let commentForm = $("form#commentForm")[0];
+    let formData = new FormData(commentForm);
+    if (commentForm.checkValidity()) {
+        $.ajax({
+            type: 'POST',
+            url: '/handleComment',
+            contentType: false,
+            dataType: "json",
+            cache: false,
+            processData: false,
+            data: formData,
+            success: function (data, textStatus, jqXHR) {
+                $("#comment").val("");
+                notyf.success(jqXHR.responseJSON.message);
+            },
+            error: function (jqXHR) {
+                notyf.error(jqXHR.responseJSON.message);
+            }
+        })
+    } else {
+        commentForm.reportValidity();
+    }
 }
 
 function goingWithoutRefresh() {
-    Swal.fire({
-        title: 'Are you sure you will be at the event?',
-        text: "You can change your attendance anytime within the marker's event text-box " +
-            "as long as the event is active or if you are the host",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $("#goingSwitch").prop('checked', true);
-            let goingForm = $("form#goingForm")[0];
-            let formData = new FormData(goingForm);
-            $.ajax({
-                type: 'POST',
-                url: '/handleGoing',
-                contentType: false,
-                dataType: "json",
-                cache: false,
-                processData: false,
-                data: formData,
-                success: function (data, textStatus, jqXHR) {
-                    notyf.success(jqXHR.responseJSON.message);
-                },
-                error: function (jqXHR) {
-                    notyf.error(jqXHR.responseJSON.message);
-                }
-            })
+    $("#goingSwitch").prop('checked', true);
+    let goingForm = $("form#goingForm")[0];
+    let formData = new FormData(goingForm);
+    $.ajax({
+        type: 'POST',
+        url: '/handleGoing',
+        contentType: false,
+        dataType: "json",
+        cache: false,
+        processData: false,
+        data: formData,
+        success: function (data, textStatus, jqXHR) {
+            notyf.success(jqXHR.responseJSON.message);
+        },
+        error: function (jqXHR) {
+            notyf.error(jqXHR.responseJSON.message);
         }
     })
 }
 
 function notGoingWithoutRefresh() {
-    Swal.fire({
-        title: 'Are you sure you will not be at the event?',
-        text: "You can change your attendance anytime within the marker's event text-box " +
-            "as long as the event is active or if you are the host",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $("#goingSwitch").prop('checked', false);
-            let goingForm = $("form#goingForm")[0];
-            let formData = new FormData(goingForm);
-            $.ajax({
-                type: 'POST',
-                url: '/handleGoing',
-                contentType: false,
-                dataType: "json",
-                cache: false,
-                processData: false,
-                data: formData,
-                success: function (data, textStatus, jqXHR) {
-                    notyf.success(jqXHR.responseJSON.message);
-                },
-                error: function (jqXHR) {
-                    notyf.error(jqXHR.responseJSON.message);
-                }
-            })
+    $("#goingSwitch").prop('checked', false);
+    let goingForm = $("form#goingForm")[0];
+    let formData = new FormData(goingForm);
+    $.ajax({
+        type: 'POST',
+        url: '/handleGoing',
+        contentType: false,
+        dataType: "json",
+        cache: false,
+        processData: false,
+        data: formData,
+        success: function (data, textStatus, jqXHR) {
+            notyf.success(jqXHR.responseJSON.message);
+        },
+        error: function (jqXHR) {
+            notyf.error(jqXHR.responseJSON.message);
         }
     })
 }
+
+function removeEventIDFromAttendance() {
+    $("#attendanceCheck").removeData("event-id");
+}
+
+function removeEventIDFromComments() {
+    $("#commentsCheck").removeData("event-id");
+}
+
+function hideShowCommentSectionModal(event_op_net_id) {
+    if (username === event_op_net_id) {
+        $("#hide-if-op").hide();
+    } else {
+        $("#hide-if-op").show();
+    }
+}
+
 
 // show/hide start date
 function showHideCalendar() {
@@ -381,6 +405,35 @@ function showHideCalendar() {
             $(".datetimepicker-final").hide();
         } else if ($('#later-final').is(':checked')) {
             $(".datetimepicker-final").show();
+        }
+    });
+}
+
+function modalsRemoveEventIDs() {
+    $('#attendanceModal').on('hidden.bs.modal', function () {
+        removeEventIDFromAttendance();
+    })
+    $('#commentsModal').on('hidden.bs.modal', function () {
+        removeEventIDFromComments();
+    })
+}
+
+function deleteComment(commentID) {
+    $.confirm({
+        title: 'Do you want to delete your comment?',
+        content: 'This cannot be undone.',
+        buttons: {
+            confirm: {
+                action: function () {
+                    socket.emit("delete_comment", commentID);
+                },
+                btnClass: 'btn-blue'
+            },
+            cancel: {
+                action: function () {
+                },
+                btnClass: 'btn-red',
+            },
         }
     });
 }

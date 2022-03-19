@@ -34,16 +34,9 @@ body {
     background: #f58025;
 }
 
-#addFoodButton, #recenterMapButton, #openNotificationSettings {
+#addFoodButton, #recenterMapButton, #openNotificationSettings, #feedbackSubmitButton, #sendCommentButton {
     border: 1px solid black;
     font-family: "Poppins", sans-serif;
-    color: black;
-    background: linear-gradient(to bottom, #ffcc00 0%, #f58025 100%);
-}
-
-#feedbackSubmitButton {
-    border: 1px solid black;
-    font-family: Verdana, sans-serif;
     color: black;
     background: linear-gradient(to bottom, #ffcc00 0%, #f58025 100%);
 }
@@ -51,7 +44,7 @@ body {
 #addFoodButton:hover, [id^=directionsButton_]:hover, #editButton:hover, #deleteButton:hover,
 #notificationSubmit:hover, #feedbackSubmitButton:hover, #extendButton:hover, #flagButton:hover,
 #currentLocationButton:hover, #submitFood:hover, #cancelFood:hover, #editDeleteButton:hover, #editFood:hover,
-#openNotificationSettings:hover, #recenterMapButton:hover {
+#openNotificationSettings:hover, #recenterMapButton:hover, #sendCommentButton:hover {
     cursor: pointer;
     color: white;
     background: #f58025;
@@ -154,6 +147,11 @@ body {
     width: 310px; /* or whatever width you want. */
     max-width: 310px; /* or whatever width you want. */
     display: inline-block;
+}
+
+
+.gm-style img {
+    max-width: 300px !important;
 }
 
 #firstHeading {
@@ -684,7 +682,6 @@ input {
 
 .elem {
     background-color: #f58025;
-    margin: 5px;
     animation-duration: 0.5s;
     animation-name: slidein;
 }
@@ -755,10 +752,6 @@ input, textarea {
     min-width: 0px !important;
 }
 
-/*.btn-info {*/
-/*    background-color: #abb427 !important;*/
-/*}*/
-
 .badge-info {
     background-color: #ffcc00 !important;
     text-align: left !important;
@@ -773,4 +766,89 @@ input, textarea {
 .form-control {
     background-color: black !important;
     color: white !important;
+}
+
+.marker-label {
+    margin-bottom: 9rem !important;
+    -webkit-text-stroke: 1px black !important;
+    -webkit-text-fill-color: #ffcc00 !important;
+    text-shadow: -1px 1px 2px #000,
+    1px 1px 2px #000,
+    1px -1px 0 #000,
+    -1px -1px 0 #000;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 25px;
+}
+
+@media (max-width: 1100px) {
+    .navbar-header {
+        float: none;
+    }
+
+    .navbar-left, .navbar-right {
+        float: none !important;
+    }
+
+    .navbar-toggle {
+        display: block;
+    }
+
+    .navbar-collapse {
+        border-top: 1px solid transparent;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .navbar-fixed-top {
+        top: 0;
+        border-width: 0 0 1px;
+    }
+
+    .navbar-collapse.collapse {
+        display: none !important;
+    }
+
+    .navbar-nav {
+        float: none !important;
+        margin-top: 7.5px;
+    }
+
+    .navbar-nav > li {
+        float: none;
+    }
+
+    .navbar-nav > li > a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .collapse.in {
+        display: block !important;
+    }
+}
+
+.navbar-btn {
+    margin-left: 2px !important;
+    margin-right: 2px !important;
+}
+
+th, td {
+    word-break: break-word !important;
+}
+
+.delete {
+    cursor: pointer;
+}
+
+.button-icon {
+    display: inline-block !important;
+    height: 15px;
+    width: 12px;
+    background-color: transparent !important;
+    margin-bottom: 4px !important;
+    margin-right: .25rem;
+}
+
+.close {
+    color: black;
 }

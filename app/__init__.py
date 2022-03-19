@@ -35,7 +35,7 @@ def create_app():
 
 def register_scheduler(app):
     from flask_apscheduler import APScheduler
-    scheduler_trash_markers = APScheduler()
+    scheduler = APScheduler()
 
     import datetime
     from app import db
@@ -48,14 +48,16 @@ def register_scheduler(app):
             events = Event.query.all()
             db.session.commit()
             for event in events:
+                # delete attendee, pic data associated with old events
                 if event.end_time is None or current_time > (event.end_time + datetime.timedelta(hours=1)):
                     delete_data(event)
                     continue
+                # send notifications for events scheduled for later
                 if current_time > event.start_time and (not event.sent_emails or event.sent_emails is None):
                     send_notifications(event)
                     event.sent_emails = True
                     db.session.commit()
 
-    scheduler_trash_markers.add_job("job_update", update, trigger="interval", seconds=20)
-    scheduler_trash_markers.init_app(app)
-    scheduler_trash_markers.start()
+    scheduler.add_job("job_update", update, trigger="interval", seconds=20)
+    scheduler.init_app(app)
+    scheduler.start()

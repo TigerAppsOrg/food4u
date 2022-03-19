@@ -38,7 +38,7 @@ function updateTime() {
                     "remaining for event") + "</span>" :
                 "<span class='badge badge-warning' style='white-space: pre-line'>" + "This event has ended.<br>We hope you got some of the good food!" + "</span>";
         } else {
-            let event_minutes_remaining = endTimeRemaining.total - startTimeRemaining.total >= 0 ? Math.floor(((endTimeRemaining.total - startTimeRemaining.total) / 1000 / 60))
+            let event_minutes_remaining = endTimeRemaining.total - startTimeRemaining.total >= 0 ? Math.round(((endTimeRemaining.total - startTimeRemaining.total) / 1000 / 60))
                 : 0;
             remaining_time_message = "<span class='badge badge-warning' style='white-space: pre-line'>" +
                 "This event starts on \n" + startTimeEstString + " ET \n" + "lasting for " + event_minutes_remaining + " minutes " + "</span>"
@@ -155,18 +155,46 @@ function getAttendance(event_id) {
         .then(response => response.text()).then(data => {
         $("#attendanceBody").empty();
         $("#attendanceBody").append(data);
-    }).then(() => emitSetAnonAttendance()
-    )
-    ;
+    }).then(() => emitSetAnonAttendance());
+}
+
+function getComments(event_id) {
+    $("#idForComment").val(event_id);
+    fetch('/get_comments?' +
+        '&event_id=' + event_id)
+        .then(response => response.text())
+        .then(data => {
+            $("#commentsTable").empty();
+            $("#commentsTable").append(data);
+        }).then(() => emitSetCommentNotificationSubscribe());
 }
 
 function emitSetAnonAttendance() {
     $("#wants-anon").on('change', function () {
             let check = $(this).prop('checked');
             if (check == true) {
-                socket.emit("set_anon", {"wants_anon": true, "event_id": $("#wants-anon").data("event-id")});
+                socket.emit("set_anon_attendance", {"wants_anon": true, "event_id": $("#wants-anon").data("event-id")});
             } else {
-                socket.emit("set_anon", {"wants_anon": false, "event_id": $("#wants-anon").data("event-id")});
+                socket.emit("set_anon_attendance", {"wants_anon": false, "event_id": $("#wants-anon").data("event-id")});
+            }
+        }
+    )
+}
+
+
+function emitSetCommentNotificationSubscribe() {
+    $("#wants-comment-notifications").on('change', function () {
+            let check = $(this).prop('checked');
+            if (check == true) {
+                socket.emit("set_comment_notifications_subscribe", {
+                    "wants_comment_notifications": true,
+                    "event_id": $("#wants-comment-notifications").data("event-id")
+                });
+            } else {
+                socket.emit("set_comment_notifications_subscribe", {
+                    "wants_comment_notifications": false,
+                    "event_id": $("#wants-comment-notifications").data("event-id")
+                });
             }
         }
     )

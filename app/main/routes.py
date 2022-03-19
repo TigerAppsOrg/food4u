@@ -5,15 +5,17 @@ import json
 import datetime
 from . import main
 from .casclient import CasClient
-from .helpers import legal_title, set_color_get_time, fetch_attendees
+from .helpers import legal_title, set_color_get_time, fetch_attendees, get_event_remaining_minutes, fetch_comments, \
+    get_number_of_comments, legal_comment
 from .helpers import legal_location, legal_duration, send_notifications
 from .helpers import legal_description, legal_lat_lng, handle_and_edit_pics
 from .helpers import legal_email, legal_fields, send_feedback_email, send_flag_email, \
     get_attendance, fetch_events, fetch_active_events_count, get_utc_start_time_from_est_time_string, \
-    get_est_time_string_from_utc_dt, is_start_time_more_than_utc_now
+    get_est_time_string_from_utc_dt, send_comment_email_to_op, send_comment_email_to_others
 from flask import redirect, flash, url_for
 from app import socket_io, db
-from app.models import Event, Picture, Users, NotificationSubscribers, Attendees
+from app.models import Event, Picture, Users, NotificationSubscribers, Attendees, Comments, \
+    CommentNotificationSubscribers
 from .helpers import delete_data
 from itsdangerous import URLSafeSerializer, BadData
 from sqlalchemy.sql import functions
@@ -39,6 +41,10 @@ def send_feedback():
     if is_illegal == 3:
         flash(
             "Feedback has word longer than 20 characters. Please fix errors and submit again.", "error")
+        return redirect(url_for('main.index'))
+    if is_illegal == 4:
+        flash(
+            "Feedback has html tags. Please fix errors and submit again.", "error")
         return redirect(url_for('main.index'))
 
     send_feedback_email(username, feedback)
@@ -177,7 +183,8 @@ def index(event_id=None):
         db.session.commit()
         socket_io.emit('uniqueVisitor', 1, broadcast=True)
     events_dict_list = []
-    events = Event.query.all()
+    events = db.session.query(Event).order_by(
+        Event.start_time.desc())
     db.session.commit()
     for event in events:
         ongoing, marker_color, remaining_minutes = set_color_get_time(
@@ -188,6 +195,7 @@ def index(event_id=None):
         db.session.commit()
         pictureList = [[picture.event_picture, picture.name] for picture in pictures]
         number_of_people_going, going_percentage, host_message = get_attendance(event)
+        number_of_comments = get_number_of_comments(event)
         events_dict_list.append(
             {'title': event.title, 'building': event.building,
              'room': event.room,
@@ -206,6 +214,7 @@ def index(event_id=None):
              'people_going': number_of_people_going,
              'going_percentage': going_percentage,
              'host_message': host_message,
+             'number_of_comments': number_of_comments
              })
     subscribers_count = NotificationSubscribers.query.filter_by(
         wants_email=True).count()
@@ -292,6 +301,7 @@ def going_to_event():
             if switch_on:
                 response_time = datetime.datetime.utcnow()
                 attendee = Attendees(event_id=going_event_id, net_id=username, going=True, response_time=response_time)
+                attendee.event = is_event
                 db.session.add(attendee)
                 user_search.update(
                     {"events_going": Users.events_going + 1,
@@ -308,6 +318,7 @@ def going_to_event():
                 # is not
                 response_time = datetime.datetime.utcnow()
                 attendee = Attendees(event_id=going_event_id, net_id=username, going=False, response_time=response_time)
+                attendee.event = is_event
                 db.session.add(attendee)
                 user_search.update(
                     {"events_responded": Users.events_responded + 1},
@@ -371,6 +382,7 @@ def going_to_event():
             if switch_on:
                 response_time = datetime.datetime.utcnow()
                 attendee = Attendees(event_id=going_event_id, net_id=username, going=True, response_time=response_time)
+                attendee.event = is_event
                 db.session.add(attendee)
                 going_event_search.update({"host_staying": True},
                                           synchronize_session=False)
@@ -389,6 +401,7 @@ def going_to_event():
                 # is not
                 response_time = datetime.datetime.utcnow()
                 attendee = Attendees(event_id=going_event_id, net_id=username, going=False, response_time=response_time)
+                attendee.event = is_event
                 db.session.add(attendee)
                 going_event_search.update({"host_staying": False,
                                            "not_planning_to_go": Event.not_planning_to_go + 1},
@@ -497,9 +510,9 @@ def extend_event():
         message = "Your event has not been found. It may have been already deleted."
         return jsonify(message=message), 400
 
-    ongoing, marker_color, remaining_minutes = set_color_get_time(extended_event)
+    event_remaining_minutes = get_event_remaining_minutes(extended_event)
 
-    if remaining_minutes + extension_duration > 180:
+    if event_remaining_minutes + extension_duration > 180:
         message = "Your event's total time cannot exceed 3 hours."
         return jsonify(message=message), 400
 
@@ -547,7 +560,7 @@ def flag_event():
         return jsonify(message=message), 400
 
     if remaining_minutes <= 10:
-        message = "The event is already less than 10 minutes."
+        message = "The event has already less than 10 minutes remaining."
         return jsonify(message=message), 400
 
     if username == flagged_event.net_id:
@@ -678,6 +691,15 @@ def handle_data_edit():
         start_time = post_time
         end_time = post_time + datetime.timedelta(minutes=duration)
 
+    if title == "" or building == "" or room == "" or duration == "" or request.form['optradio'] == "":
+        message = "One of the required fields is empty. Please edit again."
+        return jsonify(message=message), 400
+
+    if latitude == "" or longitude == "":
+        message = "One of the coordinates is not submitted. Please refresh the site and " \
+                  "edit again."
+        return jsonify(message=message), 400
+
     edited_event.update(
         {"title": title,
          "building": building,
@@ -800,8 +822,17 @@ def handle_data():
         end_time = post_time + datetime.timedelta(minutes=duration)
         send_emails_flag = True
 
+    if title == "" or building == "" or room == "" or duration == "" or request.form['optradio'] == "":
+        message = "One of the required fields is empty. Please edit again."
+        return jsonify(message=message), 400
+
+    if latitude == "" or longitude == "":
+        message = "One of the coordinates is not submitted. Please refresh the site and " \
+                  "edit again."
+        return jsonify(message=message), 400
+
     e = Event(
-        net_id=username.lower().strip(),
+        net_id=username,
         post_time=post_time,
         start_time=start_time, title=title, building=building,
         room=room,
@@ -809,6 +840,7 @@ def handle_data():
         description=desc,
         end_time=end_time, duration=duration, sent_emails=send_emails_flag)
     db.session.add(e)
+    db.session.flush()
     pics = request.files.to_dict().values()
     create = True
     is_illegal = handle_and_edit_pics(pics, e, create)
@@ -824,6 +856,13 @@ def handle_data():
         {"posts_made": Users.posts_made + 1},
         synchronize_session=False)
     socket_io.emit('postIncrement', 1, broadcast=True)
+    # subscribe op to comment notifications by default
+    comment_notification_subscriber = CommentNotificationSubscribers(
+        event_id=e.id,
+        net_id=username,
+        wants_email=True)
+    comment_notification_subscriber.event = e
+    db.session.add(comment_notification_subscriber)
     db.session.commit()
     if send_emails_flag:
         send_notifications(e)
@@ -832,6 +871,69 @@ def handle_data():
     socket_io.emit('update', events_dict, broadcast=True)
     socket_io.emit('active_event_count', active_event_count, broadcast=True)
     return jsonify(success=True)
+
+
+@main.route('/handleComment', methods=['POST'])
+def handle_comment():
+    ERROR_CODE = 400
+    SUCCESS_CODE = 200
+
+    # username = "ben"
+    username = CasClient().authenticate()
+    username = username.lower().strip()
+
+    visibility = request.form['optradio']
+
+    wants_anon_but_op = False
+    wants_anon_to_all = False
+
+    if visibility == "one":
+        wants_anon_but_op = True
+    elif visibility == "invisible":
+        wants_anon_to_all = True
+
+    comment_event_id = request.form['idForComment']
+    comment_text = request.form['comment']
+    message, success_or_error_code = legal_comment(comment_text)
+
+    all_event_comments = Comments.query.filter_by(event_id=comment_event_id).all()
+    comment_event = Event.query.filter_by(id=comment_event_id).first()
+
+    if len(all_event_comments) == 100:
+        message = "There are 100 comments for this event. Cannot submit another one " \
+                  "due to limited database size."
+        return jsonify(message=message), ERROR_CODE
+
+    if success_or_error_code == ERROR_CODE:
+        # if error, return early
+        return jsonify(message=message), success_or_error_code
+    else:
+        # if success, process comment_text
+        comment = Comments(
+            event_id=comment_event_id,
+            net_id=username,
+            comment=comment_text,
+            response_time=datetime.datetime.utcnow(),
+            wants_anon_but_op=wants_anon_but_op,
+            wants_anon_to_all=wants_anon_to_all)
+        comment.event = comment_event
+        db.session.add(comment)
+        db.session.commit()
+        events_dict = fetch_events()
+        socket_io.emit('update', events_dict, broadcast=True)
+        socket_io.emit("update_comments")
+        # in both cases, the commenter does not get the comment email notification
+        # if they comment themself
+        if not wants_anon_to_all and not wants_anon_but_op:
+            send_comment_email_to_op(comment_event, comment_text, username, username)
+            send_comment_email_to_others(comment_event, comment_text, username, username)
+        elif wants_anon_but_op:
+            send_comment_email_to_op(comment_event, comment_text, username, username)
+            send_comment_email_to_others(comment_event, comment_text, "Anonymous", username)
+        elif wants_anon_to_all:
+            send_comment_email_to_op(comment_event, comment_text, "Anonymous", username)
+            send_comment_email_to_others(comment_event, comment_text, "Anonymous", username)
+        return jsonify(message=message), success_or_error_code
 
 
 @main.route('/show_data', methods=['GET'])
@@ -862,11 +964,13 @@ def get_infowindow_poster():
     number_of_people_going, going_percentage, is_host_there = get_attendance(event)
 
     event_post_time = get_est_time_string_from_utc_dt(event.post_time)
+    number_of_comments = get_number_of_comments(event)
 
     html = render_template(
         "infowindow_poster.html", event=event, event_remaining_minutes=remaining_minutes,
         number_of_people_going=number_of_people_going, going_percentage=going_percentage,
         is_host_there=is_host_there, event_post_time=event_post_time,
+        number_of_comments=number_of_comments
     )
     response = make_response(html)
     return response
@@ -878,16 +982,17 @@ def get_infowindow_consumer():
 
     event_id = request.args.get('event_id')
     event = Event.query.filter_by(id=event_id).first()
-    _, marker_color, remaining_minutes = set_color_get_time(
-        event)
+    _, marker_color, _ = set_color_get_time(event)
+    event_remaining_minutes = get_event_remaining_minutes(event)
     number_of_people_going, going_percentage, is_host_there = get_attendance(event)
-
     event_post_time = get_est_time_string_from_utc_dt(event.post_time)
+    number_of_comments = get_number_of_comments(event)
 
     html = render_template(
-        "infowindow_consumer.html", event=event, event_remaining_minutes=remaining_minutes,
+        "infowindow_consumer.html", event=event, event_remaining_minutes=event_remaining_minutes,
         number_of_people_going=number_of_people_going, going_percentage=going_percentage,
-        is_host_there=is_host_there, event_post_time=event_post_time, marker_color=marker_color)
+        is_host_there=is_host_there, event_post_time=event_post_time, number_of_comments=number_of_comments,
+        marker_color=marker_color)
     response = make_response(html)
     return response
 
@@ -900,8 +1005,10 @@ def get_attendance_modal_body():
 
     event_id = request.args.get('event_id')
     event = Event.query.filter_by(id=event_id).first()
-    _, _, remaining_minutes = set_color_get_time(
-        event)
+    if event is None:
+        html = render_template("no_event_found.html")
+        response = make_response(html)
+        return response
     event_attendees = fetch_attendees(event)
     username_attendee = db.session.query(Attendees).filter(Attendees.net_id == username,
                                                            Attendees.event_id == int(
@@ -909,8 +1016,44 @@ def get_attendance_modal_body():
 
     html = render_template(
         "attendance_modal_body.html", event_attendees=event_attendees, event=event,
-        event_remaining_minutes=remaining_minutes, original_poster_net_id=event.net_id
+        original_poster_net_id=event.net_id
         , username=username, username_attendee=username_attendee)
+    response = make_response(html)
+    return response
+
+
+@main.route('/get_comments', methods=['GET'])
+def get_attendance_modal_table():
+    # username = "ben"
+    username = CasClient().authenticate()
+    username = username.lower().strip()
+
+    event_id = request.args.get('event_id')
+    event = Event.query.filter_by(id=event_id).first()
+    if event is None:
+        html = render_template("no_event_found.html")
+        response = make_response(html)
+        return response
+    event_comments = fetch_comments(event)
+
+    user_is_subscribed = db.session.query(CommentNotificationSubscribers).filter(
+        CommentNotificationSubscribers.net_id == username,
+        CommentNotificationSubscribers.event_id == event.id).first()
+
+    op_is_subscribed = db.session.query(CommentNotificationSubscribers).filter(
+        CommentNotificationSubscribers.net_id == event.net_id,
+        CommentNotificationSubscribers.event_id == event.id).first().wants_email
+
+    if user_is_subscribed is not None:
+        user_is_subscribed = user_is_subscribed.wants_email
+    else:
+        user_is_subscribed = False
+
+    html = render_template(
+        "comments_modal_table.html", event_comments=event_comments, event=event,
+        original_poster_net_id=event.net_id
+        , username=username, user_is_subscribed=user_is_subscribed, op_is_subscribed=op_is_subscribed)
+
     response = make_response(html)
     return response
 

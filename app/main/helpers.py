@@ -11,7 +11,7 @@ from flask_mail import Message
 from itsdangerous import URLSafeSerializer
 
 from app import mail, db, socket_io
-from app.models import Event, Picture, NotificationSubscribers, Attendees
+from app.models import Event, Picture, NotificationSubscribers, Attendees, Comments, CommentNotificationSubscribers
 from . import main
 
 
@@ -61,6 +61,68 @@ def send_flag_email(flagger_netid, op_netid, event):
     mail.send(msg)
 
 
+def send_comment_email_to_op(event, comment, commenter_public, commenter):
+    op_is_subscribed = db.session.query(CommentNotificationSubscribers).filter(
+        CommentNotificationSubscribers.event_id == event.id,
+        CommentNotificationSubscribers.net_id == event.net_id,
+        CommentNotificationSubscribers.net_id != commenter,
+        CommentNotificationSubscribers.wants_email).first() is not None
+
+    if op_is_subscribed:
+        email_html = '<p style="color:#f58025;"><strong>' \
+                     'Your free food event has been received a comment:</strong></p>' + \
+                     comment + \
+                     '<br> <p><strong>Commented by: <strong>' + commenter_public + "<strong></p>"
+        email_html += '<p style="color:#f58025;"><strong> ' \
+                      f"<a href='https://food4u.tigerapps.org/index/{event.id}'" \
+                      f"target='_blank' rel='noopener noreferrer'>Click here" \
+                      '</a> to see this your own event\'s comments.' \
+                      '<strong></p>'
+        msg = Message(
+            html=email_html,
+            subject=("food 4 u: Your Event Has Received a Comment"),
+            sender="food4uprinceton@gmail.com",
+            recipients=[event.net_id + "@princeton.edu"]
+        )
+        mail.send(msg)
+    else:
+        return
+
+
+def send_comment_email_to_others(event, comment, commenter_public, commenter):
+    all_subscribers_except_op = db.session.query(CommentNotificationSubscribers).filter(
+        CommentNotificationSubscribers.event_id == event.id,
+        CommentNotificationSubscribers.net_id != event.net_id,
+        CommentNotificationSubscribers.net_id != commenter,
+        CommentNotificationSubscribers.wants_email).all()
+
+    email_html_suffix = "<div id=bodyContent>"
+    email_html_suffix += '</div>'
+
+    email_html = '<p style="color:#f58025;"><strong>' \
+                 'Your free food event has been received a comment:</p>' \
+                 '<br>' \
+                 + comment + \
+                 '<br>' + \
+                 '<strong>' + \
+                 "<p><strong>Commented by: <strong>" + commenter_public + "</strong></p>"
+    email_html += '<p style="color:#f58025;"><strong> ' \
+                  f"<a href='https://food4u.tigerapps.org/index/{event.id}'" \
+                  f"target='_blank' rel='noopener noreferrer'>Click here" \
+                  '</a> to see your subscribed event\'s comments.' \
+                  '<strong></p>'
+    email_html += email_html_suffix
+
+    for subscriber in all_subscribers_except_op:
+        msg = Message(
+            html=email_html,
+            subject=("food 4 u: Your Opted-In Event Has Received a Comment"),
+            sender="food4uprinceton@gmail.com",
+            recipients=[subscriber.net_id + "@princeton.edu"]
+        )
+        mail.send(msg)
+
+
 def send_notifications(event):
     email_html_suffix = '<p style="color:#f58025;"><strong>We have food 4 u! ' \
                         f"<a href='https://food4u.tigerapps.org/index/{event.id}'" \
@@ -69,7 +131,7 @@ def send_notifications(event):
     email_html_suffix += "<h1><strong>" + str(event.title) + "<strong></h1>"
     email_html_suffix += "<div id=bodyContent>"
     email_html_suffix += "<p><strong>Posted by: <strong>" + str(event.net_id) + "</strong></p>"
-    email_html_suffix += "<p><strong>Set for " + str(event.duration) + " minutes<strong></p>"
+    email_html_suffix += "<p><strong>Set for " + str(get_event_remaining_minutes(event)) + " minutes<strong></p>"
     email_html_suffix += "<p><strong>at Building: " + str(event.building) + "<strong><p>" + "<p><strong>in Room: " \
                          + str(event.room) \
                          + "<strong></p>"
@@ -125,8 +187,7 @@ def delete_all_pics(event):
     event_expired_pictures = event.pictures.all()
     if event_expired_pictures:
         for pic_to_be_deleted in event_expired_pictures:
-            db.session.delete(pic_to_be_deleted)
-            db.session.commit()
+            # don't need to delete each individual pic as cascade does it for us
             cloudinary.config(
                 cloud_name=os.getenv('CLOUD_NAME'),
                 api_key=os.getenv('API_KEY'),
@@ -135,13 +196,27 @@ def delete_all_pics(event):
 
 
 def delete_all_going(event):
-    event_id = event.id
-    people_going = Attendees.query.filter_by(
-        event_id=event_id).all()
-    if people_going:
-        for people in people_going:
-            db.session.delete(people)
-    db.session.commit()
+    # don't need to delete each individual attendee as cascade does it for us
+    pass
+    # event_id = event.id
+    # people_going = Attendees.query.filter_by(
+    #     event_id=event_id).all()
+    # if people_going:
+    #     for people in people_going:
+    #         db.session.delete(people)
+    # db.session.commit()
+
+
+def delete_all_comments(event):
+    # don't need to delete each individual comment as cascade does it for us
+    pass
+    # event_id = event.id
+    # event_comments = Comments.query.filter_by(
+    #     event_id=event_id).all()
+    # if event_comments:
+    #     for comment in event_comments:
+    #         db.session.delete(comment)
+    # db.session.commit()
 
 
 def legal_title(title):
@@ -196,6 +271,23 @@ def legal_description(desc, urlTitle="", urlBuilding="", urlRoom="", title="", b
             or clean_html(desc):
         return desc, 4
     return desc, 0
+
+
+def legal_comment(comment):
+    if comment == "":
+        message = "Your comment submission is empty. Please submit a comment with one " \
+                  "or more characters."
+        return message, 400
+    if len(comment) > 500:
+        message = "Length of comment is greater than 500 characters. Please shorten it."
+        return message, 400
+    if pf.contains_profanity(comment):
+        message = "Your comment contains profanity. Please change it before submitting."
+        return message, 400
+    if clean_html(comment):
+        message = "Your comment contains html tags. Please change it before submitting."
+        return message, 400
+    return "You have successfully submitted your comment!", 200
 
 
 def legal_lat_lng(latitude, longitude):
@@ -319,9 +411,15 @@ def get_attendance(event):
     return number_of_people_going, going_percentage, host_message
 
 
+def get_number_of_comments(event):
+    comments_for_event = db.session.query(Comments).filter(Comments.event_id == event.id).all()
+    return len(comments_for_event)
+
+
 def fetch_events():
     events_dict_list = []
-    events = Event.query.all()
+    events = db.session.query(Event).order_by(
+        Event.start_time.desc())
     db.session.commit()
     for event in events:
 
@@ -335,6 +433,7 @@ def fetch_events():
         db.session.commit()
         pictureList = [[picture.event_picture, picture.name] for picture in pictures]
         number_of_people_going, going_percentage, host_message = get_attendance(event)
+        number_of_comments = get_number_of_comments(event)
 
         events_dict_list.append(
             {'title': event.title, 'building': event.building,
@@ -354,13 +453,15 @@ def fetch_events():
              'people_going': number_of_people_going,
              'going_percentage': going_percentage,
              'host_message': host_message,
+             'number_of_comments': number_of_comments,
              })
     return events_dict_list
 
 
 def delete_data(event):
     delete_all_pics(event)
-    delete_all_going(event)
+    # delete_all_going(event)
+    # delete_all_comments(event)
     db.session.delete(event)
     db.session.commit()
     active_event_count = fetch_active_events_count()
@@ -377,6 +478,13 @@ def fetch_attendees(event):
                                                                    Attendees.going).order_by(
         Attendees.response_time.asc())
     return attendees_desc_time_query.all()
+
+
+def fetch_comments(event):
+    comments_desc_time_query = db.session.query(Comments).filter(Comments.event_id == event.id
+                                                                 ).order_by(
+        Comments.response_time.asc())
+    return comments_desc_time_query.all()
 
 
 def is_dst(zonename):
@@ -403,3 +511,7 @@ def get_est_time_string_from_utc_dt(utc_dt):
 def is_start_time_more_than_utc_now(start_time_utc_dt):
     datetime_now = datetime.datetime.utcnow()
     return start_time_utc_dt > datetime_now
+
+
+def get_event_remaining_minutes(event):
+    return math.ceil((event.end_time - event.start_time).total_seconds() / 60)

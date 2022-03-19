@@ -19,7 +19,7 @@ intro.setOptions({
                 "building will also automatically move the location to that building. You can reset the location " +
                 "using the \"Use My Current Location\" button. Input how long you want the free food event to be " +
                 "displayed between 5 and 180 minutes. Optionally, add up to five photos and a description! As the " +
-                "original poster, you can edit the event. You can also extend the time of an event or delete an " +
+                "original poster (known as the OP), you can edit the event. You can also extend the time of an event or delete an " +
                 "event " +
                 "entirely.",
             position: 'bottom'
@@ -98,7 +98,7 @@ introAgain.setOptions({
                 "building will also automatically move the location to that building. You can reset the location " +
                 "using the \"Use My Current Location\" button. Input how long you want the free food event to be " +
                 "displayed between 5 and 180 minutes. Optionally, add up to five photos and a description! As the " +
-                "original poster, you can edit the event. You can also extend the time of an event or delete an " +
+                "original poster (known as the OP), you can edit the event. You can also extend the time of an event or delete an " +
                 "event " +
                 "entirely.",
             position: 'bottom'
