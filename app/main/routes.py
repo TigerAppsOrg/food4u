@@ -560,7 +560,7 @@ def flag_event():
         return jsonify(message=message), 400
 
     if remaining_minutes <= 10:
-        message = "The event is already less than 10 minutes."
+        message = "The event has already less than 10 minutes remaining."
         return jsonify(message=message), 400
 
     if username == flagged_event.net_id:
