@@ -24,13 +24,6 @@ padding-left: 0.25rem;">{{ event.title }}</div>
     </h1>
     <div id=bodyContent>
 
-        <button type="button" class="btn btn-light btn-xs" data-toggle="modal"
-                data-target="#attendanceModal"
-                style="margin-bottom: 2px;
-background-color: #5cb85c !important;" onclick="getAttendance('{{ event.id }}')">
-            View/Add Attendance
-        </button>
-        <br>
         <button type="button"
                 class="btn btn-light btn-xs"
                 data-toggle="modal"
@@ -38,33 +31,15 @@ background-color: #5cb85c !important;" onclick="getAttendance('{{ event.id }}')"
                 style="margin-bottom: 2px; background-color: #39cbe1 !important;"
                 onclick="getComments('{{ event.id }}');hideShowCommentSectionModal('{{ event.net_id }}');">
             View/Add Comments <span class="badge badge-dark"
-                           id="numberOfComments_{{ event.id }}">{{ number_of_comments }}</span>
+                                    id="numberOfComments_{{ event.id }}">{{ number_of_comments }}</span>
         </button>
-
-
-        {#        <span id="going_line_{{ event.id }}">#}
-        {#            Staying at Your Event?#}
-        {##}
-        {#        <span>#}
-        {#                <button type="submit" class="btn btn-success btn-xs shadow-none"#}
-        {#                        id="goingButton" form="goingForm" onclick="goingWithoutRefresh(); return false">#}
-        {#                    Yes#}
-        {#                </button>#}
-        {#                <button type="submit" class="btn btn-danger btn-xs"#}
-        {#                        id="goingButton" form="goingForm" onclick="notGoingWithoutRefresh(); return false">#}
-        {#                    No#}
-        {#                </button>#}
-        {#            </span>#}
-        {#        <div id="going_button_{{ event.id }}">#}
-        {#            <form action="/handleGoing" id="goingForm" method="post" enctype="multipart/form-data">#}
-        {#                <input type="text" class="input-hidden" id="idForGoing" name="idForGoing"#}
-        {#                       value="{{ event.id }}">#}
-        {#                <input type="checkbox" id="goingSwitch" name="goingSwitch" hidden>#}
-        {#            </form>#}
-        {#        </div>#}
-        {#                    </span>#}
-        {#        <br>#}
-
+        <br>
+        <button type="button" class="btn btn-light btn-xs" data-toggle="modal"
+                data-target="#attendanceModal"
+                style="margin-bottom: 2px;
+background-color: #5cb85c !important;" onclick="getAttendance('{{ event.id }}')">
+            View/Add Attendance
+        </button>
 
         <div id="attendance_info_{{ event.id }}">
             <button type="button" class="btn btn-light btn-xs" style="pointer-events: none;margin-bottom: 2px;

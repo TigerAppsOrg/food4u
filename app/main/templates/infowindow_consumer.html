@@ -26,16 +26,7 @@ padding-left: 0.25rem"
     </h1>
     <div id=bodyContent>
 
-        <button type="button"
-                class="btn btn-light btn-xs"
-                data-toggle="modal"
-                data-target="#attendanceModal"
-                style="margin-bottom: 2px;
-                background-color: #5cb85c !important;"
-                onclick="getAttendance('{{ event.id }}')">
-            View/Add Attendance
-        </button>
-        <br>
+
         <button type="button"
                 class="btn btn-light btn-xs"
                 data-toggle="modal"
@@ -44,6 +35,16 @@ padding-left: 0.25rem"
                 onclick="getComments('{{ event.id }}'); hideShowCommentSectionModal('{{ event.net_id }}');">
             View/Add Comments <span class="badge badge-dark"
                                     id="numberOfComments_{{ event.id }}">{{ number_of_comments }}</span>
+        </button>
+        <br>
+        <button type="button"
+                class="btn btn-light btn-xs"
+                data-toggle="modal"
+                data-target="#attendanceModal"
+                style="margin-bottom: 2px;
+                background-color: #5cb85c !important;"
+                onclick="getAttendance('{{ event.id }}')">
+            View/Add Attendance
         </button>
 
         <div id="attendance_info_{{ event.id }}">
