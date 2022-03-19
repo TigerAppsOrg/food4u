@@ -43,7 +43,7 @@ padding-left: 0.25rem"
                 style="margin-bottom: 2px; background-color: #39cbe1 !important;"
                 onclick="getComments('{{ event.id }}'); hideShowCommentSectionModal('{{ event.net_id }}');">
             View/Add Comments <span class="badge badge-dark"
-                           id="numberOfComments_{{ event.id }}">{{ number_of_comments }}</span>
+                                    id="numberOfComments_{{ event.id }}">{{ number_of_comments }}</span>
         </button>
 
         <div id="attendance_info_{{ event.id }}">
@@ -122,10 +122,13 @@ background-color: #f3f2f2 !important;">
 
         {% if event_remaining_minutes > 0 %}
             <div id="directionsOptional_{{ event.id }}">
+
                 <a id="directionsButton_{{ event.id }}"
                    href="https://www.google.com/maps/dir/?api=1&destination={{ event.latitude }},{{ event.longitude }}"
                    target="_blank"
                    class="btn btn-primary">
+                                   <img alt="Google Maps Logo" class="button-icon"
+                     src="{{ url_for('main.static', filename='images/google_maps_icon.png') }}">
                     Get Directions
                 </a>
             </div>

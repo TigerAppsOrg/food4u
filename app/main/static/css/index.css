@@ -839,3 +839,12 @@ th, td {
 .delete {
     cursor: pointer;
 }
+
+.button-icon {
+    display: inline-block !important;
+    height: 15px;
+    width: 12px;
+    background-color: transparent !important;
+    margin-bottom: 4px !important;
+    margin-right: .25rem;
+}
