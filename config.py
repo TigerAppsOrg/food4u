@@ -8,8 +8,9 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     # Closes connections after 0 minutes of inactivity
     SQLALCHEMY_POOL_RECYCLE = 0
-    # PostgreSQL backend has database
-    SQLALCHEMY_POOL_SIZE = 20
+    # PostgreSQL backend has 20 max connections
+    SQLALCHEMY_POOL_SIZE = 15
+    SQLALCHEMY_MAX_OVERFLOW = 5
     SECRET_KEY = os.environ.get('SECRET_KEY')
     SEND_FILE_MAX_AGE_DEFAULT = 0
     SCHEDULER_TIMEZONE = "America/New_York"
