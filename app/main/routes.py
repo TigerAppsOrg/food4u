@@ -686,8 +686,8 @@ def handle_data_edit():
         if post_time + datetime.timedelta(days=7) < start_time:
             message = "Start time is not within one week. Please edit again."
             return jsonify(message=message), 400
-        if start_time < post_time:
-            message = "Start time has already passed. Please submit a later start date."
+        if start_time > post_time:
+            message = "Start time has already passed. Please submit a later start time."
             return jsonify(message=message), 400
         end_time = start_time + datetime.timedelta(minutes=duration)
     elif request.form['optradio'] == 'now':
@@ -819,8 +819,8 @@ def handle_data():
         if post_time + datetime.timedelta(days=7) < start_time:
             message = "Start time is not within one week. Please edit again."
             return jsonify(message=message), 400
-        if start_time < post_time:
-            message = "Start time has already passed. Please submit a later start date."
+        if start_time > post_time:
+            message = "Start time has already passed. Please submit a later start time."
             return jsonify(message=message), 400
         end_time = start_time + datetime.timedelta(minutes=duration)
     elif request.form['optradio'] == 'now':
