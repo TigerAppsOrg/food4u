@@ -231,13 +231,13 @@ function addMarker(event) {
     if (username === event.net_id) {
         isPoster = true;
         // provides separate views for poster and consumers
-        fetch('/get_infowindow_poster?' +
+        fetchWithTimeout('/get_infowindow_poster?' +
             '&event_id=' + event.id)
             .then(response => response.text()).then(data => {
             infoWindowInfo = data;
         });
     } else {
-        fetch('/get_infowindow_consumer?' +
+        fetchWithTimeout('/get_infowindow_consumer?' +
             '&event_id=' + event.id)
             .then(response => response.text()).then(data => {
             infoWindowInfo = data;
@@ -321,13 +321,13 @@ function modifyMarkerOnClick(associatedEvent, associatedMarker) {
     if (username === associatedEvent.net_id) {
         isPoster = true;
         // provides separate views for poster and consumers
-        fetch('/get_infowindow_poster?' +
+        fetchWithTimeout('/get_infowindow_poster?' +
             '&event_id=' + associatedEvent.id)
             .then(response => response.text()).then(data => {
             infoWindowInfo = data;
         });
     } else {
-        fetch('/get_infowindow_consumer?' +
+        fetchWithTimeout('/get_infowindow_consumer?' +
             '&event_id=' + associatedEvent.id)
             .then(response => response.text()).then(data => {
             infoWindowInfo = data;
