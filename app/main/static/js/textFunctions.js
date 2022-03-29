@@ -150,7 +150,7 @@ function changeDateFormat(inputDateString) {
 }
 
 function getAttendance(event_id) {
-    fetch('/get_attendance?' +
+    fetchWithTimeout('/get_attendance?' +
         '&event_id=' + event_id)
         .then(response => response.text()).then(data => {
         $("#attendanceBody").empty();
@@ -160,7 +160,7 @@ function getAttendance(event_id) {
 
 function getComments(event_id) {
     $("#idForComment").val(event_id);
-    fetch('/get_comments?' +
+    fetchWithTimeout('/get_comments?' +
         '&event_id=' + event_id)
         .then(response => response.text())
         .then(data => {

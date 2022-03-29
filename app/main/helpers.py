@@ -495,8 +495,8 @@ def is_dst(zonename):
 
 def get_utc_start_time_from_est_time_string(later_date_string):
     local = pytz.timezone("America/New_York")
-    naive = datetime.datetime.strptime(later_date_string, '%m/%d/%Y %H:%M %p')
-    local_dt = local.localize(naive, is_dst=is_dst("America/New_York"))
+    naive = datetime.datetime.strptime(later_date_string, '%m/%d/%Y %I:%M %p')
+    local_dt = local.localize(naive, is_dst=None)
     start_time = local_dt.astimezone(pytz.utc)
     return start_time
 

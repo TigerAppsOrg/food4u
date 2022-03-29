@@ -6,8 +6,10 @@ import psycopg2
 class Config(object):
     SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    # Closes connections after 0 minutes of inactivity
-    SQLALCHEMY_POOL_RECYCLE = 0
+    # Closes connections after 3 seconds of inactivity
+    SQLALCHEMY_POOL_RECYCLE = 3
+    # Wait 10 seconds for a new connection
+    SQLALCHEMY_POOL_TIMEOUT = 10
     # PostgreSQL backend has 20 max connections
     SQLALCHEMY_POOL_SIZE = 15
     SQLALCHEMY_MAX_OVERFLOW = 5
