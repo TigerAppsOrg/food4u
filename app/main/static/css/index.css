@@ -852,3 +852,7 @@ th, td {
 .close {
     color: black;
 }
+
+#close-image {
+    color: white !important;
+}
