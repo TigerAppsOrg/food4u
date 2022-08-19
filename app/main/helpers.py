@@ -47,7 +47,7 @@ def send_flag_email(flagger_netid, op_netid, event):
                  'Your free food event has been flagged to have 10 minutes remaining!' \
                  '<strong></p>'
     email_html += '<p style="color:#f58025;"><strong> ' \
-                  f"<a href='https://food4u.tigerapps.org/index/{event.id}'" \
+                  f"<a href='https://food4u.tigerapps.org/map/{event.id}'" \
                   f"target='_blank' rel='noopener noreferrer'>Click here" \
                   '</a> to see this your live event\'s details and to extend it if it\'s still ' \
                   'ongoing! <strong></p>'
@@ -74,7 +74,7 @@ def send_comment_email_to_op(event, comment, commenter_public, commenter):
                      comment + \
                      '<br> <p><strong>Commented by: <strong>' + commenter_public + "<strong></p>"
         email_html += '<p style="color:#f58025;"><strong> ' \
-                      f"<a href='https://food4u.tigerapps.org/index/{event.id}'" \
+                      f"<a href='https://food4u.tigerapps.org/map/{event.id}'" \
                       f"target='_blank' rel='noopener noreferrer'>Click here" \
                       '</a> to see this your own event\'s comments.' \
                       '<strong></p>'
@@ -107,7 +107,7 @@ def send_comment_email_to_others(event, comment, commenter_public, commenter):
                  '<strong>' + \
                  "<p><strong>Commented by: <strong>" + commenter_public + "</strong></p>"
     email_html += '<p style="color:#f58025;"><strong> ' \
-                  f"<a href='https://food4u.tigerapps.org/index/{event.id}'" \
+                  f"<a href='https://food4u.tigerapps.org/map/{event.id}'" \
                   f"target='_blank' rel='noopener noreferrer'>Click here" \
                   '</a> to see your subscribed event\'s comments.' \
                   '<strong></p>'
@@ -125,7 +125,7 @@ def send_comment_email_to_others(event, comment, commenter_public, commenter):
 
 def send_notifications(event):
     email_html_suffix = '<p style="color:#f58025;"><strong>We have food 4 u! ' \
-                        f"<a href='https://food4u.tigerapps.org/index/{event.id}'" \
+                        f"<a href='https://food4u.tigerapps.org/map/{event.id}'" \
                         f"target='_blank' rel='noopener noreferrer'>Click here" \
                         '</a> to see this live event\'s details! <strong></p>'
     email_html_suffix += "<h1><strong>" + str(event.title) + "<strong></h1>"

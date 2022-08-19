@@ -10,6 +10,7 @@ from urllib.parse import quote
 from re import sub
 from flask import request, session, redirect, abort
 
+
 # -----------------------------------------------------------------------
 
 # Return url after stripping out the "ticket" parameter that was
@@ -22,6 +23,7 @@ def strip_ticket(url):
     url = sub(r'ticket=[^&]*&?', '', url)
     url = sub(r'\?&?$|&$', '', url)
     return url
+
 
 # -----------------------------------------------------------------------
 
@@ -38,6 +40,13 @@ class CasClient:
 
     # -------------------------------------------------------------------
 
+    # Return True if user is logged in
+
+    def is_logged_in(self):
+        return "username" in session
+
+    # -------------------------------------------------------------------
+
     # Validate a login ticket by contacting the CAS server. If
     # valid, return the user's username; otherwise, return None.
 
@@ -47,7 +56,7 @@ class CasClient:
                    + '&ticket=' + quote(ticket))
         lines = []
         with urlopen(val_url) as flo:
-            lines = flo.readlines()   # Should return 2 lines.
+            lines = flo.readlines()  # Should return 2 lines.
         if len(lines) != 2:
             return None
         first_line = lines[0].decode('utf-8')
@@ -96,12 +105,10 @@ class CasClient:
     def logout(self, next_url):
 
         # Delete the user's username from the session.
-        session.pop('username')
+        session.pop("username")
+        # Redirect the browser to the application's home page.
+        abort(redirect("/"))
 
-        # Logout, and redirect the browser to next_url.
-        logout_url = (self.cas_url + 'logout?service='
-                      + quote(sub('logout', next_url, request.url)))
-        abort(redirect(logout_url))
 
 # -----------------------------------------------------------------------
 

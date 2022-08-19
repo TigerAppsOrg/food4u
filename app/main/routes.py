@@ -166,10 +166,18 @@ def unsubscribe_token(token):
     return redirect(url_for('main.index'))
 
 
+@main.route("/")
+@main.route("/index")
+def index():
+    if CasClient().is_logged_in():
+        return redirect("/map")
+    return make_response(render_template("index.html"))
+
+
 @main.route('/', methods=['GET'])
-@main.route('/index', methods=['GET'])
-@main.route('/index/<event_id>', methods=['GET'])
-def index(event_id=None):
+@main.route('/map', methods=['GET'])
+@main.route('/map/<event_id>', methods=['GET'])
+def food_map(event_id=None):
     # username = "ben"
     # username = username.lower().strip()
     username = CasClient().authenticate()
@@ -223,20 +231,20 @@ def index(event_id=None):
     posts_all_time_count = db.session.query(functions.sum(Users.posts_made)).scalar()
     if not event_id:
         html = render_template(
-            "index.html", events=json.dumps(events_dict_list),
+            "map.html", events=json.dumps(events_dict_list),
             username=username, check_first_time=check_first_time,
             deeplinkEventID=None, subscribers_count=subscribers_count, unique_visitors_count=unique_visitors_count,
             posts_all_time_count=posts_all_time_count, active_events_count=active_events_count)
     elif Event.query.filter_by(id=event_id).first() is None:
         flash("The free food event has already ended.", "error")
         html = render_template(
-            "index.html", events=json.dumps(events_dict_list),
+            "map.html", events=json.dumps(events_dict_list),
             username=username, check_first_time=check_first_time,
             deeplinkEventID=None, subscribers_count=subscribers_count, unique_visitors_count=unique_visitors_count,
             posts_all_time_count=posts_all_time_count, active_events_count=active_events_count)
     else:
         html = render_template(
-            "index.html", events=json.dumps(events_dict_list),
+            "map.html", events=json.dumps(events_dict_list),
             username=username, check_first_time=check_first_time,
             deeplinkEventID=event_id, subscribers_count=subscribers_count, unique_visitors_count=unique_visitors_count,
             posts_all_time_count=posts_all_time_count, active_events_count=active_events_count)
