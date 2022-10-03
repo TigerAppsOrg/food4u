@@ -61,13 +61,13 @@ json5==0.9.6
 jupyter==1.0.0
 jupyter-console==6.4.0
 jupyter-core==4.9.1
-jupyter-server==1.17.0
+jupyter-server==1.12.1
 jupyterlab==3.2.4
 jupyterlab-pygments==0.1.2
 jupyterlab-server==2.8.2
 lazy-object-proxy==1.6.0
-lxml==4.9.1
-Mako==1.2.2
+lxml==4.6.5
+Mako==1.1.5
 Markdown==3.3.4
 MarkupSafe==2.0.1
 matplotlib-inline==0.1.3
