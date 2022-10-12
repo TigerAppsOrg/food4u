@@ -4,7 +4,7 @@ import psycopg2
 
 
 class Config(object):
-    SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     # Closes connections after 30 seconds of inactivity
     SQLALCHEMY_POOL_RECYCLE = 30
