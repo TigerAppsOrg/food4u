@@ -11,8 +11,8 @@ class Config(object):
     # Wait 100 seconds for a new connection
     SQLALCHEMY_POOL_TIMEOUT = 100
     # PostgreSQL backend has 20 max connections
-    SQLALCHEMY_POOL_SIZE = 15
-    SQLALCHEMY_MAX_OVERFLOW = 5
+    SQLALCHEMY_POOL_SIZE = 5
+    SQLALCHEMY_MAX_OVERFLOW = 0
     SECRET_KEY = os.environ.get('SECRET_KEY')
     SEND_FILE_MAX_AGE_DEFAULT = 0
     SCHEDULER_TIMEZONE = "America/New_York"
