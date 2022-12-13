@@ -15,7 +15,7 @@ blinker==1.4
 blis==0.7.5
 cached-property==1.5.2
 catalogue==1.0.0
-certifi==2021.10.8
+certifi==2022.12.7
 charset-normalizer==2.0.7
 click==8.0.3
 cloudinary==1.26.0
