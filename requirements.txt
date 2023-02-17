@@ -37,7 +37,7 @@ Flask-Mail==0.9.1
 Flask-Migrate==3.1.0
 Flask-SocketIO==5.1.1
 Flask-SQLAlchemy==2.5.1
-future==0.18.3
+future==0.18.2
 gevent-websocket==0.10.1
 ghp-import==2.0.2
 greenlet==1.1.2
