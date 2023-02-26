@@ -29,11 +29,12 @@ def send_feedback_email(netid, feedback):
 
     email_html = '<p style="color:#f58025;"><strong>food 4 u has new feedback!<strong></p>'
     email_html += email_html_suffix
+    feedback_recipient_emails = os.getenv('FEEDBACK_RECIPIENT_EMAILS').split(",")
     msg = Message(
         html=email_html,
         subject=("food 4 u: feedback"),
-        sender="food4uprinceton@gmail.com",
-        recipients=["ambuck@princeton.edu", "shannon.heh@princeton.edu", "ntyp@princeton.edu", "bychan@princeton.edu"]
+        sender=os.getenv('EMAIL_HOST_USER'),
+        recipients=feedback_recipient_emails
     )
     mail.send(msg)
 
@@ -55,7 +56,7 @@ def send_flag_email(flagger_netid, op_netid, event):
     msg = Message(
         html=email_html,
         subject=("food 4 u: Your Event Was Flagged by Another User"),
-        sender="food4uprinceton@gmail.com",
+        sender=os.getenv('EMAIL_HOST_USER'),
         recipients=[op_netid + "@princeton.edu"]
     )
     mail.send(msg)
@@ -81,7 +82,7 @@ def send_comment_email_to_op(event, comment, commenter_public, commenter):
         msg = Message(
             html=email_html,
             subject=("food 4 u: Your Event Has Received a Comment"),
-            sender="food4uprinceton@gmail.com",
+            sender=os.getenv('EMAIL_HOST_USER'),
             recipients=[event.net_id + "@princeton.edu"]
         )
         mail.send(msg)
@@ -117,7 +118,7 @@ def send_comment_email_to_others(event, comment, commenter_public, commenter):
         msg = Message(
             html=email_html,
             subject=("food 4 u: Your Opted-In Event Has Received a Comment"),
-            sender="food4uprinceton@gmail.com",
+            sender=os.getenv('EMAIL_HOST_USER'),
             recipients=[subscriber.net_id + "@princeton.edu"]
         )
         mail.send(msg)
@@ -153,14 +154,16 @@ def send_notifications(event):
         for notification_subscription in notification_subscription_list:
             if notification_subscription.wants_email and legal_email(notification_subscription.email_address):
                 email_html = f"Hi {notification_subscription.name}," + email_html_suffix
-                secret_token = unsubscribe_token(notification_subscription.email_address)
-                url_secret_token = 'https://food4u.tigerapps.org/unsubscribe/' + secret_token
-                email_html += '<br><a href={0} target="_blank" rel="noopener noreferrer">Unsubscribe</a>'.format(
-                    url_secret_token)
+                if notification_subscription.email_address != os.getenv('FREE_FOOD_LISTSERV_EMAIL'):
+                    secret_token = unsubscribe_token(notification_subscription.email_address)
+                    url_secret_token = 'https://food4u.tigerapps.org/unsubscribe/' + secret_token
+                    email_html += '<br><a href={0} target="_blank" rel="noopener noreferrer">Unsubscribe</a>'.format(
+                        url_secret_token)
+
                 msg = Message(
                     html=email_html,
                     subject=("food 4 u: " + event.title),
-                    sender="food4uprinceton@gmail.com",
+                    sender=os.getenv('EMAIL_HOST_USER'),
                     recipients=[notification_subscription.email_address]
                 )
                 mail.send(msg)
