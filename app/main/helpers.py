@@ -32,7 +32,7 @@ def send_feedback_email(netid, feedback):
     feedback_recipient_emails = os.getenv('FEEDBACK_RECIPIENT_EMAILS').split(",")
     msg = Message(
         html=email_html,
-        subject=("food 4 u: feedback"),
+        subject=("[food 4 u] feedback"),
         sender=os.getenv('EMAIL_HOST_USER'),
         recipients=feedback_recipient_emails
     )
@@ -55,7 +55,7 @@ def send_flag_email(flagger_netid, op_netid, event):
     email_html += email_html_suffix
     msg = Message(
         html=email_html,
-        subject=("food 4 u: Your Event Was Flagged by Another User"),
+        subject=("[food 4 u] Your Event Was Flagged by Another User"),
         sender=os.getenv('EMAIL_HOST_USER'),
         recipients=[op_netid + "@princeton.edu"]
     )
@@ -81,7 +81,7 @@ def send_comment_email_to_op(event, comment, commenter_public, commenter):
                       '<strong></p>'
         msg = Message(
             html=email_html,
-            subject=("food 4 u: Your Event Has Received a Comment"),
+            subject=("[food 4 u] Your Event Has Received a Comment"),
             sender=os.getenv('EMAIL_HOST_USER'),
             recipients=[event.net_id + "@princeton.edu"]
         )
@@ -117,7 +117,7 @@ def send_comment_email_to_others(event, comment, commenter_public, commenter):
     for subscriber in all_subscribers_except_op:
         msg = Message(
             html=email_html,
-            subject=("food 4 u: Your Opted-In Event Has Received a Comment"),
+            subject=("[food 4 u] Your Opted-In Event Has Received a Comment"),
             sender=os.getenv('EMAIL_HOST_USER'),
             recipients=[subscriber.net_id + "@princeton.edu"]
         )
@@ -162,7 +162,7 @@ def send_notifications(event):
 
                 msg = Message(
                     html=email_html,
-                    subject=("food 4 u: " + event.title),
+                    subject=("[food 4 u]" + event.title),
                     sender=os.getenv('EMAIL_HOST_USER'),
                     recipients=[notification_subscription.email_address]
                 )
