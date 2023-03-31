@@ -124,7 +124,7 @@ pyyaml_env_tag==0.1
 pyzmq==22.3.0
 qtconsole==5.2.1
 QtPy==1.11.3
-redis==3.5.3
+redis==4.4.4
 regex==2021.11.2
 requests==2.26.0
 ruamel.yaml==0.15.100
